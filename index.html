@@ -433,7 +433,7 @@
 
         .radio-option {
             display: flex;
-            align-items: center;
+            align-items: stretch;
             color: #c4d1c7;
             font-family: 'Lato', sans-serif;
             font-size: 1rem;
@@ -459,9 +459,8 @@
         .radio-option input[type="radio"] {
             -webkit-appearance: none;
             appearance: none;
-            width: 52px;
-            height: 52px;
-            min-width: 52px;
+            width: 56px;
+            min-width: 56px;
             border: none;
             border-right: 2px solid rgba(196, 209, 199, 0.15);
             border-radius: 0;
@@ -482,8 +481,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             border: 2px solid rgba(196, 209, 199, 0.4);
             border-radius: 50%;
             transition: all 0.3s ease;
@@ -511,7 +510,9 @@
 
         .radio-option span {
             flex: 1;
-            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            padding: 18px 20px;
             font-weight: 500;
         }
 
