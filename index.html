@@ -474,7 +474,7 @@
 
         /* FAQ Section */
         .faq-section {
-            max-width: 800px;
+            max-width: 600px;
             margin: 100px auto;
             padding: 60px 40px;
             background: rgba(61, 79, 71, 0.6);
@@ -491,6 +491,124 @@
             margin-bottom: 50px;
             text-transform: uppercase;
         }
+
+               /* FAQ Section */
+        /* --- NEW REGISTRY STYLES --- */
+.registry-intro {
+    text-align: center;
+    color: #c4d1c7;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    line-height: 1.6;
+}
+
+        .registry-section h2 {
+            font-family: 'Cinzel', serif;
+            color: #c4d1c7;
+            font-size: 2.5rem;
+            letter-spacing: 4px;
+            text-align: center;
+            margin-bottom: 50px;
+            text-transform: uppercase;
+        }
+
+.registry-grid {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.registry-card {
+    background: rgba(196, 209, 199, 0.05); /* Subtle glass effect */
+    border: 1px solid rgba(196, 209, 199, 0.2);
+    border-radius: 8px;
+    padding: 30px;
+    width: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.registry-card:hover {
+    transform: translateY(-5px);
+    background: rgba(196, 209, 199, 0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.qr-container {
+    background: white; /* White background needed for QR scanning reliability */
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    width: 180px;
+    height: 180px;
+}
+
+.qr-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.registry-card h3 {
+    font-family: 'Cinzel', serif;
+    color: #c4d1c7;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+}
+
+.registry-handle {
+    font-family: 'Cormorant Garamond', serif;
+    color: #c4d1c7;
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    opacity: 0.9;
+    background: rgba(0,0,0,0.2);
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.registry-btn {
+    display: inline-block;
+    padding: 12px 25px;
+    text-decoration: none;
+    font-family: 'Cinzel', serif;
+    font-weight: bold;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    border-radius: 4px;
+    color: white;
+    transition: opacity 0.3s ease;
+    cursor: pointer;
+    border: none;
+    width: 100%;
+}
+
+.registry-btn:hover {
+    opacity: 0.9;
+}
+
+/* Specific Brand Colors for Recognition */
+.btn-venmo {
+    background-color: #008CFF; 
+    box-shadow: 0 4px 15px rgba(0, 140, 255, 0.3);
+}
+
+.btn-zelle {
+    background-color: #6d1ed4; 
+    box-shadow: 0 4px 15px rgba(109, 30, 212, 0.3);
+}
+
+@media (max-width: 600px) {
+    .registry-card {
+        width: 100%;
+    }
+}
 
         .faq-item {
             margin-bottom: 30px;
@@ -843,6 +961,41 @@
 Think elevated but comfortable: sundresses, midi dresses, jumpsuits, dressy separates, button-downs, slacks, or jackets. Light layers recommended for the evening.</div>
         </div>
     </section>
+
+    <!-- Registry Section -->
+ <section id="registry" class="registry-section">
+    <h2>Registry</h2>
+    <p class="registry-intro">
+        Your presence at our celebration truly means the world to us.<br>
+        If you’d like to contribute to our future together, we’ve kept things simple.
+    </p>
+
+    <div class="registry-grid">
+        
+        <div class="registry-card">
+            <div class="qr-container">
+                <img src="/images/venmo-qr.jpg" alt="Venmo QR Code">
+            </div>
+            <h3>Venmo</h3>
+            <p class="registry-handle">@celesti-hao</p>
+            <a href="https://venmo.com/u/celesti-hao" target="_blank" class="registry-btn btn-venmo">
+                Open Venmo
+            </a>
+        </div>
+
+        <div class="registry-card">
+            <div class="qr-container">
+                <img src="/images/zelle-qr.jpg" alt="Zelle QR Code">
+            </div>
+            <h3>Zelle</h3>
+            <p class="registry-handle" id="zelleHandle">celestihao@gmail.com</p>
+            <button onclick="copyZelleInfo()" class="registry-btn btn-zelle">
+                Copy Info
+            </button>
+        </div>
+
+    </div>
+</section>
 
     <!-- RSVP Modal -->
     <div id="rsvpModal" class="rsvp-modal">
