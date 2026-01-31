@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
   res.setHeader(
     'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization'
   );
 
   // Handle browser pre-flight checks
@@ -24,39 +24,82 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { name, email, phone, attending, guests, dietary, allergies } = req.body;
+    const { name, email, phone, attending, guests, guestNames, dietary, allergies } = req.body;
 
     // Validate required fields
-    if (!name || !email || !phone || !attending || !guests) {
+    if (!name || !email || !phone || !attending) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
+    // Normalize phone number (remove all non-digits for comparison)
+    const normalizedPhone = phone.replace(/\D/g, '');
+
     // Check for duplicate email
-    const existing = await sql`
-      SELECT email FROM rsvps WHERE LOWER(email) = LOWER(${email})
+    const existingEmail = await sql`
+      SELECT id, email FROM rsvps WHERE LOWER(email) = LOWER(${email})
     `;
 
-    if (existing.length > 0) {
-      return res.status(409).json({ 
-        error: 'An RSVP has already been submitted with this email address' 
+    if (existingEmail.length > 0) {
+      return res.status(409).json({
+        error: 'An RSVP has already been submitted with this email address. If you need to make changes, please contact us.'
       });
     }
 
-    // Insert RSVP
-    await sql`
-      INSERT INTO rsvps (name, email, phone, attending, guests, dietary, allergies, created_at)
-      VALUES (${name}, ${email}, ${phone}, ${attending}, ${guests}, ${dietary || null}, ${allergies || null}, NOW())
+    // Check for duplicate phone number
+    const existingPhone = await sql`
+      SELECT id, phone FROM rsvps WHERE REGEXP_REPLACE(phone, '[^0-9]', '', 'g') = ${normalizedPhone}
     `;
 
-    return res.status(200).json({ 
-      success: true, 
-      message: 'RSVP submitted successfully' 
+    if (existingPhone.length > 0) {
+      return res.status(409).json({
+        error: 'An RSVP has already been submitted with this phone number. If you need to make changes, please contact us.'
+      });
+    }
+
+    // Validate guest names if attending
+    if (attending === 'yes') {
+      if (!guests || guests < 1) {
+        return res.status(400).json({ error: 'Please specify the number of guests' });
+      }
+      if (!guestNames || !Array.isArray(guestNames) || guestNames.length !== guests) {
+        return res.status(400).json({ error: 'Please provide names for all guests in your party' });
+      }
+      // Check that all guest names are non-empty
+      for (let i = 0; i < guestNames.length; i++) {
+        if (!guestNames[i] || guestNames[i].trim() === '') {
+          return res.status(400).json({ error: `Please provide a name for Guest ${i + 1}` });
+        }
+      }
+    }
+
+    // Convert guest names array to JSON string for storage
+    const guestNamesJson = attending === 'yes' ? JSON.stringify(guestNames) : null;
+
+    // Insert RSVP
+    await sql`
+      INSERT INTO rsvps (name, email, phone, attending, guests, guest_names, dietary, allergies, created_at)
+      VALUES (
+        ${name},
+        ${email.toLowerCase()},
+        ${phone},
+        ${attending},
+        ${attending === 'yes' ? guests : 0},
+        ${guestNamesJson},
+        ${dietary || null},
+        ${allergies || null},
+        NOW()
+      )
+    `;
+
+    return res.status(200).json({
+      success: true,
+      message: 'RSVP submitted successfully'
     });
 
   } catch (error) {
     console.error('Database error:', error);
-    return res.status(500).json({ 
-      error: 'Failed to submit RSVP. Please try again.' 
+    return res.status(500).json({
+      error: 'Failed to submit RSVP. Please try again.'
     });
   }
 }

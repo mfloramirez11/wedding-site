@@ -61,7 +61,7 @@
             font-weight: 500;
         }
 
-        .form-group input {
+        .form-group input, .form-group select {
             width: 100%;
             padding: 12px 16px;
             border: 1px solid rgba(196, 209, 199, 0.3);
@@ -72,7 +72,7 @@
             transition: all 0.3s ease;
         }
 
-        .form-group input:focus {
+        .form-group input:focus, .form-group select:focus {
             outline: none;
             border-color: #c4d1c7;
             background: rgba(196, 209, 199, 0.15);
@@ -142,6 +142,7 @@
         .header-actions {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
 
         .btn {
@@ -172,6 +173,21 @@
         .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-danger {
+            background: rgba(232, 180, 160, 0.2);
+            color: #e8b4a0;
+            border: 1px solid rgba(232, 180, 160, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: rgba(232, 180, 160, 0.4);
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.8rem;
         }
 
         /* Stats Cards */
@@ -254,13 +270,18 @@
             color: rgba(196, 209, 199, 0.5);
         }
 
+        .table-scroll {
+            overflow-x: auto;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 1000px;
         }
 
         th, td {
-            padding: 15px 20px;
+            padding: 15px 12px;
             text-align: left;
         }
 
@@ -269,13 +290,15 @@
             color: #c4d1c7;
             font-weight: 600;
             text-transform: uppercase;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             letter-spacing: 1px;
+            white-space: nowrap;
         }
 
         td {
             border-bottom: 1px solid rgba(196, 209, 199, 0.1);
             color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
         }
 
         tr:hover td {
@@ -286,7 +309,7 @@
             display: inline-block;
             padding: 5px 12px;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
         }
@@ -299,6 +322,21 @@
         .status-badge.declined {
             background: rgba(232, 180, 160, 0.2);
             color: #e8b4a0;
+        }
+
+        .guest-list {
+            font-size: 0.85rem;
+            color: rgba(196, 209, 199, 0.8);
+        }
+
+        .guest-list li {
+            margin-left: 15px;
+            margin-bottom: 2px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
         }
 
         .loading {
@@ -330,16 +368,81 @@
             color: rgba(196, 209, 199, 0.5);
         }
 
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: rgba(61, 79, 71, 0.98);
+            border-radius: 15px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid rgba(196, 209, 199, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: #c4d1c7;
+            font-size: 1.4rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: rgba(196, 209, 199, 0.7);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: #e8b4a0;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(196, 209, 199, 0.1);
+        }
+
+        .guest-names-input {
+            margin-top: 10px;
+        }
+
+        .guest-names-input input {
+            margin-bottom: 8px;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
-            .table-container {
-                overflow-x: auto;
-            }
-
-            table {
-                min-width: 800px;
-            }
-
             .dashboard-header {
                 flex-direction: column;
                 align-items: flex-start;
@@ -347,6 +450,11 @@
 
             .search-box {
                 width: 100%;
+            }
+
+            .header-actions {
+                width: 100%;
+                justify-content: flex-start;
             }
         }
 
@@ -363,6 +471,40 @@
 
         .back-link:hover {
             color: #c4d1c7;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: #fff;
+            font-weight: 500;
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+        }
+
+        .toast.success {
+            background: rgba(168, 213, 162, 0.9);
+            color: #2d3e3a;
+        }
+
+        .toast.error {
+            background: rgba(232, 180, 160, 0.9);
+            color: #2d3e3a;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
     </style>
 </head>
@@ -435,8 +577,97 @@
                 <h2>All RSVPs</h2>
                 <input type="text" class="search-box" id="searchBox" placeholder="Search by name or email...">
             </div>
-            <div id="tableContent">
-                <div class="loading">Loading RSVPs</div>
+            <div class="table-scroll">
+                <div id="tableContent">
+                    <div class="loading">Loading RSVPs</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit RSVP</h2>
+                <button class="modal-close" onclick="closeEditModal()">&times;</button>
+            </div>
+            <form id="editForm">
+                <input type="hidden" id="editId">
+
+                <div class="form-group">
+                    <label>Primary Contact Name</label>
+                    <input type="text" id="editName" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="editEmail" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" id="editPhone" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Attending</label>
+                    <select id="editAttending" onchange="toggleEditGuestFields()">
+                        <option value="yes">Yes - Attending</option>
+                        <option value="no">No - Declined</option>
+                    </select>
+                </div>
+
+                <div id="editGuestSection">
+                    <div class="form-group">
+                        <label>Number of Guests</label>
+                        <select id="editGuests" onchange="updateEditGuestNameFields()">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Guest Names</label>
+                        <div id="editGuestNames" class="guest-names-input"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Dietary Restrictions</label>
+                        <input type="text" id="editDietary">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Allergies</label>
+                        <input type="text" id="editAllergies">
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Confirm Delete</h2>
+                <button class="modal-close" onclick="closeDeleteModal()">&times;</button>
+            </div>
+            <p style="color: rgba(196, 209, 199, 0.9); margin-bottom: 10px;">
+                Are you sure you want to delete this RSVP?
+            </p>
+            <p id="deleteInfo" style="color: #e8b4a0; font-weight: 500;"></p>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+                <button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
             </div>
         </div>
     </div>
@@ -450,6 +681,7 @@
 
         let rsvpData = [];
         let authToken = '';
+        let deleteId = null;
 
         // Check if already logged in
         document.addEventListener('DOMContentLoaded', () => {
@@ -467,18 +699,13 @@
 
             const username = document.getElementById('username').value.toLowerCase().trim();
             const password = document.getElementById('password').value;
-            const loginBtn = document.getElementById('loginBtn');
             const errorEl = document.getElementById('loginError');
 
-            // Hide previous error
             errorEl.style.display = 'none';
 
-            // Validate credentials
             if (VALID_USERS[username] && VALID_USERS[username] === password) {
-                // Generate token for API calls (use the API's expected token)
                 authToken = 'MannyAndCelesti2026';
                 sessionStorage.setItem('adminToken', authToken);
-
                 showDashboard();
                 loadRSVPs();
             } else {
@@ -500,15 +727,25 @@
             document.getElementById('loginForm').reset();
         }
 
+        function showToast(message, type = 'success') {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => toast.remove(), 3000);
+        }
+
         async function loadRSVPs() {
             const tableContent = document.getElementById('tableContent');
             tableContent.innerHTML = '<div class="loading">Loading RSVPs</div>';
 
             try {
                 const response = await fetch('/api/get-rsvps', {
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`
-                    }
+                    headers: { 'Authorization': `Bearer ${authToken}` }
                 });
 
                 if (!response.ok) {
@@ -522,7 +759,6 @@
                 const data = await response.json();
                 rsvpData = data.rsvps;
 
-                // Update stats
                 document.getElementById('statTotal').textContent = data.stats.total;
                 document.getElementById('statAttending').textContent = data.stats.attending;
                 document.getElementById('statDeclined').textContent = data.stats.declined;
@@ -533,6 +769,16 @@
             } catch (error) {
                 console.error('Error loading RSVPs:', error);
                 tableContent.innerHTML = '<div class="no-data">Failed to load RSVPs. Please try again.</div>';
+            }
+        }
+
+        function parseGuestNames(guestNames) {
+            if (!guestNames) return [];
+            if (Array.isArray(guestNames)) return guestNames;
+            try {
+                return JSON.parse(guestNames);
+            } catch {
+                return [];
             }
         }
 
@@ -548,18 +794,22 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Name</th>
+                            <th>Primary Contact</th>
                             <th>Email</th>
                             <th>Phone</th>
                             <th>Status</th>
                             <th>Guests</th>
+                            <th>Guest Names</th>
                             <th>Dietary</th>
                             <th>Allergies</th>
                             <th>Date</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        ${data.map(rsvp => `
+                        ${data.map(rsvp => {
+                            const guestNames = parseGuestNames(rsvp.guest_names);
+                            return `
                             <tr>
                                 <td>${escapeHtml(rsvp.name)}</td>
                                 <td>${escapeHtml(rsvp.email)}</td>
@@ -570,11 +820,24 @@
                                     </span>
                                 </td>
                                 <td>${rsvp.attending === 'yes' ? rsvp.guests : '-'}</td>
+                                <td>
+                                    ${guestNames.length > 0 ? `
+                                        <ul class="guest-list">
+                                            ${guestNames.map(name => `<li>${escapeHtml(name)}</li>`).join('')}
+                                        </ul>
+                                    ` : '-'}
+                                </td>
                                 <td>${escapeHtml(rsvp.dietary || '-')}</td>
                                 <td>${escapeHtml(rsvp.allergies || '-')}</td>
                                 <td>${formatDate(rsvp.created_at)}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn btn-secondary btn-small" onclick="openEditModal(${rsvp.id})">Edit</button>
+                                        <button class="btn btn-danger btn-small" onclick="openDeleteModal(${rsvp.id}, '${escapeHtml(rsvp.name)}')">Delete</button>
+                                    </div>
+                                </td>
                             </tr>
-                        `).join('')}
+                        `}).join('')}
                     </tbody>
                 </table>
             `;
@@ -594,9 +857,7 @@
             return date.toLocaleDateString('en-US', {
                 month: 'short',
                 day: 'numeric',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
+                year: 'numeric'
             });
         }
 
@@ -605,13 +866,156 @@
             const searchTerm = e.target.value.toLowerCase();
             const filtered = rsvpData.filter(rsvp =>
                 rsvp.name.toLowerCase().includes(searchTerm) ||
-                rsvp.email.toLowerCase().includes(searchTerm)
+                rsvp.email.toLowerCase().includes(searchTerm) ||
+                (rsvp.phone && rsvp.phone.includes(searchTerm))
             );
             renderTable(filtered);
         });
 
         function refreshData() {
             loadRSVPs();
+            showToast('Data refreshed');
+        }
+
+        // Edit Modal Functions
+        function openEditModal(id) {
+            const rsvp = rsvpData.find(r => r.id === id);
+            if (!rsvp) return;
+
+            document.getElementById('editId').value = rsvp.id;
+            document.getElementById('editName').value = rsvp.name;
+            document.getElementById('editEmail').value = rsvp.email;
+            document.getElementById('editPhone').value = rsvp.phone || '';
+            document.getElementById('editAttending').value = rsvp.attending;
+            document.getElementById('editGuests').value = rsvp.guests || 1;
+            document.getElementById('editDietary').value = rsvp.dietary || '';
+            document.getElementById('editAllergies').value = rsvp.allergies || '';
+
+            toggleEditGuestFields();
+
+            const guestNames = parseGuestNames(rsvp.guest_names);
+            updateEditGuestNameFields(guestNames);
+
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+        }
+
+        function toggleEditGuestFields() {
+            const attending = document.getElementById('editAttending').value;
+            const section = document.getElementById('editGuestSection');
+            section.style.display = attending === 'yes' ? 'block' : 'none';
+        }
+
+        function updateEditGuestNameFields(existingNames = []) {
+            const count = parseInt(document.getElementById('editGuests').value);
+            const container = document.getElementById('editGuestNames');
+            container.innerHTML = '';
+
+            for (let i = 0; i < count; i++) {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.name = `editGuest_${i}`;
+                input.id = `editGuest_${i}`;
+                input.placeholder = `Guest ${i + 1} name`;
+                input.value = existingNames[i] || '';
+                input.required = true;
+                container.appendChild(input);
+            }
+        }
+
+        document.getElementById('editForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const id = document.getElementById('editId').value;
+            const attending = document.getElementById('editAttending').value;
+
+            let guestNames = [];
+            if (attending === 'yes') {
+                const count = parseInt(document.getElementById('editGuests').value);
+                for (let i = 0; i < count; i++) {
+                    const input = document.getElementById(`editGuest_${i}`);
+                    if (input) guestNames.push(input.value.trim());
+                }
+            }
+
+            const data = {
+                id: parseInt(id),
+                name: document.getElementById('editName').value.trim(),
+                email: document.getElementById('editEmail').value.trim(),
+                phone: document.getElementById('editPhone').value.trim(),
+                attending: attending,
+                guests: attending === 'yes' ? parseInt(document.getElementById('editGuests').value) : 0,
+                guestNames: guestNames,
+                dietary: document.getElementById('editDietary').value.trim(),
+                allergies: document.getElementById('editAllergies').value.trim()
+            };
+
+            try {
+                const response = await fetch('/api/update-rsvp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    closeEditModal();
+                    loadRSVPs();
+                    showToast('RSVP updated successfully');
+                } else {
+                    showToast(result.error || 'Failed to update', 'error');
+                }
+            } catch (error) {
+                console.error('Update error:', error);
+                showToast('Failed to update RSVP', 'error');
+            }
+        });
+
+        // Delete Modal Functions
+        function openDeleteModal(id, name) {
+            deleteId = id;
+            document.getElementById('deleteInfo').textContent = `"${name}" will be permanently removed.`;
+            document.getElementById('deleteModal').classList.add('active');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('active');
+            deleteId = null;
+        }
+
+        async function confirmDelete() {
+            if (!deleteId) return;
+
+            try {
+                const response = await fetch('/api/delete-rsvp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ id: deleteId })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    closeDeleteModal();
+                    loadRSVPs();
+                    showToast('RSVP deleted successfully');
+                } else {
+                    showToast(result.error || 'Failed to delete', 'error');
+                }
+            } catch (error) {
+                console.error('Delete error:', error);
+                showToast('Failed to delete RSVP', 'error');
+            }
         }
 
         function exportCSV() {
@@ -620,19 +1024,23 @@
                 return;
             }
 
-            const headers = ['Name', 'Email', 'Phone', 'Attending', 'Guests', 'Dietary', 'Allergies', 'Date'];
+            const headers = ['Name', 'Email', 'Phone', 'Attending', 'Guests', 'Guest Names', 'Dietary', 'Allergies', 'Date'];
             const csvContent = [
                 headers.join(','),
-                ...rsvpData.map(rsvp => [
-                    `"${(rsvp.name || '').replace(/"/g, '""')}"`,
-                    `"${(rsvp.email || '').replace(/"/g, '""')}"`,
-                    `"${(rsvp.phone || '').replace(/"/g, '""')}"`,
-                    rsvp.attending === 'yes' ? 'Yes' : 'No',
-                    rsvp.attending === 'yes' ? rsvp.guests : 0,
-                    `"${(rsvp.dietary || '').replace(/"/g, '""')}"`,
-                    `"${(rsvp.allergies || '').replace(/"/g, '""')}"`,
-                    `"${formatDate(rsvp.created_at)}"`
-                ].join(','))
+                ...rsvpData.map(rsvp => {
+                    const guestNames = parseGuestNames(rsvp.guest_names);
+                    return [
+                        `"${(rsvp.name || '').replace(/"/g, '""')}"`,
+                        `"${(rsvp.email || '').replace(/"/g, '""')}"`,
+                        `"${(rsvp.phone || '').replace(/"/g, '""')}"`,
+                        rsvp.attending === 'yes' ? 'Yes' : 'No',
+                        rsvp.attending === 'yes' ? rsvp.guests : 0,
+                        `"${guestNames.join('; ').replace(/"/g, '""')}"`,
+                        `"${(rsvp.dietary || '').replace(/"/g, '""')}"`,
+                        `"${(rsvp.allergies || '').replace(/"/g, '""')}"`,
+                        `"${formatDate(rsvp.created_at)}"`
+                    ].join(',');
+                })
             ].join('\n');
 
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -641,6 +1049,15 @@
             link.download = `wedding-rsvps-${new Date().toISOString().split('T')[0]}.csv`;
             link.click();
         }
+
+        // Close modals when clicking outside
+        document.getElementById('editModal').addEventListener('click', (e) => {
+            if (e.target.id === 'editModal') closeEditModal();
+        });
+
+        document.getElementById('deleteModal').addEventListener('click', (e) => {
+            if (e.target.id === 'deleteModal') closeDeleteModal();
+        });
     </script>
 </body>
 </html>

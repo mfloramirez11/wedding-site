@@ -1009,7 +1009,7 @@ Think elevated but comfortable: sundresses, midi dresses, jumpsuits, dressy sepa
             <h2>RSVP</h2>
             <form id="rsvpForm" onsubmit="submitRSVP(event)">
                 <div class="form-group">
-                    <label>Name <span class="required">*</span></label>
+                    <label>Primary Contact Name <span class="required">*</span></label>
                     <input type="text" id="name" name="name" required placeholder="Your full name">
                 </div>
 
@@ -1027,35 +1027,46 @@ Think elevated but comfortable: sundresses, midi dresses, jumpsuits, dressy sepa
                     <label>Will you be attending? <span class="required">*</span></label>
                     <div class="radio-group">
                         <label class="radio-option">
-                            <input type="radio" name="attending" value="yes" required>
+                            <input type="radio" name="attending" value="yes" required onchange="toggleGuestFields()">
                             Joyfully Accept
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="attending" value="no" required>
+                            <input type="radio" name="attending" value="no" required onchange="toggleGuestFields()">
                             Regretfully Decline
                         </label>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Number of Guests <span class="required">*</span></label>
-                    <select id="guests" name="guests" required>
-                        <option value="1">Just me</option>
-                        <option value="2">Plus 1 guest</option>
-                        <option value="3">Plus 2 guests</option>
-                        <option value="4">Plus 3 guests</option>
-                        <option value="5">Plus 4 guests</option>
-                    </select>
-                </div>
+                <div id="guestSection" class="guest-section" style="display: none;">
+                    <div class="form-group">
+                        <label>Number of Guests in Your Party <span class="required">*</span></label>
+                        <select id="guestCount" name="guestCount" onchange="updateGuestNameFields()">
+                            <option value="1">1 Guest (Just me)</option>
+                            <option value="2">2 Guests</option>
+                            <option value="3">3 Guests</option>
+                            <option value="4">4 Guests</option>
+                            <option value="5">5 Guests</option>
+                        </select>
+                    </div>
 
-                <div class="form-group">
-                    <label>Dietary Restrictions</label>
-                    <input type="text" id="dietary" name="dietary" placeholder="Vegetarian, Vegan, Gluten-free, etc.">
-                </div>
+                    <div id="guestNamesContainer" class="guest-names-container">
+                        <label class="guest-names-label">Please provide the full name of each guest attending <span class="required">*</span></label>
+                        <div id="guestNameFields">
+                            <!-- Guest name fields will be dynamically generated -->
+                        </div>
+                    </div>
 
-                <div class="form-group">
-                    <label>Allergies</label>
-                    <input type="text" id="allergies" name="allergies" placeholder="Nuts, Dairy, Shellfish, etc.">
+                    <div class="form-group">
+                        <label>Dietary Restrictions</label>
+                        <input type="text" id="dietary" name="dietary" placeholder="Vegetarian, Vegan, Gluten-free, etc.">
+                        <small class="form-hint">Please note any dietary restrictions for your party</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Allergies</label>
+                        <input type="text" id="allergies" name="allergies" placeholder="Nuts, Dairy, Shellfish, etc.">
+                        <small class="form-hint">Please note any food allergies for your party</small>
+                    </div>
                 </div>
 
                 <button type="submit" class="submit-button">Submit RSVP</button>
@@ -1065,6 +1076,54 @@ Think elevated but comfortable: sundresses, midi dresses, jumpsuits, dressy sepa
             </form>
         </div>
     </div>
+
+    <style>
+        .guest-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(196, 209, 199, 0.3);
+        }
+        .guest-names-container {
+            margin-bottom: 20px;
+        }
+        .guest-names-label {
+            display: block;
+            margin-bottom: 12px;
+            color: #c4d1c7;
+            font-weight: 500;
+        }
+        .guest-name-field {
+            margin-bottom: 10px;
+        }
+        .guest-name-field input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid rgba(196, 209, 199, 0.3);
+            border-radius: 8px;
+            background: rgba(196, 209, 199, 0.1);
+            color: #fff;
+            font-size: 1rem;
+        }
+        .guest-name-field input:focus {
+            outline: none;
+            border-color: #c4d1c7;
+        }
+        .guest-name-field input::placeholder {
+            color: rgba(196, 209, 199, 0.5);
+        }
+        .guest-name-field label {
+            display: block;
+            margin-bottom: 5px;
+            color: rgba(196, 209, 199, 0.8);
+            font-size: 0.9rem;
+        }
+        .form-hint {
+            display: block;
+            margin-top: 5px;
+            color: rgba(196, 209, 199, 0.6);
+            font-size: 0.85rem;
+        }
+    </style>
 
     <script>
         function openRSVP() {
@@ -1084,33 +1143,108 @@ Think elevated but comfortable: sundresses, midi dresses, jumpsuits, dressy sepa
             }
         });
 
+        // Toggle guest fields based on attendance selection
+        function toggleGuestFields() {
+            const attending = document.querySelector('input[name="attending"]:checked');
+            const guestSection = document.getElementById('guestSection');
+
+            if (attending && attending.value === 'yes') {
+                guestSection.style.display = 'block';
+                updateGuestNameFields();
+            } else {
+                guestSection.style.display = 'none';
+            }
+        }
+
+        // Update guest name input fields based on selected count
+        function updateGuestNameFields() {
+            const count = parseInt(document.getElementById('guestCount').value);
+            const container = document.getElementById('guestNameFields');
+            const primaryName = document.getElementById('name').value.trim();
+
+            container.innerHTML = '';
+
+            for (let i = 1; i <= count; i++) {
+                const fieldDiv = document.createElement('div');
+                fieldDiv.className = 'guest-name-field';
+
+                const label = document.createElement('label');
+                label.textContent = i === 1 ? 'Guest 1 (Primary Contact)' : `Guest ${i}`;
+
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.name = `guest_${i}`;
+                input.id = `guest_${i}`;
+                input.required = true;
+                input.placeholder = i === 1 ? 'Primary guest full name' : `Guest ${i} full name`;
+
+                // Pre-fill first guest with primary contact name
+                if (i === 1 && primaryName) {
+                    input.value = primaryName;
+                }
+
+                fieldDiv.appendChild(label);
+                fieldDiv.appendChild(input);
+                container.appendChild(fieldDiv);
+            }
+        }
+
+        // Sync primary name to first guest field
+        document.getElementById('name').addEventListener('input', function() {
+            const guest1 = document.getElementById('guest_1');
+            if (guest1 && !guest1.dataset.edited) {
+                guest1.value = this.value;
+            }
+        });
+
         async function submitRSVP(event) {
             event.preventDefault();
-            
+
             const form = document.getElementById('rsvpForm');
             const errorMessage = document.getElementById('errorMessage');
             const successMessage = document.getElementById('successMessage');
             const submitButton = form.querySelector('.submit-button');
-            
+
             // Hide previous messages
             errorMessage.style.display = 'none';
             successMessage.style.display = 'none';
-            
+
+            const attending = form.attending.value;
+
+            // Collect guest names if attending
+            let guestNames = [];
+            if (attending === 'yes') {
+                const count = parseInt(document.getElementById('guestCount').value);
+                for (let i = 1; i <= count; i++) {
+                    const guestInput = document.getElementById(`guest_${i}`);
+                    if (guestInput) {
+                        const name = guestInput.value.trim();
+                        if (!name) {
+                            errorMessage.textContent = `Please enter the name for Guest ${i}`;
+                            errorMessage.style.display = 'block';
+                            return;
+                        }
+                        guestNames.push(name);
+                    }
+                }
+            }
+
             // Get form data
             const formData = {
                 name: form.name.value.trim(),
                 email: form.email.value.trim().toLowerCase(),
                 phone: form.phone.value.trim(),
-                attending: form.attending.value,
-                guests: parseInt(form.guests.value),
-                dietary: form.dietary.value.trim(),
-                allergies: form.allergies.value.trim()
+                attending: attending,
+                guests: attending === 'yes' ? parseInt(document.getElementById('guestCount').value) : 0,
+                guestNames: guestNames,
+                dietary: form.dietary ? form.dietary.value.trim() : '',
+                allergies: form.allergies ? form.allergies.value.trim() : ''
             };
-            
+
             // Disable submit button
             submitButton.disabled = true;
             submitButton.textContent = 'Submitting...';
-            
+
             try {
                 // Submit to API
                 const response = await fetch('/api/rsvp', {
@@ -1120,17 +1254,23 @@ Think elevated but comfortable: sundresses, midi dresses, jumpsuits, dressy sepa
                     },
                     body: JSON.stringify(formData)
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (response.ok) {
                     // Success
-                    successMessage.innerHTML = 'Thank you for submitting your RSVP! We look forward to seeing you.<br><br>If you have any questions or concerns, please contact us at<br><a href="tel:+13239723556" style="color: #c4d1c7; text-decoration: underline;">(323) 972-3556</a>';
+                    if (attending === 'yes') {
+                        successMessage.innerHTML = 'Thank you for submitting your RSVP! We look forward to celebrating with you.<br><br>If you have any questions or concerns, please contact us at<br><a href="tel:+13239723556" style="color: #c4d1c7; text-decoration: underline;">(323) 972-3556</a>';
+                    } else {
+                        successMessage.innerHTML = 'Thank you for letting us know. We\'ll miss you!<br><br>If anything changes, please contact us at<br><a href="tel:+13239723556" style="color: #c4d1c7; text-decoration: underline;">(323) 972-3556</a>';
+                    }
                     successMessage.style.display = 'block';
-                    
+
                     // Reset form
                     form.reset();
-                    
+                    document.getElementById('guestSection').style.display = 'none';
+                    document.getElementById('guestNameFields').innerHTML = '';
+
                     // Close modal after 5 seconds
                     setTimeout(() => {
                         closeRSVP();
