@@ -703,7 +703,7 @@
 }
 
 .btn-zelle {
-    background-color: #6d1ed4; 
+    background-color: #6d1ed4;
     box-shadow: 0 4px 15px rgba(109, 30, 212, 0.3);
 }
 
@@ -711,6 +711,130 @@
     .registry-card {
         width: 100%;
     }
+}
+
+/* Contact Section */
+.contact-intro {
+    text-align: center;
+    color: #c4d1c7;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    line-height: 1.6;
+    font-style: italic;
+}
+
+.contact-info-section {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.contact-item {
+    margin-bottom: 15px;
+}
+
+.contact-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #e8b4a0;
+    margin-bottom: 8px;
+}
+
+.contact-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    color: #c4d1c7;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.contact-value:hover {
+    color: #fff;
+}
+
+.vcard-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: #c4d1c7;
+    color: #3d4f47;
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-family: 'Lato', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    margin: 0 auto;
+    display: flex;
+}
+
+.vcard-btn:hover {
+    background: #d4e1d7;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.contact-divider {
+    height: 1px;
+    background: rgba(196, 209, 199, 0.2);
+    margin: 30px 0;
+}
+
+.rsvp-changes-box {
+    background: rgba(196, 209, 199, 0.08);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+}
+
+.rsvp-changes-box h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #c4d1c7;
+    margin-bottom: 12px;
+    font-weight: 400;
+}
+
+.rsvp-changes-box p {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 15px;
+    color: rgba(196, 209, 199, 0.85);
+}
+
+.modify-rsvp-link {
+    display: inline-block;
+    color: #e8b4a0;
+    text-decoration: none;
+    font-family: 'Lato', sans-serif;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.modify-rsvp-link:hover {
+    color: #f0c4b0;
+    text-decoration: underline;
+}
+
+.deadline-notice {
+    font-size: 0.95rem !important;
+    color: rgba(196, 209, 199, 0.6) !important;
+    margin-top: 10px;
+    margin-bottom: 0 !important;
+    font-style: italic;
+}
+
+.deadline-passed {
+    color: #e8b4a0 !important;
 }
 
         .faq-item {
@@ -912,7 +1036,7 @@
             <li><a href="#our-story">Our Story</a></li>
             <li><a href="#faq">FAQ</a></li>
             <li><a href="#registry">Registry</a></li>
-            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="#contact">Contact</a></li>
         </ul>
     </nav>
 
@@ -1068,7 +1192,7 @@ Think elevated but comfortable: sundresses, midi dresses, jumpsuits, dressy sepa
 
         <div class="faq-item">
             <div class="faq-question">Can I make changes to my RSVP?</div>
-            <div class="faq-answer">Yes! You can modify your RSVP <a href="modify-rsvp.html" style="color: #e8b4a0;">by clicking here</a> until March 15, 2026. After that date, please <a href="contact.html" style="color: #e8b4a0;">contact us</a> directly if you need to make changes.</div>
+            <div class="faq-answer">Yes! You can modify your RSVP <a href="modify-rsvp.html" style="color: #e8b4a0;">by clicking here</a> until March 15, 2026. After that date, please <a href="#contact" style="color: #e8b4a0;">contact us</a> directly if you need to make changes.</div>
         </div>
     </section>
 </div>
@@ -1108,6 +1232,37 @@ Think elevated but comfortable: sundresses, midi dresses, jumpsuits, dressy sepa
 
     </div>
 </section>
+</div>
+
+<div class="main-container">
+    <!-- Contact Section -->
+    <section id="contact" class="invitation-container">
+        <h2>Contact Us</h2>
+        <p class="contact-intro">Need to reach us? We're here to help!</p>
+
+        <div class="contact-info-section">
+            <div class="contact-item">
+                <div class="contact-label">Phone</div>
+                <a href="tel:+13239723556" class="contact-value">(323) 972-3556</a>
+            </div>
+        </div>
+
+        <button class="vcard-btn" onclick="downloadVCard()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+            </svg>
+            Save Our Contact
+        </button>
+
+        <div class="contact-divider"></div>
+
+        <div class="rsvp-changes-box">
+            <h3>Need to Change Your RSVP?</h3>
+            <p>If you need to make changes to your RSVP, you can do so easily by clicking below.</p>
+            <a href="modify-rsvp.html" class="modify-rsvp-link" id="modifyRsvpLink">Click here to modify your RSVP</a>
+            <p class="deadline-notice" id="deadlineNotice">Changes can be made until March 15, 2026</p>
+        </div>
+    </section>
 </div>
 
     <!-- RSVP Modal -->
@@ -1471,6 +1626,59 @@ Think elevated but comfortable: sundresses, midi dresses, jumpsuits, dressy sepa
                 submitButton.textContent = 'Submit RSVP';
             }
         }
+
+        // Copy Zelle info function
+        function copyZelleInfo() {
+            const zelleEmail = 'celestihao@gmail.com';
+            navigator.clipboard.writeText(zelleEmail).then(() => {
+                const btn = document.querySelector('.btn-zelle');
+                const originalText = btn.textContent;
+                btn.textContent = 'Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            });
+        }
+
+        // Download vCard function
+        function downloadVCard() {
+            const vcard = `BEGIN:VCARD
+VERSION:3.0
+N:Wedding;Manny & Celesti
+FN:Manny & Celesti Wedding
+TEL;TYPE=CELL:+13239723556
+NOTE:Wedding contact for Manny & Celesti - April 4, 2026
+END:VCARD`;
+
+            const blob = new Blob([vcard], { type: 'text/vcard' });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'Manny-Celesti-Wedding.vcf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // Check if RSVP deadline has passed
+        function checkDeadline() {
+            const deadline = new Date('2026-03-15T23:59:59');
+            const now = new Date();
+
+            const modifyLink = document.getElementById('modifyRsvpLink');
+            const deadlineNotice = document.getElementById('deadlineNotice');
+
+            if (modifyLink && deadlineNotice && now > deadline) {
+                modifyLink.style.display = 'none';
+                deadlineNotice.innerHTML = 'The deadline for RSVP changes (March 15) has passed.<br>Please contact us directly if you need to make changes.';
+                deadlineNotice.classList.add('deadline-passed');
+            }
+        }
+
+        // Run on page load
+        checkDeadline();
     </script>
 </body>
 </html>
