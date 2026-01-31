@@ -1,46 +1,45 @@
-import { neon } from '@neondatabase/serverless';
+import { sql } from '@vercel/postgres';
 
-export default async function handler(req, res) {
-  const sql = neon(process.env.DATABASE_URL);
-  // Only allow POST requests
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+export default async function handler(request, response) {
+  // 1. Handle CORS (Cross-Origin Resource Sharing)
+  response.setHeader('Access-Control-Allow-Credentials', true);
+  response.setHeader('Access-Control-Allow-Origin', '*');
+  response.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  response.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  );
+
+  // Handle browser pre-flight checks
+  if (request.method === 'OPTIONS') {
+    return response.status(200).end();
+  }
+
+  // 2. Only allow POST requests
+  if (request.method !== 'POST') {
+    return response.status(405).json({ error: 'Method Not Allowed' });
   }
 
   try {
-    const { name, email, phone, attending, guests, dietary, allergies } = req.body;
+    // 3. Get data from the frontend
+    const { name, email, phone, attending, guests, dietary, allergies } = request.body;
 
-    // Validate required fields
-    if (!name || !email || !phone || !attending || !guests) {
-      return res.status(400).json({ error: 'Missing required fields' });
+    // Validation (Optional but recommended)
+    if (!name || !email || !phone) {
+        return response.status(400).json({ error: 'Name, Email, and Phone are required.' });
     }
 
-    // Check for duplicate email
-    const existing = await sql`
-      SELECT email FROM rsvps WHERE LOWER(email) = LOWER(${email})
-    `;
-
-    if (existing.length > 0) {
-      return res.status(409).json({ 
-        error: 'An RSVP has already been submitted with this email address' 
-      });
-    }
-
-    // Insert RSVP
+    // 4. Insert into Vercel Postgres
+    // NOTE: Ensure your table name matches "rsvps" below
     await sql`
-      INSERT INTO rsvps (name, email, phone, attending, guests, dietary, allergies, created_at)
-      VALUES (${name}, ${email}, ${phone}, ${attending}, ${guests}, ${dietary || null}, ${allergies || null}, NOW())
+      INSERT INTO rsvps (name, email, phone, attending, guests, dietary, allergies)
+      VALUES (${name}, ${email}, ${phone}, ${attending}, ${guests}, ${dietary}, ${allergies});
     `;
 
-    return res.status(200).json({ 
-      success: true, 
-      message: 'RSVP submitted successfully' 
-    });
-
+    return response.status(200).json({ message: 'RSVP received successfully!' });
+    
   } catch (error) {
-    console.error('Database error:', error);
-    return res.status(500).json({ 
-      error: 'Failed to submit RSVP. Please try again.' 
-    });
+    console.error('Database Error:', error);
+    return response.status(500).json({ error: 'Internal Server Error' });
   }
 }
