@@ -1,6 +1,7 @@
-import { sql } from '@vercel/postgres';
+import { neon } from '@neondatabase/serverless';
 
 export default async function handler(req, res) {
+  const sql = neon(process.env.DATABASE_URL);
   // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -19,7 +20,7 @@ export default async function handler(req, res) {
       SELECT email FROM rsvps WHERE LOWER(email) = LOWER(${email})
     `;
 
-    if (existing.rows.length > 0) {
+    if (existing.length > 0) {
       return res.status(409).json({ 
         error: 'An RSVP has already been submitted with this email address' 
       });

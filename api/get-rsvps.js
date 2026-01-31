@@ -1,6 +1,7 @@
-import { sql } from '@vercel/postgres';
+import { neon } from '@neondatabase/serverless';
 
 export default async function handler(req, res) {
+  const sql = neon(process.env.DATABASE_URL);
   // Only allow GET requests
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -24,16 +25,16 @@ export default async function handler(req, res) {
 
     // Calculate statistics
     const stats = {
-      total: result.rows.length,
-      attending: result.rows.filter(r => r.attending === 'yes').length,
-      declined: result.rows.filter(r => r.attending === 'no').length,
-      totalGuests: result.rows
+      total: result.length,
+      attending: result.filter(r => r.attending === 'yes').length,
+      declined: result.filter(r => r.attending === 'no').length,
+      totalGuests: result
         .filter(r => r.attending === 'yes')
         .reduce((sum, r) => sum + (parseInt(r.guests) || 1), 0)
     };
 
     return res.status(200).json({ 
-      rsvps: result.rows,
+      rsvps: result,
       stats 
     });
 
