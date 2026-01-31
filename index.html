@@ -1137,7 +1137,7 @@ Think elevated but comfortable: sundresses, midi dresses, jumpsuits, dressy sepa
                     </div>
 
                     <div id="guestNamesContainer" class="guest-names-container">
-                        <label class="guest-names-label">Please provide details for each guest <span class="required">*</span></label>
+                        <label class="guest-names-label" id="guestDetailsLabel">Any dietary restrictions or allergies?</label>
                         <div id="guestNameFields">
                             <!-- Guest fields will be dynamically generated -->
                         </div>
@@ -1249,6 +1249,14 @@ Think elevated but comfortable: sundresses, midi dresses, jumpsuits, dressy sepa
             const count = parseInt(document.getElementById('guestCount').value);
             const container = document.getElementById('guestNameFields');
             const primaryName = document.getElementById('name').value.trim();
+            const label = document.getElementById('guestDetailsLabel');
+
+            // Update label based on guest count
+            if (count === 1) {
+                label.textContent = 'Any dietary restrictions or allergies?';
+            } else {
+                label.innerHTML = 'Please provide details for each guest <span class="required">*</span>';
+            }
 
             container.innerHTML = '';
 
@@ -1258,26 +1266,34 @@ Think elevated but comfortable: sundresses, midi dresses, jumpsuits, dressy sepa
 
                 const header = document.createElement('div');
                 header.className = 'guest-card-header';
-                header.textContent = i === 1 ? 'Guest 1 (Primary Contact)' : `Guest ${i}`;
+
+                if (i === 1) {
+                    // For primary contact (Guest 1), show their name from the form
+                    header.innerHTML = `<span style="opacity: 0.7;">Your dietary preferences</span>`;
+                    if (primaryName) {
+                        header.innerHTML = `${primaryName} <span style="opacity: 0.6; font-weight: normal;">(Primary Contact)</span>`;
+                    }
+                } else {
+                    header.textContent = `Guest ${i}`;
+                }
                 card.appendChild(header);
 
-                // Name field
-                const nameGroup = document.createElement('div');
-                nameGroup.className = 'form-group';
-                const nameLabel = document.createElement('label');
-                nameLabel.innerHTML = 'Full Name <span class="required">*</span>';
-                const nameInput = document.createElement('input');
-                nameInput.type = 'text';
-                nameInput.name = `guest_name_${i}`;
-                nameInput.id = `guest_name_${i}`;
-                nameInput.required = true;
-                nameInput.placeholder = 'Enter full name';
-                if (i === 1 && primaryName) {
-                    nameInput.value = primaryName;
+                // Name field - only show for guests 2 and above
+                if (i > 1) {
+                    const nameGroup = document.createElement('div');
+                    nameGroup.className = 'form-group';
+                    const nameLabel = document.createElement('label');
+                    nameLabel.innerHTML = 'Full Name <span class="required">*</span>';
+                    const nameInput = document.createElement('input');
+                    nameInput.type = 'text';
+                    nameInput.name = `guest_name_${i}`;
+                    nameInput.id = `guest_name_${i}`;
+                    nameInput.required = true;
+                    nameInput.placeholder = 'Enter full name';
+                    nameGroup.appendChild(nameLabel);
+                    nameGroup.appendChild(nameInput);
+                    card.appendChild(nameGroup);
                 }
-                nameGroup.appendChild(nameLabel);
-                nameGroup.appendChild(nameInput);
-                card.appendChild(nameGroup);
 
                 // Dietary field
                 const dietaryGroup = document.createElement('div');
@@ -1311,11 +1327,16 @@ Think elevated but comfortable: sundresses, midi dresses, jumpsuits, dressy sepa
             }
         }
 
-        // Sync primary name to first guest field
+        // Update guest 1 header when primary name changes
         document.getElementById('name').addEventListener('input', function() {
-            const guest1 = document.getElementById('guest_name_1');
-            if (guest1 && !guest1.dataset.edited) {
-                guest1.value = this.value;
+            const guestCard = document.querySelector('.guest-card-header');
+            if (guestCard && document.getElementById('guestCount').value === '1') {
+                const name = this.value.trim();
+                if (name) {
+                    guestCard.innerHTML = `${name} <span style="opacity: 0.6; font-weight: normal;">(Primary Contact)</span>`;
+                } else {
+                    guestCard.innerHTML = `<span style="opacity: 0.7;">Your dietary preferences</span>`;
+                }
             }
         });
 
@@ -1337,23 +1358,35 @@ Think elevated but comfortable: sundresses, midi dresses, jumpsuits, dressy sepa
             let guests = [];
             if (attending === 'yes') {
                 const count = parseInt(document.getElementById('guestCount').value);
+                const primaryName = form.name.value.trim();
+
                 for (let i = 1; i <= count; i++) {
-                    const nameInput = document.getElementById(`guest_name_${i}`);
                     const dietaryInput = document.getElementById(`guest_dietary_${i}`);
                     const allergyInput = document.getElementById(`guest_allergies_${i}`);
 
-                    if (nameInput) {
-                        const name = nameInput.value.trim();
-                        if (!name) {
-                            errorMessage.textContent = `Please enter the name for Guest ${i}`;
-                            errorMessage.style.display = 'block';
-                            return;
-                        }
+                    if (i === 1) {
+                        // Guest 1 uses the primary contact name
                         guests.push({
-                            name: name,
+                            name: primaryName,
                             dietary: dietaryInput ? dietaryInput.value.trim() : '',
                             allergies: allergyInput ? allergyInput.value.trim() : ''
                         });
+                    } else {
+                        // Guest 2+ has their own name field
+                        const nameInput = document.getElementById(`guest_name_${i}`);
+                        if (nameInput) {
+                            const name = nameInput.value.trim();
+                            if (!name) {
+                                errorMessage.textContent = `Please enter the name for Guest ${i}`;
+                                errorMessage.style.display = 'block';
+                                return;
+                            }
+                            guests.push({
+                                name: name,
+                                dietary: dietaryInput ? dietaryInput.value.trim() : '',
+                                allergies: allergyInput ? allergyInput.value.trim() : ''
+                            });
+                        }
                     }
                 }
             }
