@@ -87,7 +87,9 @@
         .photo-scroller {
             position: fixed;
             top: 80px;
-            width: 80px;
+            width: 18%;
+            min-width: 80px;
+            max-width: 250px;
             height: calc(100vh - 100px);
             overflow: hidden;
             opacity: 0;
@@ -96,11 +98,11 @@
         }
 
         .photo-scroller.left {
-            left: 2px;
+            left: 2%;
         }
 
         .photo-scroller.right {
-            right: 2px;
+            right: 2%;
         }
 
         .photo-track {
@@ -134,7 +136,9 @@
 
         .photo-item {
             width: 100%;
-            height: 180px;
+            height: 35vh;
+            min-height: 180px;
+            max-height: 400px;
             border-radius: 6px;
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
@@ -150,10 +154,11 @@
         /* Invitation card */
         .invitation-container {
             position: relative;
-            width: 100%;
-            max-width: 500px;
+            width: 90%;
+            max-width: 600px;
+            min-width: 280px;
             background: #3d4f47;
-            padding: 120px 40px 100px;
+            padding: 120px 50px 100px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
             overflow: hidden;
             z-index: 10;
@@ -277,6 +282,18 @@
         }
 
         /* Responsive */
+        @media (max-width: 1200px) {
+            .photo-scroller {
+                width: 15%;
+                min-width: 70px;
+            }
+
+            .photo-item {
+                height: 30vh;
+                min-height: 150px;
+            }
+        }
+
         @media (max-width: 768px) {
             nav {
                 padding: 15px 0;
@@ -296,17 +313,19 @@
             }
 
             .invitation-container {
-                padding: 90px 30px 75px;
-                max-width: 400px;
+                padding: 90px 35px 75px;
+                max-width: 450px;
             }
 
             .photo-scroller {
-                width: 70px;
+                width: 12%;
+                min-width: 60px;
                 top: 70px;
             }
 
             .photo-item {
-                height: 150px;
+                height: 25vh;
+                min-height: 120px;
             }
 
             .script-text {
@@ -348,15 +367,17 @@
         @media (max-width: 480px) {
             .invitation-container {
                 padding: 75px 25px 60px;
-                max-width: 280px;
+                max-width: 300px;
             }
 
             .photo-scroller {
-                width: 60px;
+                width: 18%;
+                min-width: 55px;
             }
 
             .photo-item {
-                height: 120px;
+                height: 20vh;
+                min-height: 100px;
             }
 
             .script-text {
@@ -427,46 +448,46 @@
     <!-- Left photo scroller -->
     <div class="photo-scroller left">
         <div class="photo-track">
-            <div class="photo-item"><img loading="eager" src="/images/4D693264-E0BA-4620-9622-98B47AC58FD2_4_5005_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/976FDBD9-C71C-4DD1-B024-FA97B2D73664_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/B9E7FA37-EBA7-4B8A-A87E-2180B8AA9CDA_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/CF5717A3-1427-4C50-8056-BCC9B95BD2B6_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/01C6380C-AAD9-4215-B0B3-72C6AB20D916_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/515D7E22-FD7E-475F-8E00-B02BC47FE704_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/54D23782-B980-4541-9BF1-CF348643795C_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/B8BCC5F2-4E81-4EE8-B154-CAEE557479A5_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/4D5A8638-F73B-4AC4-8778-A5278C8BC828_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/42D2FAE7-AFFC-4DB3-A6EE-F23091009D2F_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/85B8912A-FB61-4250-9B83-8D7E858A493A_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/0587F5A0-D753-4285-A1C4-A83C902051AE_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/DE79E046-12F6-4A54-959D-7C81B80E2E67_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/0852DFAA-36B8-478C-A23F-3DBEEA799C85_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/8B21D087-56BE-41D3-8876-FE78177EBA7F_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/0182ED3F-7DAD-4187-B3AD-38768CA7E776_4_5005_c.jpeg" alt="Memory"></div>
             <!-- Duplicate for seamless loop -->
-            <div class="photo-item"><img loading="eager" src="/images/4D693264-E0BA-4620-9622-98B47AC58FD2_4_5005_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/976FDBD9-C71C-4DD1-B024-FA97B2D73664_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/B9E7FA37-EBA7-4B8A-A87E-2180B8AA9CDA_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/CF5717A3-1427-4C50-8056-BCC9B95BD2B6_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/01C6380C-AAD9-4215-B0B3-72C6AB20D916_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/515D7E22-FD7E-475F-8E00-B02BC47FE704_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/54D23782-B980-4541-9BF1-CF348643795C_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/B8BCC5F2-4E81-4EE8-B154-CAEE557479A5_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/4D5A8638-F73B-4AC4-8778-A5278C8BC828_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/42D2FAE7-AFFC-4DB3-A6EE-F23091009D2F_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/85B8912A-FB61-4250-9B83-8D7E858A493A_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/0587F5A0-D753-4285-A1C4-A83C902051AE_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/DE79E046-12F6-4A54-959D-7C81B80E2E67_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/0852DFAA-36B8-478C-A23F-3DBEEA799C85_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/8B21D087-56BE-41D3-8876-FE78177EBA7F_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/0182ED3F-7DAD-4187-B3AD-38768CA7E776_4_5005_c.jpeg" alt="Memory"></div>
         </div>
     </div>
 
     <!-- Right photo scroller -->
     <div class="photo-scroller right">
         <div class="photo-track">
-            <div class="photo-item"><img loading="eager" src="/images/B37AB545-BEBE-40D9-B5E0-A3A422CD5CC6_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/33C12700-052B-4519-A9D2-6704197C800D_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/36AA0B74-3A15-4761-8D82-E6F520906E2F_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/52B08637-75E4-44F7-B80A-EC48FB94F1E5_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/334C424A-14ED-4705-87AF-7B019188853D_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/D9C024BE-11E3-4ADA-8A69-3F29644BCA13_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/1DA7E94F-ACD9-40A2-ABAA-F0DEF12EB1E1_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/CAB243D3-54A2-496E-8B87-33DBA6D0EE20_1_102_o.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/658706F7-2832-48C5-9EEE-8F888B2D5A7B_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/4D693264-E0BA-4620-9622-98B47AC58FD2_4_5005_c.jpeg" alt="Memory"></div>
             <div class="photo-item"><img loading="eager" src="/images/45E95932-DBC0-4A17-9A89-52C3448CBD2C_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/179791E5-6FB0-4AC9-8ADC-5E34EC7DC0B4_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/4D5A8638-F73B-4AC4-8778-A5278C8BC828_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/D731F66B-E11A-417F-88A9-8EECA18087E8_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/A1DAFFA5-AD9E-47FC-BBF8-EB56C4FB5B80_1_105_c.jpeg" alt="Memory"></div>
             <!-- Duplicate for seamless loop -->
-            <div class="photo-item"><img loading="eager" src="/images/B37AB545-BEBE-40D9-B5E0-A3A422CD5CC6_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/33C12700-052B-4519-A9D2-6704197C800D_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/36AA0B74-3A15-4761-8D82-E6F520906E2F_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/52B08637-75E4-44F7-B80A-EC48FB94F1E5_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/334C424A-14ED-4705-87AF-7B019188853D_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/D9C024BE-11E3-4ADA-8A69-3F29644BCA13_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/1DA7E94F-ACD9-40A2-ABAA-F0DEF12EB1E1_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/CAB243D3-54A2-496E-8B87-33DBA6D0EE20_1_102_o.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/658706F7-2832-48C5-9EEE-8F888B2D5A7B_1_105_c.jpeg" alt="Memory"></div>
+            <div class="photo-item"><img loading="eager" src="/images/4D693264-E0BA-4620-9622-98B47AC58FD2_4_5005_c.jpeg" alt="Memory"></div>
             <div class="photo-item"><img loading="eager" src="/images/45E95932-DBC0-4A17-9A89-52C3448CBD2C_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/179791E5-6FB0-4AC9-8ADC-5E34EC7DC0B4_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/4D5A8638-F73B-4AC4-8778-A5278C8BC828_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/D731F66B-E11A-417F-88A9-8EECA18087E8_1_105_c.jpeg" alt="Memory"></div>
-            <div class="photo-item"><img loading="eager" src="/images/A1DAFFA5-AD9E-47FC-BBF8-EB56C4FB5B80_1_105_c.jpeg" alt="Memory"></div>
         </div>
     </div>
 
