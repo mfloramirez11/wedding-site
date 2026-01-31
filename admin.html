@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Manny & Celesti Wedding RSVPs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .login-box h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+            color: #c4d1c7;
+        }
+
+        .login-box p {
+            text-align: center;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #c4d1c7;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #c4d1c7;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #c4d1c7 0%, #a8b5ab 100%);
+            border: none;
+            border-radius: 10px;
+            color: #1a1a2e;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(196, 209, 199, 0.4);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .error-message {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid rgba(255, 107, 107, 0.5);
+            color: #ff6b6b;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            display: none;
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .dashboard-header h1 {
+            color: #c4d1c7;
+            font-size: 1.8rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #c4d1c7 0%, #a8b5ab 100%);
+            color: #1a1a2e;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(196, 209, 199, 0.4);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #c4d1c7;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-card.attending .number { color: #4ade80; }
+        .stat-card.declined .number { color: #f87171; }
+        .stat-card.guests .number { color: #60a5fa; }
+
+        /* Table Styles */
+        .table-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .table-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .table-header h2 {
+            color: #c4d1c7;
+            font-size: 1.2rem;
+        }
+
+        .search-box {
+            padding: 10px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 0.9rem;
+            width: 250px;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #c4d1c7;
+        }
+
+        .search-box::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px 20px;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.2);
+            color: #c4d1c7;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        td {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-badge.attending {
+            background: rgba(74, 222, 128, 0.2);
+            color: #4ade80;
+        }
+
+        .status-badge.declined {
+            background: rgba(248, 113, 113, 0.2);
+            color: #f87171;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #c4d1c7;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .table-container {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 800px;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+        }
+
+        /* Back link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #c4d1c7;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-container" id="loginScreen">
+        <div class="login-box">
+            <h1>Wedding Admin</h1>
+            <p>Manny & Celesti's RSVP Dashboard</p>
+
+            <div class="error-message" id="loginError"></div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Enter username" required autocomplete="username">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter password" required autocomplete="current-password">
+                </div>
+
+                <button type="submit" class="login-btn" id="loginBtn">Sign In</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard" id="dashboard">
+        <a href="/" class="back-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Back to Website
+        </a>
+
+        <div class="dashboard-header">
+            <h1>RSVP Dashboard</h1>
+            <div class="header-actions">
+                <button class="btn btn-secondary" onclick="refreshData()">Refresh</button>
+                <button class="btn btn-primary" onclick="exportCSV()">Export CSV</button>
+                <button class="btn btn-secondary" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="number" id="statTotal">-</div>
+                <div class="label">Total Responses</div>
+            </div>
+            <div class="stat-card attending">
+                <div class="number" id="statAttending">-</div>
+                <div class="label">Attending</div>
+            </div>
+            <div class="stat-card declined">
+                <div class="number" id="statDeclined">-</div>
+                <div class="label">Declined</div>
+            </div>
+            <div class="stat-card guests">
+                <div class="number" id="statGuests">-</div>
+                <div class="label">Total Guests</div>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-container">
+            <div class="table-header">
+                <h2>All RSVPs</h2>
+                <input type="text" class="search-box" id="searchBox" placeholder="Search by name or email...">
+            </div>
+            <div id="tableContent">
+                <div class="loading">Loading RSVPs</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Valid credentials
+        const VALID_USERS = {
+            'manny': 'MannyAndCelesti2026!@',
+            'celesti': 'MannyAndCelesti2026!@'
+        };
+
+        let rsvpData = [];
+        let authToken = '';
+
+        // Check if already logged in
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedToken = sessionStorage.getItem('adminToken');
+            if (savedToken) {
+                authToken = savedToken;
+                showDashboard();
+                loadRSVPs();
+            }
+        });
+
+        // Login form handler
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value.toLowerCase().trim();
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const errorEl = document.getElementById('loginError');
+
+            // Hide previous error
+            errorEl.style.display = 'none';
+
+            // Validate credentials
+            if (VALID_USERS[username] && VALID_USERS[username] === password) {
+                // Generate token for API calls (use the API's expected token)
+                authToken = 'MannyAndCelesti2026';
+                sessionStorage.setItem('adminToken', authToken);
+
+                showDashboard();
+                loadRSVPs();
+            } else {
+                errorEl.textContent = 'Invalid username or password';
+                errorEl.style.display = 'block';
+            }
+        });
+
+        function showDashboard() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+        }
+
+        function logout() {
+            sessionStorage.removeItem('adminToken');
+            authToken = '';
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('loginForm').reset();
+        }
+
+        async function loadRSVPs() {
+            const tableContent = document.getElementById('tableContent');
+            tableContent.innerHTML = '<div class="loading">Loading RSVPs</div>';
+
+            try {
+                const response = await fetch('/api/get-rsvps', {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        logout();
+                        return;
+                    }
+                    throw new Error('Failed to load RSVPs');
+                }
+
+                const data = await response.json();
+                rsvpData = data.rsvps;
+
+                // Update stats
+                document.getElementById('statTotal').textContent = data.stats.total;
+                document.getElementById('statAttending').textContent = data.stats.attending;
+                document.getElementById('statDeclined').textContent = data.stats.declined;
+                document.getElementById('statGuests').textContent = data.stats.totalGuests;
+
+                renderTable(rsvpData);
+
+            } catch (error) {
+                console.error('Error loading RSVPs:', error);
+                tableContent.innerHTML = '<div class="no-data">Failed to load RSVPs. Please try again.</div>';
+            }
+        }
+
+        function renderTable(data) {
+            const tableContent = document.getElementById('tableContent');
+
+            if (data.length === 0) {
+                tableContent.innerHTML = '<div class="no-data">No RSVPs yet</div>';
+                return;
+            }
+
+            const tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Status</th>
+                            <th>Guests</th>
+                            <th>Dietary</th>
+                            <th>Allergies</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.map(rsvp => `
+                            <tr>
+                                <td>${escapeHtml(rsvp.name)}</td>
+                                <td>${escapeHtml(rsvp.email)}</td>
+                                <td>${escapeHtml(rsvp.phone || '-')}</td>
+                                <td>
+                                    <span class="status-badge ${rsvp.attending === 'yes' ? 'attending' : 'declined'}">
+                                        ${rsvp.attending === 'yes' ? 'Attending' : 'Declined'}
+                                    </span>
+                                </td>
+                                <td>${rsvp.attending === 'yes' ? rsvp.guests : '-'}</td>
+                                <td>${escapeHtml(rsvp.dietary || '-')}</td>
+                                <td>${escapeHtml(rsvp.allergies || '-')}</td>
+                                <td>${formatDate(rsvp.created_at)}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            tableContent.innerHTML = tableHTML;
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Search functionality
+        document.getElementById('searchBox').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filtered = rsvpData.filter(rsvp =>
+                rsvp.name.toLowerCase().includes(searchTerm) ||
+                rsvp.email.toLowerCase().includes(searchTerm)
+            );
+            renderTable(filtered);
+        });
+
+        function refreshData() {
+            loadRSVPs();
+        }
+
+        function exportCSV() {
+            if (rsvpData.length === 0) {
+                alert('No data to export');
+                return;
+            }
+
+            const headers = ['Name', 'Email', 'Phone', 'Attending', 'Guests', 'Dietary', 'Allergies', 'Date'];
+            const csvContent = [
+                headers.join(','),
+                ...rsvpData.map(rsvp => [
+                    `"${(rsvp.name || '').replace(/"/g, '""')}"`,
+                    `"${(rsvp.email || '').replace(/"/g, '""')}"`,
+                    `"${(rsvp.phone || '').replace(/"/g, '""')}"`,
+                    rsvp.attending === 'yes' ? 'Yes' : 'No',
+                    rsvp.attending === 'yes' ? rsvp.guests : 0,
+                    `"${(rsvp.dietary || '').replace(/"/g, '""')}"`,
+                    `"${(rsvp.allergies || '').replace(/"/g, '""')}"`,
+                    `"${formatDate(rsvp.created_at)}"`
+                ].join(','))
+            ].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `wedding-rsvps-${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+        }
+    </script>
+</body>
+</html>
