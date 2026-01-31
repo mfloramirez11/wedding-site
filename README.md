@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Manny & Celesti Wedding Website
 
 Wedding invitation website for mannyandcelesti.com
@@ -79,3 +80,6 @@ Or implement as single-page sections with smooth scrolling.
 - No external dependencies except Google Fonts
 - Site is fully static (no backend required)
 - File size is ~7-8MB due to embedded images
+=======
+# wedding-site
+>>>>>>> 3bb34f309f7a87f7654ec767a65b6ce3c3777fec
