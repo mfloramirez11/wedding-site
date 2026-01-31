@@ -5,9 +5,11 @@ CREATE TABLE IF NOT EXISTS rsvps (
   id SERIAL PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   email VARCHAR(255) NOT NULL UNIQUE,
-  phone VARCHAR(50),
+  phone VARCHAR(50) NOT NULL,
   attending VARCHAR(10) NOT NULL CHECK (attending IN ('yes', 'no')),
-  guests INTEGER DEFAULT 1 CHECK (guests >= 1 AND guests <= 10),
+  guests INTEGER NOT NULL CHECK (guests >= 1 AND guests <= 10),
+  dietary TEXT,
+  allergies TEXT,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

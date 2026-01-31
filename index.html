@@ -472,6 +472,53 @@
             color: #c4d1c7;
         }
 
+        /* FAQ Section */
+        .faq-section {
+            max-width: 800px;
+            margin: 100px auto;
+            padding: 60px 40px;
+            background: rgba(61, 79, 71, 0.6);
+            border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .faq-section h2 {
+            font-family: 'Cinzel', serif;
+            color: #c4d1c7;
+            font-size: 2.5rem;
+            letter-spacing: 4px;
+            text-align: center;
+            margin-bottom: 50px;
+            text-transform: uppercase;
+        }
+
+        .faq-item {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(196, 209, 199, 0.2);
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
+        .faq-question {
+            font-family: 'Cinzel', serif;
+            color: #c4d1c7;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .faq-answer {
+            color: #c4d1c7;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
         @keyframes fadeSlideIn {
             from {
                 opacity: 0;
@@ -641,8 +688,8 @@
     <nav>
         <ul>
             <li><a href="#home">Home</a></li>
-            <li><a href="#his-story">His Story</a></li>
-            <li><a href="#her-story">Her Story</a></li>
+            <li><a href="#our-story">Our Story</a></li>
+            <li><a href="#faq">FAQ</a></li>
             <li><a href="#registry">Registry</a></li>
         </ul>
     </nav>
@@ -756,6 +803,41 @@
         </div>
     </div>
 
+    <!-- FAQ Section -->
+    <section id="faq" class="faq-section">
+        <h2>FAQ</h2>
+        
+        <div class="faq-item">
+            <div class="faq-question">Are kids invited?</div>
+            <div class="faq-answer">Yes! We welcome children to celebrate with us.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Can I bring a plus-one?</div>
+            <div class="faq-answer">Yes, feel free to bring a guest. Please include them in your RSVP.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">What time does the ceremony end?</div>
+            <div class="faq-answer">The celebration will run until approximately 10:00 PM.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Is it indoors or outdoors?</div>
+            <div class="faq-answer">The ceremony and reception will be held outdoors, weather permitting, with indoor backup available.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">What's the weather like in April?</div>
+            <div class="faq-answer">Pinole in April typically has mild temperatures (60-70°F). We recommend bringing a light jacket for the evening.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Is there parking on-site?</div>
+            <div class="faq-answer">Yes, free parking is available on-site for all guests.</div>
+        </div>
+    </section>
+
     <!-- RSVP Modal -->
     <div id="rsvpModal" class="rsvp-modal">
         <div class="rsvp-content">
@@ -773,8 +855,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Phone Number</label>
-                    <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567">
+                    <label>Phone Number <span class="required">*</span></label>
+                    <input type="tel" id="phone" name="phone" required placeholder="(555) 123-4567">
                 </div>
 
                 <div class="form-group">
@@ -792,14 +874,24 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Number of Guests</label>
-                    <select id="guests" name="guests">
+                    <label>Number of Guests <span class="required">*</span></label>
+                    <select id="guests" name="guests" required>
                         <option value="1">Just me</option>
                         <option value="2">Plus 1 guest</option>
                         <option value="3">Plus 2 guests</option>
                         <option value="4">Plus 3 guests</option>
                         <option value="5">Plus 4 guests</option>
                     </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Dietary Restrictions</label>
+                    <input type="text" id="dietary" name="dietary" placeholder="Vegetarian, Vegan, Gluten-free, etc.">
+                </div>
+
+                <div class="form-group">
+                    <label>Allergies</label>
+                    <input type="text" id="allergies" name="allergies" placeholder="Nuts, Dairy, Shellfish, etc.">
                 </div>
 
                 <button type="submit" class="submit-button">Submit RSVP</button>
@@ -846,7 +938,9 @@
                 email: form.email.value.trim().toLowerCase(),
                 phone: form.phone.value.trim(),
                 attending: form.attending.value,
-                guests: parseInt(form.guests.value)
+                guests: parseInt(form.guests.value),
+                dietary: form.dietary.value.trim(),
+                allergies: form.allergies.value.trim()
             };
             
             // Disable submit button
@@ -867,17 +961,17 @@
                 
                 if (response.ok) {
                     // Success
-                    successMessage.textContent = 'Thank you! Your RSVP has been received.';
+                    successMessage.innerHTML = 'Thank you for submitting your RSVP! We look forward to seeing you.<br><br>If you have any questions or concerns, please contact us at<br><a href="tel:+13239723556" style="color: #c4d1c7; text-decoration: underline;">(323) 972-3556</a>';
                     successMessage.style.display = 'block';
                     
                     // Reset form
                     form.reset();
                     
-                    // Close modal after 2 seconds
+                    // Close modal after 5 seconds
                     setTimeout(() => {
                         closeRSVP();
                         successMessage.style.display = 'none';
-                    }, 2000);
+                    }, 5000);
                 } else {
                     // Error from server
                     errorMessage.textContent = data.error || 'Failed to submit RSVP. Please try again.';

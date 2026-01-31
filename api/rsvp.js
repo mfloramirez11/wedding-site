@@ -8,10 +8,10 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { name, email, phone, attending, guests } = req.body;
+    const { name, email, phone, attending, guests, dietary, allergies } = req.body;
 
     // Validate required fields
-    if (!name || !email || !attending) {
+    if (!name || !email || !phone || !attending || !guests) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
@@ -28,8 +28,8 @@ export default async function handler(req, res) {
 
     // Insert RSVP
     await sql`
-      INSERT INTO rsvps (name, email, phone, attending, guests, created_at)
-      VALUES (${name}, ${email}, ${phone || null}, ${attending}, ${guests || 1}, NOW())
+      INSERT INTO rsvps (name, email, phone, attending, guests, dietary, allergies, created_at)
+      VALUES (${name}, ${email}, ${phone}, ${attending}, ${guests}, ${dietary || null}, ${allergies || null}, NOW())
     `;
 
     return res.status(200).json({ 
