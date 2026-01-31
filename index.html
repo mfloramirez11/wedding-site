@@ -433,16 +433,16 @@
         .radio-option {
             display: flex;
             align-items: center;
-            gap: 14px;
             color: #c4d1c7;
             font-family: 'Lato', sans-serif;
             font-size: 1rem;
             cursor: pointer;
-            padding: 16px 20px;
+            padding: 0;
             background: rgba(196, 209, 199, 0.08);
             border: 2px solid rgba(196, 209, 199, 0.25);
             border-radius: 12px;
             transition: all 0.3s ease;
+            overflow: hidden;
         }
 
         .radio-option:hover {
@@ -458,12 +458,13 @@
         .radio-option input[type="radio"] {
             -webkit-appearance: none;
             appearance: none;
-            width: 22px;
-            height: 22px;
-            min-width: 22px;
-            border: 2px solid rgba(196, 209, 199, 0.4);
-            border-radius: 50%;
-            background: transparent;
+            width: 52px;
+            height: 52px;
+            min-width: 52px;
+            border: none;
+            border-right: 2px solid rgba(196, 209, 199, 0.15);
+            border-radius: 0;
+            background: rgba(196, 209, 199, 0.05);
             cursor: pointer;
             position: relative;
             transition: all 0.3s ease;
@@ -471,8 +472,24 @@
         }
 
         .radio-option input[type="radio"]:checked {
+            background: rgba(196, 209, 199, 0.1);
+        }
+
+        .radio-option input[type="radio"]::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(196, 209, 199, 0.4);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .radio-option input[type="radio"]:checked::before {
             border-color: #c4d1c7;
-            background: transparent;
         }
 
         .radio-option input[type="radio"]:checked::after {
@@ -489,11 +506,11 @@
 
         .radio-option input[type="radio"]:focus {
             outline: none;
-            border-color: #c4d1c7;
-            box-shadow: 0 0 0 3px rgba(196, 209, 199, 0.2);
         }
 
         .radio-option span {
+            flex: 1;
+            padding: 16px 20px;
             font-weight: 500;
         }
 
