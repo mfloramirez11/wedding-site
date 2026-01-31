@@ -153,7 +153,7 @@
             width: 100%;
             max-width: 500px;
             background: #3d4f47;
-            padding: 100px 40px 80px;
+            padding: 80px 40px 70px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
             overflow: hidden;
             z-index: 10;
@@ -168,22 +168,22 @@
         /* Botanical decorations */
         .botanical-top {
             position: absolute;
-            top: 30px;
+            top: 20px;
             left: 50%;
             transform: translateX(-50%);
-            width: 160px;
-            height: 80px;
+            width: 120px;
+            height: 60px;
             opacity: 0;
             animation: fadeIn 1.5s ease-out 0.5s forwards;
         }
 
         .botanical-bottom {
             position: absolute;
-            bottom: 30px;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            width: 80px;
-            height: 80px;
+            width: 50px;
+            height: 50px;
             opacity: 0;
             animation: fadeIn 1.5s ease-out 0.8s forwards;
         }
@@ -215,7 +215,7 @@
         }
 
         .names {
-            margin-bottom: 60px;
+            margin-bottom: 50px;
         }
 
         .name {
@@ -296,7 +296,7 @@
             }
 
             .invitation-container {
-                padding: 80px 30px 60px;
+                padding: 60px 30px 50px;
                 max-width: 400px;
             }
 
@@ -311,6 +311,10 @@
 
             .script-text {
                 font-size: 1.3rem;
+                margin-bottom: 30px;
+            }
+
+            .names {
                 margin-bottom: 35px;
             }
 
@@ -321,17 +325,29 @@
 
             .and {
                 font-size: 1.2rem;
-                margin: 20px 0;
+                margin: 18px 0;
             }
 
             .details {
                 font-size: 0.95rem;
             }
+
+            .botanical-top {
+                width: 100px;
+                height: 50px;
+                top: 15px;
+            }
+
+            .botanical-bottom {
+                width: 45px;
+                height: 45px;
+                bottom: 15px;
+            }
         }
 
         @media (max-width: 480px) {
             .invitation-container {
-                padding: 70px 25px 50px;
+                padding: 50px 25px 40px;
                 max-width: 280px;
             }
 
@@ -345,6 +361,10 @@
 
             .script-text {
                 font-size: 1.1rem;
+                margin-bottom: 25px;
+            }
+
+            .names {
                 margin-bottom: 30px;
             }
 
@@ -355,6 +375,7 @@
 
             .and {
                 font-size: 1.1rem;
+                margin: 15px 0;
             }
 
             .details {
@@ -362,13 +383,15 @@
             }
 
             .botanical-top {
-                width: 120px;
-                height: 60px;
+                width: 80px;
+                height: 40px;
+                top: 10px;
             }
 
             .botanical-bottom {
-                width: 60px;
-                height: 60px;
+                width: 35px;
+                height: 35px;
+                bottom: 10px;
             }
         }
 
