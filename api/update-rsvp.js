@@ -30,7 +30,7 @@ export default async function handler(req, res) {
   const sql = neon(process.env.DATABASE_URL);
 
   try {
-    const { id, name, email, phone, attending, guests, guestNames, dietary, allergies } = req.body;
+    const { id, name, email, phone, attending, guests, guestData, guestNames, dietary, allergies } = req.body;
 
     if (!id) {
       return res.status(400).json({ error: 'Missing RSVP ID' });
@@ -64,10 +64,21 @@ export default async function handler(req, res) {
       }
     }
 
-    // Convert guest names array to JSON string for storage
-    const guestNamesJson = guestNames ? JSON.stringify(guestNames) : existing[0].guest_names;
+    // Handle guest data - supports both new format (guestData with per-guest dietary/allergies)
+    // and legacy format (guestNames array of strings)
+    let guestNamesJson;
+    if (guestData && Array.isArray(guestData)) {
+      // New format: array of { name, dietary, allergies } objects
+      guestNamesJson = JSON.stringify(guestData);
+    } else if (guestNames && Array.isArray(guestNames)) {
+      // Legacy format: array of strings - convert to new format
+      guestNamesJson = JSON.stringify(guestNames.map(n => ({ name: n, dietary: '', allergies: '' })));
+    } else {
+      guestNamesJson = existing[0].guest_names;
+    }
 
     // Update the RSVP
+    // Note: dietary and allergies columns kept for backwards compatibility but now stored per-guest
     await sql`
       UPDATE rsvps SET
         name = ${name || existing[0].name},

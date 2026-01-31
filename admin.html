@@ -391,6 +391,36 @@
             padding: 2px 0;
         }
 
+        .guest-details-list {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .guest-detail-card {
+            background: rgba(196, 209, 199, 0.08);
+            border-radius: 8px;
+            padding: 10px 12px;
+            border-left: 3px solid rgba(196, 209, 199, 0.3);
+        }
+
+        .guest-detail-name {
+            font-weight: 500;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .guest-detail-info {
+            font-size: 0.85rem;
+            color: rgba(196, 209, 199, 0.8);
+            margin-top: 2px;
+        }
+
+        .guest-detail-info .info-label {
+            color: rgba(196, 209, 199, 0.6);
+        }
+
         .rsvp-card-actions {
             display: flex;
             border-top: 1px solid rgba(196, 209, 199, 0.1);
@@ -535,6 +565,45 @@
 
         .guest-names-input input {
             margin-bottom: 0;
+        }
+
+        .edit-guest-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .edit-guest-card {
+            background: rgba(196, 209, 199, 0.05);
+            border: 1px solid rgba(196, 209, 199, 0.15);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .edit-guest-card-header {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #c4d1c7;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(196, 209, 199, 0.1);
+        }
+
+        .edit-guest-card .form-group {
+            margin-bottom: 12px;
+        }
+
+        .edit-guest-card .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .edit-guest-card .form-group label {
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+        }
+
+        .edit-guest-card .form-group input {
+            padding: 10px 12px;
         }
 
         /* Back link */
@@ -861,7 +930,7 @@
                 <div id="editGuestSection">
                     <div class="form-group">
                         <label>Number of Guests</label>
-                        <select id="editGuests" onchange="updateEditGuestNameFields()">
+                        <select id="editGuests" onchange="updateEditGuestFields()">
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -871,18 +940,8 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Guest Names</label>
-                        <div id="editGuestNames" class="guest-names-input"></div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Dietary Restrictions</label>
-                        <input type="text" id="editDietary" placeholder="Optional">
-                    </div>
-
-                    <div class="form-group">
-                        <label>Allergies</label>
-                        <input type="text" id="editAllergies" placeholder="Optional">
+                        <label>Guest Details</label>
+                        <div id="editGuestFields" class="edit-guest-fields"></div>
                     </div>
                 </div>
 
@@ -1020,14 +1079,26 @@
             }
         }
 
-        function parseGuestNames(guestNames) {
+        function parseGuestData(guestNames) {
             if (!guestNames) return [];
             if (Array.isArray(guestNames)) return guestNames;
             try {
-                return JSON.parse(guestNames);
+                const parsed = JSON.parse(guestNames);
+                // Handle both old format (array of strings) and new format (array of objects)
+                if (parsed.length > 0 && typeof parsed[0] === 'string') {
+                    // Old format: convert to new format
+                    return parsed.map(name => ({ name, dietary: '', allergies: '' }));
+                }
+                return parsed;
             } catch {
                 return [];
             }
+        }
+
+        // Legacy function for backwards compatibility
+        function parseGuestNames(guestNames) {
+            const guests = parseGuestData(guestNames);
+            return guests.map(g => typeof g === 'string' ? g : g.name);
         }
 
         function renderCards(data) {
@@ -1041,7 +1112,7 @@
             const cardsHTML = `
                 <div class="rsvp-list">
                     ${data.map(rsvp => {
-                        const guestNames = parseGuestNames(rsvp.guest_names);
+                        const guests = parseGuestData(rsvp.guest_names);
                         return `
                         <div class="rsvp-card">
                             <div class="rsvp-card-header">
@@ -1059,26 +1130,25 @@
                             ${rsvp.attending === 'yes' ? `
                             <div class="rsvp-card-details">
                                 <div class="rsvp-detail-row">
-                                    <span class="rsvp-detail-label">Guests</span>
-                                    <span class="rsvp-detail-value">${rsvp.guests}</span>
+                                    <span class="rsvp-detail-label">Party Size</span>
+                                    <span class="rsvp-detail-value">${rsvp.guests} guest${rsvp.guests > 1 ? 's' : ''}</span>
                                 </div>
-                                <div class="rsvp-detail-row">
-                                    <span class="rsvp-detail-label">Names</span>
-                                    <span class="rsvp-detail-value">
-                                        ${guestNames.length > 0 ? `
-                                            <ul class="guest-names-list">
-                                                ${guestNames.map(name => `<li>${escapeHtml(name)}</li>`).join('')}
-                                            </ul>
-                                        ` : '-'}
-                                    </span>
-                                </div>
-                                <div class="rsvp-detail-row">
-                                    <span class="rsvp-detail-label">Dietary</span>
-                                    <span class="rsvp-detail-value">${escapeHtml(rsvp.dietary || '-')}</span>
-                                </div>
-                                <div class="rsvp-detail-row">
-                                    <span class="rsvp-detail-label">Allergies</span>
-                                    <span class="rsvp-detail-value">${escapeHtml(rsvp.allergies || '-')}</span>
+                                <div class="rsvp-detail-row" style="flex-direction: column; align-items: flex-start;">
+                                    <span class="rsvp-detail-label" style="margin-bottom: 8px;">Guest Details</span>
+                                    <div class="guest-details-list">
+                                        ${guests.length > 0 ? guests.map((guest, idx) => {
+                                            const guestName = typeof guest === 'string' ? guest : guest.name;
+                                            const dietary = typeof guest === 'object' ? guest.dietary : '';
+                                            const allergies = typeof guest === 'object' ? guest.allergies : '';
+                                            return `
+                                            <div class="guest-detail-card">
+                                                <div class="guest-detail-name">${escapeHtml(guestName)}</div>
+                                                ${dietary ? `<div class="guest-detail-info"><span class="info-label">Dietary:</span> ${escapeHtml(dietary)}</div>` : ''}
+                                                ${allergies ? `<div class="guest-detail-info"><span class="info-label">Allergies:</span> ${escapeHtml(allergies)}</div>` : ''}
+                                                ${!dietary && !allergies ? `<div class="guest-detail-info" style="opacity: 0.5;">No dietary restrictions</div>` : ''}
+                                            </div>
+                                        `}).join('') : '<div style="opacity: 0.6;">No guest details provided</div>'}
+                                    </div>
                                 </div>
                             </div>
                             ` : ''}
@@ -1138,6 +1208,8 @@
         }
 
         // Edit Modal Functions
+        let currentEditGuests = [];
+
         function openEditModal(id) {
             const rsvp = rsvpData.find(r => r.id === id);
             if (!rsvp) return;
@@ -1148,13 +1220,12 @@
             document.getElementById('editPhone').value = rsvp.phone || '';
             document.getElementById('editAttending').value = rsvp.attending;
             document.getElementById('editGuests').value = rsvp.guests || 1;
-            document.getElementById('editDietary').value = rsvp.dietary || '';
-            document.getElementById('editAllergies').value = rsvp.allergies || '';
 
-            toggleEditGuestFields();
+            toggleEditGuestSection();
 
-            const guestNames = parseGuestNames(rsvp.guest_names);
-            updateEditGuestNameFields(guestNames);
+            // Parse guest data (handles both old and new format)
+            currentEditGuests = parseGuestData(rsvp.guest_names);
+            updateEditGuestFields();
 
             document.getElementById('editModal').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -1163,28 +1234,44 @@
         function closeEditModal() {
             document.getElementById('editModal').classList.remove('active');
             document.body.style.overflow = '';
+            currentEditGuests = [];
         }
 
-        function toggleEditGuestFields() {
+        function toggleEditGuestSection() {
             const attending = document.getElementById('editAttending').value;
             const section = document.getElementById('editGuestSection');
             section.style.display = attending === 'yes' ? 'block' : 'none';
         }
 
-        function updateEditGuestNameFields(existingNames = []) {
+        function updateEditGuestFields() {
             const count = parseInt(document.getElementById('editGuests').value);
-            const container = document.getElementById('editGuestNames');
+            const container = document.getElementById('editGuestFields');
             container.innerHTML = '';
 
             for (let i = 0; i < count; i++) {
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.name = `editGuest_${i}`;
-                input.id = `editGuest_${i}`;
-                input.placeholder = `Guest ${i + 1} name`;
-                input.value = existingNames[i] || '';
-                input.required = true;
-                container.appendChild(input);
+                const existingGuest = currentEditGuests[i] || { name: '', dietary: '', allergies: '' };
+                const guestName = typeof existingGuest === 'string' ? existingGuest : existingGuest.name;
+                const dietary = typeof existingGuest === 'object' ? existingGuest.dietary : '';
+                const allergies = typeof existingGuest === 'object' ? existingGuest.allergies : '';
+
+                const card = document.createElement('div');
+                card.className = 'edit-guest-card';
+                card.innerHTML = `
+                    <div class="edit-guest-card-header">Guest ${i + 1}${i === 0 ? ' (Primary)' : ''}</div>
+                    <div class="form-group">
+                        <label>Name *</label>
+                        <input type="text" id="editGuest_name_${i}" value="${escapeHtml(guestName)}" placeholder="Full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Dietary Restrictions</label>
+                        <input type="text" id="editGuest_dietary_${i}" value="${escapeHtml(dietary)}" placeholder="Optional">
+                    </div>
+                    <div class="form-group">
+                        <label>Allergies</label>
+                        <input type="text" id="editGuest_allergies_${i}" value="${escapeHtml(allergies)}" placeholder="Optional">
+                    </div>
+                `;
+                container.appendChild(card);
             }
         }
 
@@ -1194,12 +1281,21 @@
             const id = document.getElementById('editId').value;
             const attending = document.getElementById('editAttending').value;
 
-            let guestNames = [];
+            let guestData = [];
             if (attending === 'yes') {
                 const count = parseInt(document.getElementById('editGuests').value);
                 for (let i = 0; i < count; i++) {
-                    const input = document.getElementById(`editGuest_${i}`);
-                    if (input) guestNames.push(input.value.trim());
+                    const nameInput = document.getElementById(`editGuest_name_${i}`);
+                    const dietaryInput = document.getElementById(`editGuest_dietary_${i}`);
+                    const allergyInput = document.getElementById(`editGuest_allergies_${i}`);
+
+                    if (nameInput) {
+                        guestData.push({
+                            name: nameInput.value.trim(),
+                            dietary: dietaryInput ? dietaryInput.value.trim() : '',
+                            allergies: allergyInput ? allergyInput.value.trim() : ''
+                        });
+                    }
                 }
             }
 
@@ -1210,9 +1306,7 @@
                 phone: document.getElementById('editPhone').value.trim(),
                 attending: attending,
                 guests: attending === 'yes' ? parseInt(document.getElementById('editGuests').value) : 0,
-                guestNames: guestNames,
-                dietary: document.getElementById('editDietary').value.trim(),
-                allergies: document.getElementById('editAllergies').value.trim()
+                guestData: guestData
             };
 
             try {
@@ -1288,20 +1382,31 @@
                 return;
             }
 
-            const headers = ['Name', 'Email', 'Phone', 'Attending', 'Guests', 'Guest Names', 'Dietary', 'Allergies', 'Date'];
+            const headers = ['Primary Contact', 'Email', 'Phone', 'Attending', 'Party Size', 'Guest Details', 'Date'];
             const csvContent = [
                 headers.join(','),
                 ...rsvpData.map(rsvp => {
-                    const guestNames = parseGuestNames(rsvp.guest_names);
+                    const guests = parseGuestData(rsvp.guest_names);
+                    // Format guest details with dietary info
+                    const guestDetails = guests.map(g => {
+                        const name = typeof g === 'string' ? g : g.name;
+                        const dietary = typeof g === 'object' && g.dietary ? g.dietary : '';
+                        const allergies = typeof g === 'object' && g.allergies ? g.allergies : '';
+                        let detail = name;
+                        if (dietary || allergies) {
+                            const restrictions = [dietary, allergies].filter(Boolean).join(', ');
+                            detail += ` (${restrictions})`;
+                        }
+                        return detail;
+                    }).join('; ');
+
                     return [
                         `"${(rsvp.name || '').replace(/"/g, '""')}"`,
                         `"${(rsvp.email || '').replace(/"/g, '""')}"`,
                         `"${(rsvp.phone || '').replace(/"/g, '""')}"`,
                         rsvp.attending === 'yes' ? 'Yes' : 'No',
                         rsvp.attending === 'yes' ? rsvp.guests : 0,
-                        `"${guestNames.join('; ').replace(/"/g, '""')}"`,
-                        `"${(rsvp.dietary || '').replace(/"/g, '""')}"`,
-                        `"${(rsvp.allergies || '').replace(/"/g, '""')}"`,
+                        `"${guestDetails.replace(/"/g, '""')}"`,
                         `"${formatDate(rsvp.created_at)}"`
                     ].join(',');
                 })

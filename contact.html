@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - Manny & Celesti Wedding</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cinzel:wght@400;500&family=Lato:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #2d3e3a 0%, #455951 100%);
+            font-family: 'Cormorant Garamond', serif;
+            color: #c4d1c7;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(61, 79, 71, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #c4d1c7;
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #c4d1c7;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #ffffff;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Main container */
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 120px 20px 50px;
+        }
+
+        .contact-card {
+            background: rgba(61, 79, 71, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 50px 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(196, 209, 199, 0.2);
+        }
+
+        .contact-card h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            color: #c4d1c7;
+            margin-bottom: 10px;
+            font-weight: 400;
+        }
+
+        .contact-card .subtitle {
+            font-size: 1.1rem;
+            color: rgba(196, 209, 199, 0.7);
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .contact-section {
+            margin-bottom: 30px;
+        }
+
+        .contact-section h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #e8b4a0;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .contact-info {
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+
+        .contact-info a {
+            color: #c4d1c7;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-info a:hover {
+            color: #fff;
+        }
+
+        .vcard-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: #c4d1c7;
+            color: #3d4f47;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-family: 'Lato', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            margin-top: 10px;
+        }
+
+        .vcard-btn:hover {
+            background: #d4e1d7;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .vcard-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .divider {
+            height: 1px;
+            background: rgba(196, 209, 199, 0.2);
+            margin: 30px 0;
+        }
+
+        .rsvp-changes-section {
+            background: rgba(196, 209, 199, 0.08);
+            border-radius: 12px;
+            padding: 24px;
+            margin-top: 30px;
+        }
+
+        .rsvp-changes-section h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #c4d1c7;
+            margin-bottom: 12px;
+            font-weight: 400;
+        }
+
+        .rsvp-changes-section p {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: rgba(196, 209, 199, 0.85);
+        }
+
+        .modify-rsvp-link {
+            display: inline-block;
+            color: #e8b4a0;
+            text-decoration: none;
+            font-weight: 500;
+            font-family: 'Lato', sans-serif;
+            transition: color 0.3s ease;
+        }
+
+        .modify-rsvp-link:hover {
+            color: #f0c4b0;
+            text-decoration: underline;
+        }
+
+        .deadline-notice {
+            font-size: 0.9rem;
+            color: rgba(196, 209, 199, 0.6);
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+        .deadline-passed {
+            color: #e8b4a0;
+        }
+
+        /* Back link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(196, 209, 199, 0.7);
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-family: 'Lato', sans-serif;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #c4d1c7;
+        }
+
+        @media (max-width: 600px) {
+            nav ul {
+                gap: 20px;
+                padding: 0 15px;
+            }
+
+            nav a {
+                font-size: 0.75rem;
+                letter-spacing: 1px;
+            }
+
+            .contact-card {
+                padding: 40px 25px;
+            }
+
+            .contact-card h1 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/#our-story">Our Story</a></li>
+            <li><a href="/#faq">FAQ</a></li>
+            <li><a href="/#registry">Registry</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+    </nav>
+
+    <div class="main-container">
+        <div class="contact-card">
+            <a href="/" class="back-link">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Home
+            </a>
+
+            <h1>Contact Us</h1>
+            <p class="subtitle">Need to reach us?</p>
+
+            <div class="contact-section">
+                <h2>Phone</h2>
+                <div class="contact-info">
+                    <a href="tel:+13239723556">(323) 972-3556</a>
+                </div>
+            </div>
+
+            <button class="vcard-btn" onclick="downloadVCard()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+                </svg>
+                Save Our Contact
+            </button>
+
+            <div class="divider"></div>
+
+            <div class="rsvp-changes-section">
+                <h2>Need to Change Your RSVP?</h2>
+                <p>
+                    If you need to make changes to your RSVP, you can do so easily by clicking below.
+                </p>
+                <a href="modify-rsvp.html" class="modify-rsvp-link" id="modifyRsvpLink">Click here to modify your RSVP</a>
+                <p class="deadline-notice" id="deadlineNotice">
+                    Changes can be made until March 15, 2026
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function downloadVCard() {
+            const vcard = `BEGIN:VCARD
+VERSION:3.0
+N:Wedding;Manny & Celesti
+FN:Manny & Celesti Wedding
+TEL;TYPE=CELL:+13239723556
+NOTE:Wedding contact for Manny & Celesti - August 22, 2026
+END:VCARD`;
+
+            const blob = new Blob([vcard], { type: 'text/vcard' });
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'Manny-Celesti-Wedding.vcf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // Check if deadline has passed
+        function checkDeadline() {
+            const deadline = new Date('2026-03-15T23:59:59');
+            const now = new Date();
+
+            const modifyLink = document.getElementById('modifyRsvpLink');
+            const deadlineNotice = document.getElementById('deadlineNotice');
+
+            if (now > deadline) {
+                // Deadline has passed
+                modifyLink.style.display = 'none';
+                deadlineNotice.innerHTML = 'The deadline for RSVP changes (March 15) has passed.<br>Please contact us directly if you need to make changes.';
+                deadlineNotice.classList.add('deadline-passed');
+            }
+        }
+
+        // Run on page load
+        checkDeadline();
+    </script>
+</body>
+</html>

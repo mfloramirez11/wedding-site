@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modify RSVP - Manny & Celesti Wedding</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cinzel:wght@400;500&family=Lato:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #2d3e3a 0%, #455951 100%);
+            font-family: 'Cormorant Garamond', serif;
+            color: #c4d1c7;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(61, 79, 71, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #c4d1c7;
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: #ffffff;
+        }
+
+        /* Main container */
+        .main-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 120px 20px 50px;
+        }
+
+        .modify-card {
+            background: rgba(61, 79, 71, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 50px 40px;
+            max-width: 550px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(196, 209, 199, 0.2);
+        }
+
+        .modify-card h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            color: #c4d1c7;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: 400;
+        }
+
+        .modify-card .subtitle {
+            font-size: 1rem;
+            color: rgba(196, 209, 199, 0.7);
+            margin-bottom: 30px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        /* Back link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(196, 209, 199, 0.7);
+            text-decoration: none;
+            margin-bottom: 20px;
+            font-family: 'Lato', sans-serif;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: #c4d1c7;
+        }
+
+        /* Form styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #c4d1c7;
+            font-family: 'Lato', sans-serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid rgba(196, 209, 199, 0.3);
+            border-radius: 10px;
+            background: rgba(196, 209, 199, 0.1);
+            color: #fff;
+            font-family: 'Lato', sans-serif;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #c4d1c7;
+            background: rgba(196, 209, 199, 0.15);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(196, 209, 199, 0.5);
+        }
+
+        .form-group select {
+            -webkit-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23c4d1c7' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Lato', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #c4d1c7;
+            color: #3d4f47;
+        }
+
+        .btn-primary:hover {
+            background: #d4e1d7;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #c4d1c7;
+            border: 1px solid rgba(196, 209, 199, 0.3);
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(196, 209, 199, 0.1);
+        }
+
+        .btn-danger {
+            background: rgba(232, 180, 160, 0.2);
+            color: #e8b4a0;
+            border: 1px solid rgba(232, 180, 160, 0.3);
+        }
+
+        .btn-danger:hover {
+            background: rgba(232, 180, 160, 0.3);
+        }
+
+        /* Error message */
+        .error-message {
+            background: rgba(232, 180, 160, 0.2);
+            border: 1px solid #e8b4a0;
+            color: #e8b4a0;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-family: 'Lato', sans-serif;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .success-message {
+            background: rgba(168, 213, 162, 0.2);
+            border: 1px solid #a8d5a2;
+            color: #a8d5a2;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-family: 'Lato', sans-serif;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        /* Deadline expired */
+        .deadline-expired {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .deadline-expired h2 {
+            font-family: 'Cinzel', serif;
+            color: #e8b4a0;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .deadline-expired p {
+            color: rgba(196, 209, 199, 0.8);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* Guest card for editing */
+        .guest-card {
+            background: rgba(196, 209, 199, 0.05);
+            border: 1px solid rgba(196, 209, 199, 0.15);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .guest-card-header {
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            color: #c4d1c7;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(196, 209, 199, 0.1);
+        }
+
+        .guest-card .form-group {
+            margin-bottom: 12px;
+        }
+
+        .guest-card .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Hide sections */
+        .hidden {
+            display: none !important;
+        }
+
+        /* RSVP details display */
+        .rsvp-summary {
+            background: rgba(196, 209, 199, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .rsvp-summary h3 {
+            font-family: 'Cinzel', serif;
+            color: #c4d1c7;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(196, 209, 199, 0.1);
+            font-family: 'Lato', sans-serif;
+            font-size: 0.95rem;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            color: rgba(196, 209, 199, 0.6);
+        }
+
+        .summary-value {
+            color: #fff;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-badge.attending {
+            background: rgba(168, 213, 162, 0.2);
+            color: #a8d5a2;
+        }
+
+        .status-badge.declined {
+            background: rgba(232, 180, 160, 0.2);
+            color: #e8b4a0;
+        }
+
+        @media (max-width: 600px) {
+            nav ul {
+                gap: 20px;
+                padding: 0 15px;
+            }
+
+            nav a {
+                font-size: 0.75rem;
+                letter-spacing: 1px;
+            }
+
+            .modify-card {
+                padding: 40px 25px;
+            }
+
+            .modify-card h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/#our-story">Our Story</a></li>
+            <li><a href="/#faq">FAQ</a></li>
+            <li><a href="/#registry">Registry</a></li>
+            <li><a href="contact.html">Contact Us</a></li>
+        </ul>
+    </nav>
+
+    <div class="main-container">
+        <div class="modify-card">
+            <a href="/" class="back-link">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Home
+            </a>
+
+            <!-- Deadline expired view -->
+            <div id="deadlineExpired" class="deadline-expired hidden">
+                <h2>RSVP Changes Closed</h2>
+                <p>
+                    The deadline for making changes to your RSVP (March 15, 2026) has passed.
+                </p>
+                <p>
+                    If you need to make changes, please contact us directly.
+                </p>
+                <a href="contact.html" class="btn btn-primary" style="display: inline-block; width: auto; padding: 16px 32px;">Contact Us</a>
+            </div>
+
+            <!-- Verification form -->
+            <div id="verifySection">
+                <h1>Modify Your RSVP</h1>
+                <p class="subtitle">Enter the email and phone number you used when submitting your RSVP</p>
+
+                <div class="error-message" id="verifyError"></div>
+
+                <form id="verifyForm">
+                    <div class="form-group">
+                        <label for="verifyEmail">Email Address</label>
+                        <input type="email" id="verifyEmail" placeholder="Enter your email" required autocapitalize="none">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="verifyPhone">Phone Number</label>
+                        <input type="tel" id="verifyPhone" placeholder="Enter your phone number" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Find My RSVP</button>
+                </form>
+            </div>
+
+            <!-- Edit RSVP form -->
+            <div id="editSection" class="hidden">
+                <h1>Edit Your RSVP</h1>
+                <p class="subtitle">Make changes to your response below</p>
+
+                <div class="error-message" id="editError"></div>
+                <div class="success-message" id="editSuccess"></div>
+
+                <div class="rsvp-summary" id="rsvpSummary"></div>
+
+                <form id="editRsvpForm">
+                    <input type="hidden" id="rsvpId">
+
+                    <div class="form-group">
+                        <label for="editName">Primary Contact Name</label>
+                        <input type="text" id="editName" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="editAttending">Will you be attending?</label>
+                        <select id="editAttending" onchange="toggleGuestSection()">
+                            <option value="yes">Yes, we'll be there!</option>
+                            <option value="no">Sorry, we can't make it</option>
+                        </select>
+                    </div>
+
+                    <div id="guestSection">
+                        <div class="form-group">
+                            <label for="editGuestCount">Number of Guests</label>
+                            <select id="editGuestCount" onchange="updateGuestFields()">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
+
+                        <div id="guestFields"></div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" onclick="goBack()">Cancel</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentRsvp = null;
+
+        // Check deadline on page load
+        function checkDeadline() {
+            const deadline = new Date('2026-03-15T23:59:59');
+            const now = new Date();
+
+            if (now > deadline) {
+                document.getElementById('verifySection').classList.add('hidden');
+                document.getElementById('editSection').classList.add('hidden');
+                document.getElementById('deadlineExpired').classList.remove('hidden');
+                return false;
+            }
+            return true;
+        }
+
+        // Verify RSVP
+        document.getElementById('verifyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('verifyEmail').value.trim();
+            const phone = document.getElementById('verifyPhone').value.trim();
+            const errorEl = document.getElementById('verifyError');
+
+            errorEl.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/lookup-rsvp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, phone })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.rsvp) {
+                    currentRsvp = result.rsvp;
+                    showEditForm(result.rsvp);
+                } else {
+                    errorEl.textContent = result.error || 'No RSVP found with those details. Please check your email and phone number.';
+                    errorEl.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Lookup error:', error);
+                errorEl.textContent = 'An error occurred. Please try again.';
+                errorEl.style.display = 'block';
+            }
+        });
+
+        function parseGuestData(guestNames) {
+            if (!guestNames) return [];
+            if (Array.isArray(guestNames)) return guestNames;
+            try {
+                const parsed = JSON.parse(guestNames);
+                if (parsed.length > 0 && typeof parsed[0] === 'string') {
+                    return parsed.map(name => ({ name, dietary: '', allergies: '' }));
+                }
+                return parsed;
+            } catch {
+                return [];
+            }
+        }
+
+        function showEditForm(rsvp) {
+            document.getElementById('verifySection').classList.add('hidden');
+            document.getElementById('editSection').classList.remove('hidden');
+
+            document.getElementById('rsvpId').value = rsvp.id;
+            document.getElementById('editName').value = rsvp.name;
+            document.getElementById('editAttending').value = rsvp.attending;
+            document.getElementById('editGuestCount').value = rsvp.guests || 1;
+
+            // Show summary
+            const guests = parseGuestData(rsvp.guest_names);
+            document.getElementById('rsvpSummary').innerHTML = `
+                <h3>Current RSVP Details</h3>
+                <div class="summary-row">
+                    <span class="summary-label">Status</span>
+                    <span class="summary-value">
+                        <span class="status-badge ${rsvp.attending === 'yes' ? 'attending' : 'declined'}">
+                            ${rsvp.attending === 'yes' ? 'Attending' : 'Declined'}
+                        </span>
+                    </span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Primary Contact</span>
+                    <span class="summary-value">${escapeHtml(rsvp.name)}</span>
+                </div>
+                ${rsvp.attending === 'yes' ? `
+                <div class="summary-row">
+                    <span class="summary-label">Party Size</span>
+                    <span class="summary-value">${rsvp.guests} guest${rsvp.guests > 1 ? 's' : ''}</span>
+                </div>
+                ` : ''}
+            `;
+
+            toggleGuestSection();
+            updateGuestFields(guests);
+        }
+
+        function toggleGuestSection() {
+            const attending = document.getElementById('editAttending').value;
+            const section = document.getElementById('guestSection');
+            section.style.display = attending === 'yes' ? 'block' : 'none';
+        }
+
+        function updateGuestFields(existingGuests = []) {
+            const count = parseInt(document.getElementById('editGuestCount').value);
+            const container = document.getElementById('guestFields');
+            container.innerHTML = '';
+
+            for (let i = 0; i < count; i++) {
+                const guest = existingGuests[i] || { name: '', dietary: '', allergies: '' };
+                const guestName = typeof guest === 'string' ? guest : guest.name;
+                const dietary = typeof guest === 'object' ? guest.dietary : '';
+                const allergies = typeof guest === 'object' ? guest.allergies : '';
+
+                const card = document.createElement('div');
+                card.className = 'guest-card';
+                card.innerHTML = `
+                    <div class="guest-card-header">Guest ${i + 1}${i === 0 ? ' (Primary)' : ''}</div>
+                    <div class="form-group">
+                        <label>Full Name *</label>
+                        <input type="text" id="guest_name_${i}" value="${escapeHtml(guestName)}" placeholder="Guest name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Dietary Restrictions</label>
+                        <input type="text" id="guest_dietary_${i}" value="${escapeHtml(dietary)}" placeholder="Optional">
+                    </div>
+                    <div class="form-group">
+                        <label>Allergies</label>
+                        <input type="text" id="guest_allergies_${i}" value="${escapeHtml(allergies)}" placeholder="Optional">
+                    </div>
+                `;
+                container.appendChild(card);
+            }
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Save changes
+        document.getElementById('editRsvpForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const errorEl = document.getElementById('editError');
+            const successEl = document.getElementById('editSuccess');
+            errorEl.style.display = 'none';
+            successEl.style.display = 'none';
+
+            const attending = document.getElementById('editAttending').value;
+
+            let guestData = [];
+            if (attending === 'yes') {
+                const count = parseInt(document.getElementById('editGuestCount').value);
+                for (let i = 0; i < count; i++) {
+                    const nameInput = document.getElementById(`guest_name_${i}`);
+                    const dietaryInput = document.getElementById(`guest_dietary_${i}`);
+                    const allergiesInput = document.getElementById(`guest_allergies_${i}`);
+
+                    if (nameInput && nameInput.value.trim()) {
+                        guestData.push({
+                            name: nameInput.value.trim(),
+                            dietary: dietaryInput ? dietaryInput.value.trim() : '',
+                            allergies: allergiesInput ? allergiesInput.value.trim() : ''
+                        });
+                    }
+                }
+            }
+
+            const data = {
+                id: parseInt(document.getElementById('rsvpId').value),
+                name: document.getElementById('editName').value.trim(),
+                email: currentRsvp.email,
+                phone: currentRsvp.phone,
+                attending: attending,
+                guests: attending === 'yes' ? parseInt(document.getElementById('editGuestCount').value) : 0,
+                guestData: guestData
+            };
+
+            try {
+                const response = await fetch('/api/update-rsvp-public', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    successEl.textContent = 'Your RSVP has been updated successfully!';
+                    successEl.style.display = 'block';
+
+                    // Update the summary
+                    currentRsvp = { ...currentRsvp, ...data, guest_names: JSON.stringify(guestData) };
+                    showEditForm(currentRsvp);
+
+                    // Scroll to top to show success message
+                    document.querySelector('.modify-card').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    errorEl.textContent = result.error || 'Failed to update RSVP. Please try again.';
+                    errorEl.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Update error:', error);
+                errorEl.textContent = 'An error occurred. Please try again.';
+                errorEl.style.display = 'block';
+            }
+        });
+
+        function goBack() {
+            document.getElementById('editSection').classList.add('hidden');
+            document.getElementById('verifySection').classList.remove('hidden');
+            document.getElementById('verifyForm').reset();
+            currentRsvp = null;
+        }
+
+        // Initialize
+        checkDeadline();
+    </script>
+</body>
+</html>

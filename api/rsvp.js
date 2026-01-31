@@ -24,7 +24,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { name, email, phone, attending, guests, guestNames, dietary, allergies } = req.body;
+    const { name, email, phone, attending, guestCount, guests } = req.body;
 
     // Validate required fields
     if (!name || !email || !phone || !attending) {
@@ -41,7 +41,7 @@ export default async function handler(req, res) {
 
     if (existingEmail.length > 0) {
       return res.status(409).json({
-        error: 'An RSVP has already been submitted with this email address. If you need to make changes, please contact us.'
+        error: 'An RSVP has already been submitted with this email address. If you need to make changes, please use the modify RSVP link.'
       });
     }
 
@@ -52,28 +52,28 @@ export default async function handler(req, res) {
 
     if (existingPhone.length > 0) {
       return res.status(409).json({
-        error: 'An RSVP has already been submitted with this phone number. If you need to make changes, please contact us.'
+        error: 'An RSVP has already been submitted with this phone number. If you need to make changes, please use the modify RSVP link.'
       });
     }
 
-    // Validate guest names if attending
+    // Validate guests if attending
     if (attending === 'yes') {
-      if (!guests || guests < 1) {
+      if (!guestCount || guestCount < 1) {
         return res.status(400).json({ error: 'Please specify the number of guests' });
       }
-      if (!guestNames || !Array.isArray(guestNames) || guestNames.length !== guests) {
-        return res.status(400).json({ error: 'Please provide names for all guests in your party' });
+      if (!guests || !Array.isArray(guests) || guests.length !== guestCount) {
+        return res.status(400).json({ error: 'Please provide details for all guests in your party' });
       }
-      // Check that all guest names are non-empty
-      for (let i = 0; i < guestNames.length; i++) {
-        if (!guestNames[i] || guestNames[i].trim() === '') {
+      // Check that all guests have names
+      for (let i = 0; i < guests.length; i++) {
+        if (!guests[i].name || guests[i].name.trim() === '') {
           return res.status(400).json({ error: `Please provide a name for Guest ${i + 1}` });
         }
       }
     }
 
-    // Convert guest names array to JSON string for storage
-    const guestNamesJson = attending === 'yes' ? JSON.stringify(guestNames) : null;
+    // Convert guests array to JSON string for storage (includes name, dietary, allergies per guest)
+    const guestsJson = attending === 'yes' ? JSON.stringify(guests) : null;
 
     // Insert RSVP
     await sql`
@@ -83,10 +83,10 @@ export default async function handler(req, res) {
         ${email.toLowerCase()},
         ${phone},
         ${attending},
-        ${attending === 'yes' ? guests : 0},
-        ${guestNamesJson},
-        ${dietary || null},
-        ${allergies || null},
+        ${attending === 'yes' ? guestCount : 0},
+        ${guestsJson},
+        ${null},
+        ${null},
         NOW()
       )
     `;
