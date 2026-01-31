@@ -427,25 +427,25 @@
             display: flex;
             gap: 12px;
             margin-top: 10px;
-            flex-wrap: wrap;
         }
 
         .radio-option {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 12px;
+            justify-content: center;
+            gap: 8px;
             color: #c4d1c7;
             font-family: 'Lato', sans-serif;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             cursor: pointer;
-            padding: 14px 20px;
+            padding: 18px 16px;
             background: rgba(196, 209, 199, 0.08);
             border: 2px solid rgba(196, 209, 199, 0.25);
             border-radius: 12px;
             transition: all 0.3s ease;
             flex: 1;
-            min-width: 140px;
-            justify-content: flex-start;
+            text-align: center;
         }
 
         .radio-option:hover {
@@ -461,8 +461,8 @@
         .radio-option input[type="radio"] {
             -webkit-appearance: none;
             appearance: none;
-            width: 22px;
-            height: 22px;
+            width: 24px;
+            height: 24px;
             border: 2px solid rgba(196, 209, 199, 0.4);
             border-radius: 50%;
             background: transparent;
@@ -470,6 +470,7 @@
             position: relative;
             flex-shrink: 0;
             transition: all 0.3s ease;
+            margin: 0;
         }
 
         .radio-option input[type="radio"]:checked {
@@ -483,8 +484,8 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 10px;
-            height: 10px;
+            width: 12px;
+            height: 12px;
             background: #c4d1c7;
             border-radius: 50%;
         }
@@ -493,6 +494,10 @@
             outline: none;
             border-color: #c4d1c7;
             box-shadow: 0 0 0 3px rgba(196, 209, 199, 0.2);
+        }
+
+        .radio-option span {
+            font-weight: 500;
         }
 
         .submit-button {
@@ -1115,11 +1120,11 @@ Think elevated but comfortable: sundresses, midi dresses, jumpsuits, dressy sepa
                     <div class="radio-group">
                         <label class="radio-option">
                             <input type="radio" name="attending" value="yes" required onchange="toggleGuestFields()">
-                            Joyfully Accept
+                            <span>Joyfully Accept</span>
                         </label>
                         <label class="radio-option">
                             <input type="radio" name="attending" value="no" required onchange="toggleGuestFields()">
-                            Regretfully Decline
+                            <span>Regretfully Decline</span>
                         </label>
                     </div>
                 </div>
@@ -1129,10 +1134,8 @@ Think elevated but comfortable: sundresses, midi dresses, jumpsuits, dressy sepa
                         <label>Number of Guests in Your Party <span class="required">*</span></label>
                         <select id="guestCount" name="guestCount" onchange="updateGuestNameFields()">
                             <option value="1">1 Guest (Just me)</option>
-                            <option value="2">2 Guests</option>
-                            <option value="3">3 Guests</option>
-                            <option value="4">4 Guests</option>
-                            <option value="5">5 Guests</option>
+                            <option value="2">2 Guests (me + 1)</option>
+                            <option value="3">3 Guests (me + 2)</option>
                         </select>
                     </div>
 
