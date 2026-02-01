@@ -36,14 +36,20 @@ function getTwilioClient() {
  * Send confirmation email via Resend
  */
 export async function sendConfirmationEmail({ name, email, attending, guestCount, guests }) {
+  console.log('sendConfirmationEmail called for:', email);
+  console.log('RESEND_API_KEY exists:', !!process.env.RESEND_API_KEY);
+  console.log('RESEND_FROM_EMAIL:', process.env.RESEND_FROM_EMAIL);
+
   const resend = getResendClient();
   if (!resend) {
+    console.log('Resend client not initialized');
     return { success: false, error: 'Email service not configured' };
   }
 
   try {
     const htmlContent = generateRsvpConfirmationEmail({ name, email, attending, guestCount, guests });
     const textContent = generateRsvpConfirmationText({ name, email, attending, guestCount, guests });
+    console.log('Email content generated, sending to:', email);
 
     const { data, error } = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || 'Manny & Celesti <rsvp@mannyandcelesti.com>',
