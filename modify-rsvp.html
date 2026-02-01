@@ -56,6 +56,64 @@
             color: #ffffff;
         }
 
+        /* Photo scrollers */
+        .photo-scroller {
+            position: fixed;
+            top: 80px;
+            width: 18%;
+            min-width: 80px;
+            max-width: 250px;
+            height: calc(100vh - 100px);
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .photo-scroller.left {
+            left: 2%;
+        }
+
+        .photo-scroller.right {
+            right: 2%;
+        }
+
+        .photo-track {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            animation: scrollPhotos 60s linear infinite;
+        }
+
+        .photo-scroller.right .photo-track {
+            animation: scrollPhotosReverse 60s linear infinite;
+        }
+
+        @keyframes scrollPhotos {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50%); }
+        }
+
+        @keyframes scrollPhotosReverse {
+            0% { transform: translateY(-50%); }
+            100% { transform: translateY(0); }
+        }
+
+        .photo-item {
+            width: 100%;
+            height: 35vh;
+            min-height: 180px;
+            max-height: 400px;
+            border-radius: 6px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
         /* Main container */
         .main-container {
             display: flex;
@@ -63,6 +121,8 @@
             align-items: center;
             min-height: 100vh;
             padding: 120px 20px 50px;
+            position: relative;
+            z-index: 10;
         }
 
         .modify-card {
@@ -328,7 +388,23 @@
             color: #e8b4a0;
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 1200px) {
+            .photo-scroller {
+                width: 15%;
+                min-width: 70px;
+            }
+
+            .photo-item {
+                height: 30vh;
+                min-height: 150px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .photo-scroller {
+                display: none;
+            }
+
             nav ul {
                 gap: 20px;
                 padding: 0 15px;
@@ -338,7 +414,9 @@
                 font-size: 0.75rem;
                 letter-spacing: 1px;
             }
+        }
 
+        @media (max-width: 600px) {
             .modify-card {
                 padding: 40px 25px;
             }
@@ -350,15 +428,53 @@
     </style>
 </head>
 <body>
-    <nav>
+    <nav role="navigation" aria-label="Main navigation">
         <ul>
             <li><a href="/">Home</a></li>
             <li><a href="/#our-story">Our Story</a></li>
             <li><a href="/#faq">FAQ</a></li>
             <li><a href="/#registry">Registry</a></li>
-            <li><a href="contact.html">Contact Us</a></li>
+            <li><a href="/#contact">Contact</a></li>
         </ul>
     </nav>
+
+    <!-- Left photo scroller -->
+    <div class="photo-scroller left">
+        <div class="photo-track">
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/4D5A8638-F73B-4AC4-8778-A5278C8BC828_1_105_c.jpeg" alt="Manny and Celesti together"></div>
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/42D2FAE7-AFFC-4DB3-A6EE-F23091009D2F_1_105_c.jpeg" alt="Manny and Celesti together"></div>
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/85B8912A-FB61-4250-9B83-8D7E858A493A_1_105_c.jpeg" alt="Manny and Celesti together"></div>
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/0587F5A0-D753-4285-A1C4-A83C902051AE_1_105_c.jpeg" alt="Manny and Celesti together"></div>
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/DE79E046-12F6-4A54-959D-7C81B80E2E67_1_105_c.jpeg" alt="Manny and Celesti together"></div>
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/0852DFAA-36B8-478C-A23F-3DBEEA799C85_1_105_c.jpeg" alt="Manny and Celesti together"></div>
+            <!-- Duplicate for seamless loop -->
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/4D5A8638-F73B-4AC4-8778-A5278C8BC828_1_105_c.jpeg" alt="Manny and Celesti together"></div>
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/42D2FAE7-AFFC-4DB3-A6EE-F23091009D2F_1_105_c.jpeg" alt="Manny and Celesti together"></div>
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/85B8912A-FB61-4250-9B83-8D7E858A493A_1_105_c.jpeg" alt="Manny and Celesti together"></div>
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/0587F5A0-D753-4285-A1C4-A83C902051AE_1_105_c.jpeg" alt="Manny and Celesti together"></div>
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/DE79E046-12F6-4A54-959D-7C81B80E2E67_1_105_c.jpeg" alt="Manny and Celesti together"></div>
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/0852DFAA-36B8-478C-A23F-3DBEEA799C85_1_105_c.jpeg" alt="Manny and Celesti together"></div>
+        </div>
+    </div>
+
+    <!-- Right photo scroller -->
+    <div class="photo-scroller right">
+        <div class="photo-track">
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/52B08637-75E4-44F7-B80A-EC48FB94F1E5_1_105_c.jpeg" alt="Manny and Celesti together"></div>
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/334C424A-14ED-4705-87AF-7B019188853D_1_105_c.jpeg" alt="Manny and Celesti together"></div>
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/D9C024BE-11E3-4ADA-8A69-3F29644BCA13_1_105_c.jpeg" alt="Manny and Celesti together"></div>
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/1DA7E94F-ACD9-40A2-ABAA-F0DEF12EB1E1_1_105_c.jpeg" alt="Manny and Celesti together"></div>
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/CAB243D3-54A2-496E-8B87-33DBA6D0EE20_1_102_o.jpeg" alt="Manny and Celesti together"></div>
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/658706F7-2832-48C5-9EEE-8F888B2D5A7B_1_105_c.jpeg" alt="Manny and Celesti together"></div>
+            <!-- Duplicate for seamless loop -->
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/52B08637-75E4-44F7-B80A-EC48FB94F1E5_1_105_c.jpeg" alt="Manny and Celesti together"></div>
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/334C424A-14ED-4705-87AF-7B019188853D_1_105_c.jpeg" alt="Manny and Celesti together"></div>
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/D9C024BE-11E3-4ADA-8A69-3F29644BCA13_1_105_c.jpeg" alt="Manny and Celesti together"></div>
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/1DA7E94F-ACD9-40A2-ABAA-F0DEF12EB1E1_1_105_c.jpeg" alt="Manny and Celesti together"></div>
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/CAB243D3-54A2-496E-8B87-33DBA6D0EE20_1_102_o.jpeg" alt="Manny and Celesti together"></div>
+            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/658706F7-2832-48C5-9EEE-8F888B2D5A7B_1_105_c.jpeg" alt="Manny and Celesti together"></div>
+        </div>
+    </div>
 
     <div class="main-container">
         <div class="modify-card">
@@ -378,7 +494,7 @@
                 <p>
                     If you need to make changes, please contact us directly.
                 </p>
-                <a href="contact.html" class="btn btn-primary" style="display: inline-block; width: auto; padding: 16px 32px;">Contact Us</a>
+                <a href="/#contact" class="btn btn-primary" style="display: inline-block; width: auto; padding: 16px 32px;">Contact Us</a>
             </div>
 
             <!-- Verification form -->

@@ -248,6 +248,111 @@
         .stat-card.declined .number { color: #e8b4a0; }
         .stat-card.guests .number { color: #c4d1c7; }
 
+        /* Additional Stats Detail */
+        .stats-detail {
+            background: rgba(61, 79, 71, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(196, 209, 199, 0.2);
+        }
+
+        .stat-detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(196, 209, 199, 0.1);
+        }
+
+        .stat-detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: rgba(196, 209, 199, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .detail-value {
+            color: #c4d1c7;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Email Modal Content */
+        .email-options {
+            margin-bottom: 20px;
+        }
+
+        .email-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            background: rgba(196, 209, 199, 0.05);
+            border: 1px solid rgba(196, 209, 199, 0.15);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .email-option:hover {
+            background: rgba(196, 209, 199, 0.1);
+            border-color: rgba(196, 209, 199, 0.3);
+        }
+
+        .email-option.selected {
+            background: rgba(196, 209, 199, 0.15);
+            border-color: #c4d1c7;
+        }
+
+        .email-option input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #c4d1c7;
+        }
+
+        .email-option-content {
+            flex: 1;
+        }
+
+        .email-option-title {
+            color: #c4d1c7;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+
+        .email-option-desc {
+            color: rgba(196, 209, 199, 0.6);
+            font-size: 0.85rem;
+        }
+
+        .email-count {
+            background: rgba(196, 209, 199, 0.2);
+            color: #c4d1c7;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .email-list-preview {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            max-height: 150px;
+            overflow-y: auto;
+            margin-bottom: 16px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            color: rgba(196, 209, 199, 0.8);
+            word-break: break-all;
+        }
+
         /* Search Box */
         .search-container {
             margin-bottom: 16px;
@@ -849,6 +954,13 @@
                     </svg>
                     Export
                 </button>
+                <button class="btn btn-secondary" onclick="openEmailModal()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                        <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                    Email
+                </button>
                 <button class="btn btn-secondary" onclick="logout()">Logout</button>
             </div>
         </div>
@@ -870,6 +982,22 @@
             <div class="stat-card guests">
                 <div class="number" id="statGuests">-</div>
                 <div class="label">Total Guests</div>
+            </div>
+        </div>
+
+        <!-- Additional Stats -->
+        <div class="stats-detail" id="statsDetail">
+            <div class="stat-detail-row">
+                <span class="detail-label">Response Rate</span>
+                <span class="detail-value" id="statResponseRate">-</span>
+            </div>
+            <div class="stat-detail-row">
+                <span class="detail-label">Dietary Restrictions</span>
+                <span class="detail-value" id="statDietary">-</span>
+            </div>
+            <div class="stat-detail-row">
+                <span class="detail-label">Food Allergies</span>
+                <span class="detail-value" id="statAllergies">-</span>
             </div>
         </div>
 
@@ -973,6 +1101,74 @@
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
                 <button class="btn btn-danger" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Email Modal -->
+    <div class="modal" id="emailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Email Guests</h2>
+                <button class="modal-close" onclick="closeEmailModal()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <p style="color: rgba(196, 209, 199, 0.8); margin-bottom: 16px;">Select which guests to email:</p>
+
+            <div class="email-options">
+                <label class="email-option" onclick="selectEmailOption('all')">
+                    <input type="radio" name="emailOption" value="all" checked>
+                    <div class="email-option-content">
+                        <div class="email-option-title">All Respondents</div>
+                        <div class="email-option-desc">Everyone who has RSVP'd</div>
+                    </div>
+                    <span class="email-count" id="emailCountAll">0</span>
+                </label>
+
+                <label class="email-option" onclick="selectEmailOption('attending')">
+                    <input type="radio" name="emailOption" value="attending">
+                    <div class="email-option-content">
+                        <div class="email-option-title">Attending Only</div>
+                        <div class="email-option-desc">Guests who confirmed attendance</div>
+                    </div>
+                    <span class="email-count" id="emailCountAttending">0</span>
+                </label>
+
+                <label class="email-option" onclick="selectEmailOption('declined')">
+                    <input type="radio" name="emailOption" value="declined">
+                    <div class="email-option-content">
+                        <div class="email-option-title">Declined Only</div>
+                        <div class="email-option-desc">Guests who declined</div>
+                    </div>
+                    <span class="email-count" id="emailCountDeclined">0</span>
+                </label>
+            </div>
+
+            <p style="color: rgba(196, 209, 199, 0.7); font-size: 0.9rem; margin-bottom: 8px;">Email addresses:</p>
+            <div class="email-list-preview" id="emailListPreview">
+                Select an option to see emails
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeEmailModal()">Cancel</button>
+                <button class="btn btn-secondary" onclick="copyEmails()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                        <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/>
+                    </svg>
+                    Copy Emails
+                </button>
+                <button class="btn btn-primary" onclick="openMailClient()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                        <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                    Open Mail App
+                </button>
             </div>
         </div>
     </div>
@@ -1088,6 +1284,9 @@
                 document.getElementById('statAttending').textContent = data.stats.attending;
                 document.getElementById('statDeclined').textContent = data.stats.declined;
                 document.getElementById('statGuests').textContent = data.stats.totalGuests;
+
+                // Update additional stats
+                updateDetailedStats(rsvpData);
 
                 renderCards(rsvpData);
 
@@ -1448,6 +1647,10 @@
             if (e.target.id === 'deleteModal') closeDeleteModal();
         });
 
+        document.getElementById('emailModal').addEventListener('click', (e) => {
+            if (e.target.id === 'emailModal') closeEmailModal();
+        });
+
         // Prevent body scroll when modal is open
         document.addEventListener('touchmove', (e) => {
             if (document.body.style.overflow === 'hidden') {
@@ -1457,6 +1660,125 @@
                 }
             }
         }, { passive: false });
+
+        // ===== DETAILED STATS =====
+        function updateDetailedStats(data) {
+            // Count dietary restrictions and allergies
+            let dietaryCount = 0;
+            let allergyCount = 0;
+
+            data.forEach(rsvp => {
+                if (rsvp.attending === 'yes') {
+                    const guests = parseGuestData(rsvp.guest_names);
+                    guests.forEach(guest => {
+                        if (guest.dietary && guest.dietary.trim()) dietaryCount++;
+                        if (guest.allergies && guest.allergies.trim()) allergyCount++;
+                    });
+                }
+            });
+
+            // Calculate response rate (assuming 50 invited - you can change this)
+            const totalInvited = 50; // Adjust this number based on your guest list
+            const responseRate = data.length > 0 ? Math.round((data.length / totalInvited) * 100) : 0;
+
+            document.getElementById('statResponseRate').textContent = responseRate + '%';
+            document.getElementById('statDietary').textContent = dietaryCount + ' guests';
+            document.getElementById('statAllergies').textContent = allergyCount + ' guests';
+        }
+
+        // ===== EMAIL FUNCTIONS =====
+        let selectedEmailOption = 'all';
+
+        function openEmailModal() {
+            const modal = document.getElementById('emailModal');
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // Update counts
+            const allCount = rsvpData.length;
+            const attendingCount = rsvpData.filter(r => r.attending === 'yes').length;
+            const declinedCount = rsvpData.filter(r => r.attending === 'no').length;
+
+            document.getElementById('emailCountAll').textContent = allCount;
+            document.getElementById('emailCountAttending').textContent = attendingCount;
+            document.getElementById('emailCountDeclined').textContent = declinedCount;
+
+            // Update preview
+            updateEmailPreview();
+        }
+
+        function closeEmailModal() {
+            const modal = document.getElementById('emailModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        function selectEmailOption(option) {
+            selectedEmailOption = option;
+            // Update radio button
+            document.querySelector(`input[value="${option}"]`).checked = true;
+            // Update visual selection
+            document.querySelectorAll('.email-option').forEach(el => el.classList.remove('selected'));
+            document.querySelector(`input[value="${option}"]`).closest('.email-option').classList.add('selected');
+            // Update preview
+            updateEmailPreview();
+        }
+
+        function getFilteredEmails() {
+            let filtered = rsvpData;
+
+            if (selectedEmailOption === 'attending') {
+                filtered = rsvpData.filter(r => r.attending === 'yes');
+            } else if (selectedEmailOption === 'declined') {
+                filtered = rsvpData.filter(r => r.attending === 'no');
+            }
+
+            return filtered.map(r => r.email);
+        }
+
+        function updateEmailPreview() {
+            const emails = getFilteredEmails();
+            const preview = document.getElementById('emailListPreview');
+
+            if (emails.length === 0) {
+                preview.textContent = 'No email addresses found';
+            } else {
+                preview.textContent = emails.join(', ');
+            }
+        }
+
+        function copyEmails() {
+            const emails = getFilteredEmails();
+            if (emails.length === 0) {
+                showToast('No emails to copy');
+                return;
+            }
+
+            navigator.clipboard.writeText(emails.join(', ')).then(() => {
+                showToast(`${emails.length} email(s) copied!`);
+            }).catch(() => {
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = emails.join(', ');
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast(`${emails.length} email(s) copied!`);
+            });
+        }
+
+        function openMailClient() {
+            const emails = getFilteredEmails();
+            if (emails.length === 0) {
+                showToast('No emails to send to');
+                return;
+            }
+
+            // Use BCC to protect privacy
+            const mailtoLink = `mailto:?bcc=${emails.join(',')}`;
+            window.location.href = mailtoLink;
+        }
     </script>
 </body>
 </html>
