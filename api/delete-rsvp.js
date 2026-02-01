@@ -1,17 +1,49 @@
 import { neon } from '@neondatabase/serverless';
 
+// Simple in-memory rate limiting
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW = 60000; // 1 minute
+const RATE_LIMIT_MAX = 10; // 10 delete requests per minute
+
+function checkRateLimit(ip) {
+  const now = Date.now();
+  const windowStart = now - RATE_LIMIT_WINDOW;
+
+  if (!rateLimitMap.has(ip)) {
+    rateLimitMap.set(ip, []);
+  }
+
+  const requests = rateLimitMap.get(ip).filter(time => time > windowStart);
+  requests.push(now);
+  rateLimitMap.set(ip, requests);
+
+  return requests.length <= RATE_LIMIT_MAX;
+}
+
 export default async function handler(req, res) {
-  // CORS Headers
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,DELETE,POST');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization'
-  );
+  // Security headers
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+
+  // CORS - restrict to your domain
+  const allowedOrigins = ['https://mannyandcelesti.com', 'https://www.mannyandcelesti.com'];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'DELETE, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
+  }
+
+  // Rate limiting
+  const clientIp = req.headers['x-forwarded-for']?.split(',')[0] || req.socket?.remoteAddress || 'unknown';
+  if (!checkRateLimit(clientIp)) {
+    return res.status(429).json({ error: 'Too many requests. Please try again later.' });
   }
 
   // Only allow DELETE or POST requests
@@ -19,9 +51,14 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Auth check
+  // Auth check - password from environment variable
   const authHeader = req.headers.authorization;
-  const password = 'MannyAndCelesti2026';
+  const password = process.env.ADMIN_PASSWORD;
+
+  if (!password) {
+    console.error('ADMIN_PASSWORD environment variable not set');
+    return res.status(500).json({ error: 'Server configuration error' });
+  }
 
   if (!authHeader || authHeader !== `Bearer ${password}`) {
     return res.status(401).json({ error: 'Unauthorized' });

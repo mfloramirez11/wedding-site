@@ -1,24 +1,56 @@
 import { neon } from '@neondatabase/serverless';
 
+// Rate limiting for RSVP submissions - stricter limits
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW = 3600000; // 1 hour
+const RATE_LIMIT_MAX = 5; // 5 RSVP submissions per hour per IP
+
+function checkRateLimit(ip) {
+  const now = Date.now();
+  const windowStart = now - RATE_LIMIT_WINDOW;
+
+  if (!rateLimitMap.has(ip)) {
+    rateLimitMap.set(ip, []);
+  }
+
+  const requests = rateLimitMap.get(ip).filter(time => time > windowStart);
+  requests.push(now);
+  rateLimitMap.set(ip, requests);
+
+  return requests.length <= RATE_LIMIT_MAX;
+}
+
 export default async function handler(req, res) {
-  // 1. Add CORS Headers (Critical for form submission to work)
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization'
-  );
+  // Security headers
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+
+  // CORS - restrict to your domain
+  const allowedOrigins = ['https://mannyandcelesti.com', 'https://www.mannyandcelesti.com'];
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   // Handle browser pre-flight checks
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
 
-  // 2. Initialize Database Connection
+  // Rate limiting
+  const clientIp = req.headers['x-forwarded-for']?.split(',')[0] || req.socket?.remoteAddress || 'unknown';
+  if (!checkRateLimit(clientIp)) {
+    return res.status(429).json({ error: 'Too many submissions. Please try again later.' });
+  }
+
+  // Initialize Database Connection
   const sql = neon(process.env.DATABASE_URL);
 
-  // 3. Only allow POST requests
+  // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }

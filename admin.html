@@ -978,12 +978,6 @@
     </div>
 
     <script>
-        // Valid credentials
-        const VALID_USERS = {
-            'manny': 'MannyAndCelesti2026!@',
-            'celesti': 'MannyAndCelesti2026!@'
-        };
-
         let rsvpData = [];
         let authToken = '';
         let deleteId = null;
@@ -998,24 +992,50 @@
             }
         });
 
-        // Login form handler
+        // Login form handler - uses server-side authentication
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const username = document.getElementById('username').value.toLowerCase().trim();
+            const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const errorEl = document.getElementById('loginError');
+            const submitBtn = e.target.querySelector('button[type="submit"]');
 
             errorEl.style.display = 'none';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Signing in...';
 
-            if (VALID_USERS[username] && VALID_USERS[username] === password) {
-                authToken = 'MannyAndCelesti2026';
-                sessionStorage.setItem('adminToken', authToken);
-                showDashboard();
-                loadRSVPs();
-            } else {
-                errorEl.textContent = 'Invalid username or password';
+            try {
+                const response = await fetch('/api/admin-login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    authToken = data.token;
+                    sessionStorage.setItem('adminToken', authToken);
+                    showDashboard();
+                    loadRSVPs();
+                } else {
+                    let errorMsg = data.error || 'Invalid username or password';
+                    if (data.remainingAttempts !== undefined && data.remainingAttempts > 0) {
+                        errorMsg += ` (${data.remainingAttempts} attempts remaining)`;
+                    }
+                    errorEl.textContent = errorMsg;
+                    errorEl.style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                errorEl.textContent = 'Network error. Please try again.';
                 errorEl.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Sign In';
             }
         });
 
