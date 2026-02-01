@@ -7,6 +7,13 @@ import { generateRsvpConfirmationEmail, generateRsvpConfirmationText } from './l
  * This is an internal utility function, not a public API endpoint
  */
 
+// ============================================================================
+// SMS TEMPORARILY DISABLED
+// Waiting for toll-free number approval and A2P 10DLC registration
+// Set to true once approved to enable SMS notifications
+// ============================================================================
+const SMS_ENABLED = false;
+
 // Initialize Resend client
 function getResendClient() {
   if (!process.env.RESEND_API_KEY) {
@@ -91,6 +98,12 @@ function formatPhoneForTwilio(phone) {
  * Send confirmation SMS via Twilio
  */
 export async function sendConfirmationSms({ name, phone, attending }) {
+  // SMS disabled until toll-free/A2P 10DLC registration is approved
+  if (!SMS_ENABLED) {
+    console.log('SMS disabled - skipping notification for:', phone);
+    return { success: false, error: 'SMS temporarily disabled pending A2P 10DLC approval' };
+  }
+
   const twilioClient = getTwilioClient();
   if (!twilioClient) {
     return { success: false, error: 'SMS service not configured' };
