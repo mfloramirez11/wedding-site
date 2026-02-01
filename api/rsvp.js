@@ -1,4 +1,5 @@
 import { neon } from '@neondatabase/serverless';
+import { sendRsvpNotifications } from './send-rsvp-notifications.js';
 
 // Rate limiting for RSVP submissions - stricter limits
 const rateLimitMap = new Map();
@@ -122,6 +123,20 @@ export default async function handler(req, res) {
         NOW()
       )
     `;
+
+    // Send confirmation email and SMS (non-blocking - don't fail RSVP if notifications fail)
+    sendRsvpNotifications({
+      name,
+      email: email.toLowerCase(),
+      phone,
+      attending,
+      guestCount: attending === 'yes' ? guestCount : 0,
+      guests: attending === 'yes' ? guests : [],
+    }).then(result => {
+      console.log('Notification results:', result);
+    }).catch(err => {
+      console.error('Notification error (non-critical):', err);
+    });
 
     return res.status(200).json({
       success: true,
