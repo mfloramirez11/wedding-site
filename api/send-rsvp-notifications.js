@@ -32,6 +32,84 @@ function getTwilioClient() {
   return twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 }
 
+// Admin email for notifications
+const ADMIN_EMAIL = 'mannyandcelesti@gmail.com';
+
+/**
+ * Send notification email to the couple when someone RSVPs or modifies
+ */
+export async function sendAdminNotification({ name, email, phone, attending, guestCount, guests, isUpdate = false }) {
+  const resend = getResendClient();
+  if (!resend) {
+    return { success: false, error: 'Email service not configured' };
+  }
+
+  try {
+    const action = isUpdate ? 'Updated' : 'New';
+    const emoji = attending === 'yes' ? '🎉' : '😢';
+
+    // Build guest list for the email
+    let guestList = '';
+    if (attending === 'yes' && guests && guests.length > 0) {
+      guestList = guests.map((g, i) => {
+        let details = `  ${i + 1}. ${g.name}`;
+        if (g.dietary) details += ` (Diet: ${g.dietary})`;
+        if (g.allergies) details += ` (Allergies: ${g.allergies})`;
+        return details;
+      }).join('\n');
+    }
+
+    const htmlContent = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h2 style="color: #3d4f47;">${emoji} ${action} RSVP ${emoji}</h2>
+        <div style="background: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Phone:</strong> ${phone}</p>
+          <p><strong>Attending:</strong> ${attending === 'yes' ? '✅ Yes' : '❌ No'}</p>
+          ${attending === 'yes' ? `<p><strong>Guest Count:</strong> ${guestCount}</p>` : ''}
+          ${guestList ? `<p><strong>Guests:</strong></p><pre style="background: #fff; padding: 10px; border-radius: 4px;">${guestList}</pre>` : ''}
+        </div>
+        <p style="color: #666; font-size: 12px;">
+          View all RSVPs at <a href="https://mannyandcelesti.com/admin.html">mannyandcelesti.com/admin.html</a>
+        </p>
+      </div>
+    `;
+
+    const textContent = `
+${action} RSVP ${emoji}
+
+Name: ${name}
+Email: ${email}
+Phone: ${phone}
+Attending: ${attending === 'yes' ? 'Yes' : 'No'}
+${attending === 'yes' ? `Guest Count: ${guestCount}` : ''}
+${guestList ? `\nGuests:\n${guestList}` : ''}
+
+View all RSVPs at https://mannyandcelesti.com/admin.html
+    `;
+
+    const { data, error } = await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || 'Manny & Celesti <rsvp@mannyandcelesti.com>',
+      to: ADMIN_EMAIL,
+      subject: `${emoji} ${action} RSVP: ${name} (${attending === 'yes' ? 'Attending' : 'Declined'})`,
+      html: htmlContent,
+      text: textContent,
+    });
+
+    if (error) {
+      console.error('Admin notification error:', error);
+      return { success: false, error: error.message };
+    }
+
+    console.log('Admin notification sent:', data?.id);
+    return { success: true, emailId: data?.id };
+  } catch (error) {
+    console.error('Admin notification error:', error);
+    return { success: false, error: error.message };
+  }
+}
+
 /**
  * Send confirmation email via Resend
  */
@@ -138,14 +216,16 @@ export async function sendConfirmationSms({ name, phone, attending }) {
  * Send both email and SMS notifications
  * Returns results for both, doesn't fail if one fails
  */
-export async function sendRsvpNotifications({ name, email, phone, attending, guestCount, guests }) {
-  const [emailResult, smsResult] = await Promise.all([
+export async function sendRsvpNotifications({ name, email, phone, attending, guestCount, guests, isUpdate = false }) {
+  const [emailResult, smsResult, adminResult] = await Promise.all([
     sendConfirmationEmail({ name, email, attending, guestCount, guests }),
     sendConfirmationSms({ name, phone, attending }),
+    sendAdminNotification({ name, email, phone, attending, guestCount, guests, isUpdate }),
   ]);
 
   return {
     email: emailResult,
     sms: smsResult,
+    admin: adminResult,
   };
 }

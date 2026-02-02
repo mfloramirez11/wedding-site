@@ -1,4 +1,5 @@
 import { neon } from '@neondatabase/serverless';
+import { sendAdminNotification } from './send-rsvp-notifications.js';
 
 // Rate limiting for public updates
 const rateLimitMap = new Map();
@@ -103,6 +104,22 @@ export default async function handler(req, res) {
         guest_names = ${guestNamesJson}
       WHERE id = ${id}
     `;
+
+    // Send admin notification about the update
+    try {
+      await sendAdminNotification({
+        name: name || existing[0].name,
+        email,
+        phone,
+        attending: attending || existing[0].attending,
+        guestCount: guests !== undefined ? guests : existing[0].guests,
+        guests: guestData || [],
+        isUpdate: true,
+      });
+    } catch (notifyErr) {
+      console.error('Admin notification failed:', notifyErr);
+      // Don't fail the update if notification fails
+    }
 
     return res.status(200).json({
       success: true,
