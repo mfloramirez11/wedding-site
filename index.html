@@ -657,6 +657,44 @@
     }
 }
 
+/* Schedule Section */
+.schedule-list {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.schedule-item {
+    display: flex;
+    align-items: baseline;
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(196, 209, 199, 0.15);
+}
+
+.schedule-item:last-child {
+    border-bottom: none;
+}
+
+.schedule-time {
+    font-family: 'Cinzel', serif;
+    color: #e8b4a0;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    min-width: 100px;
+    flex-shrink: 0;
+}
+
+.schedule-event {
+    font-family: 'Cormorant Garamond', serif;
+    color: #c4d1c7;
+    font-size: 1.2rem;
+    line-height: 1.4;
+}
+
+.schedule-note {
+    font-style: italic;
+    opacity: 0.8;
+}
+
 /* Contact Section */
 .contact-intro {
     text-align: center;
@@ -983,6 +1021,7 @@
             <li><a href="#home">Home</a></li>
             <li><a href="#our-story">Our Story</a></li>
             <li><a href="#faq">FAQ</a></li>
+            <li><a href="#schedule">Schedule</a></li>
             <li><a href="#registry">Registry</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
@@ -1140,7 +1179,42 @@ Think elevated but comfortable: sundresses, midi dresses, jumpsuits, dressy sepa
 
         <div class="faq-item">
             <div class="faq-question">Can I make changes to my RSVP?</div>
-            <div class="faq-answer">Yes! You can modify your RSVP <a href="modify-rsvp.html" style="color: #e8b4a0;">by clicking here</a> until March 15, 2026. After that date, please <a href="#contact" style="color: #e8b4a0;">contact us</a> directly if you need to make changes.</div>
+            <div class="faq-answer">Yes! You can modify your RSVP <a href="modify-rsvp.html" style="color: #e8b4a0;">by clicking here</a>. The last day to make changes is March 15, 2026. After that date, please <a href="#contact" style="color: #e8b4a0;">contact us</a> directly if you need to make changes.</div>
+        </div>
+    </section>
+</div>
+
+<div class="main-container">
+    <!-- Schedule Section -->
+    <section id="schedule" class="invitation-container" aria-labelledby="schedule-heading">
+        <h2 id="schedule-heading">Schedule</h2>
+        <p class="registry-intro" style="margin-bottom: 30px;">A rough timeline for the evening</p>
+
+        <div class="schedule-list">
+            <div class="schedule-item">
+                <div class="schedule-time">4:00 PM</div>
+                <div class="schedule-event">Arrivals</div>
+            </div>
+
+            <div class="schedule-item">
+                <div class="schedule-time">5:30 PM</div>
+                <div class="schedule-event">Light appetizers throughout evening</div>
+            </div>
+
+            <div class="schedule-item">
+                <div class="schedule-time">7:00 PM</div>
+                <div class="schedule-event">Toasts and cake</div>
+            </div>
+
+            <div class="schedule-item">
+                <div class="schedule-time">8:00 PM</div>
+                <div class="schedule-event">Dancing and socializing</div>
+            </div>
+
+            <div class="schedule-item">
+                <div class="schedule-time">10:00 PM</div>
+                <div class="schedule-event">Event winds down <span class="schedule-note">(but we'll keep going!)</span></div>
+            </div>
         </div>
     </section>
 </div>
@@ -1208,7 +1282,7 @@ Think elevated but comfortable: sundresses, midi dresses, jumpsuits, dressy sepa
             <h3>Need to Change Your RSVP?</h3>
             <p>If you need to make changes to your RSVP, you can do so easily by clicking below.</p>
             <a href="modify-rsvp.html" class="modify-rsvp-link" id="modifyRsvpLink">Click here to modify your RSVP</a>
-            <p class="deadline-notice" id="deadlineNotice">Changes can be made until March 15, 2026</p>
+            <p class="deadline-notice" id="deadlineNotice">The last day to make changes is March 15, 2026</p>
         </div>
     </section>
 </div>
@@ -1280,8 +1354,8 @@ Think elevated but comfortable: sundresses, midi dresses, jumpsuits, dressy sepa
                 <button type="submit" class="submit-button">Submit RSVP</button>
 
                 <div id="errorMessage" class="error-message"></div>
-                <div id="successMessage" class="success-message"></div>
             </form>
+            <div id="successMessage" class="success-message"></div>
         </div>
     </div>
 
@@ -1710,30 +1784,35 @@ Think elevated but comfortable: sundresses, midi dresses, jumpsuits, dressy sepa
                 const data = await response.json();
 
                 if (response.ok) {
-                    // Success
-                    let emailWarning = '';
+                    // Success - hide the form and title, show only the success message
+                    form.style.display = 'none';
+                    document.getElementById('rsvpTitle').style.display = 'none';
+
+                    let emailNote = '<br><br><span style="color: #a8b5ab; font-size: 14px;">You will receive an email confirmation shortly.</span>';
                     if (data.notifications && !data.notifications.email) {
                         console.error('Email failed:', data.notifications.emailError);
-                        emailWarning = '<br><br><span style="color: #e8b4a0;">Note: We couldn\'t send a confirmation email. Your RSVP was saved successfully.</span>';
+                        emailNote = '<br><br><span style="color: #e8b4a0; font-size: 14px;">Note: We couldn\'t send a confirmation email, but your RSVP was saved successfully.</span>';
                     }
 
                     if (attending === 'yes') {
-                        successMessage.innerHTML = 'Thank you for submitting your RSVP! We look forward to celebrating with you.<br><br>If you have any questions or concerns, please contact us at<br><a href="tel:+13239723556" style="color: #c4d1c7; text-decoration: underline;">(323) 972-3556</a>' + emailWarning;
+                        successMessage.innerHTML = '<div style="text-align: center; padding: 20px 0;"><p style="font-size: 20px; color: #ffffff; margin-bottom: 15px;">Thank you for your RSVP!</p><p style="color: #c4d1c7;">We look forward to celebrating with you.</p>' + emailNote + '</div>';
                     } else {
-                        successMessage.innerHTML = 'Thank you for letting us know. We\'ll miss you!<br><br>If anything changes, please contact us at<br><a href="tel:+13239723556" style="color: #c4d1c7; text-decoration: underline;">(323) 972-3556</a>' + emailWarning;
+                        successMessage.innerHTML = '<div style="text-align: center; padding: 20px 0;"><p style="font-size: 20px; color: #ffffff; margin-bottom: 15px;">Thank you for letting us know.</p><p style="color: #c4d1c7;">We\'ll miss you!</p>' + emailNote + '</div>';
                     }
                     successMessage.style.display = 'block';
 
-                    // Reset form
+                    // Reset form (hidden)
                     form.reset();
                     document.getElementById('guestSection').style.display = 'none';
                     document.getElementById('guestNameFields').innerHTML = '';
 
-                    // Close modal after 5 seconds (longer if email warning)
+                    // Close modal after delay and restore form/title visibility
                     setTimeout(() => {
                         closeRSVP();
                         successMessage.style.display = 'none';
-                    }, emailWarning ? 8000 : 5000);
+                        form.style.display = 'block';
+                        document.getElementById('rsvpTitle').style.display = 'block';
+                    }, emailNote.includes('couldn\'t') ? 8000 : 5000);
                 } else {
                     // Error from server
                     errorMessage.textContent = data.error || 'Failed to submit RSVP. Please try again.';
