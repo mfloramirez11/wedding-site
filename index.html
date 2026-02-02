@@ -695,6 +695,34 @@
     opacity: 0.8;
 }
 
+/* RSVP Deadline */
+.rsvp-deadline {
+    margin-top: 15px;
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: rgba(196, 209, 199, 0.7);
+    opacity: 0;
+    animation: fadeSlideIn 1s ease-out 2s forwards;
+}
+
+.rsvp-deadline.closed {
+    color: #e8b4a0;
+}
+
+.rsvp-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: rgba(196, 209, 199, 0.1);
+}
+
+.rsvp-button:disabled:hover {
+    background: rgba(196, 209, 199, 0.1);
+    color: #c4d1c7;
+    transform: none;
+    box-shadow: none;
+}
+
 /* Contact Section */
 .contact-intro {
     text-align: center;
@@ -1115,7 +1143,8 @@
                 </div>
 
                 <div class="rsvp-section">
-                    <button class="rsvp-button" onclick="openRSVP()" aria-haspopup="dialog">RSVP</button>
+                    <button class="rsvp-button" id="rsvpButton" onclick="openRSVP()" aria-haspopup="dialog">RSVP</button>
+                    <p class="rsvp-deadline" id="rsvpDeadlineText">Please RSVP by March 15, 2026</p>
                 </div>
             </div>
 
@@ -1853,11 +1882,26 @@ END:VCARD`;
 
             const modifyLink = document.getElementById('modifyRsvpLink');
             const deadlineNotice = document.getElementById('deadlineNotice');
+            const rsvpButton = document.getElementById('rsvpButton');
+            const rsvpDeadlineText = document.getElementById('rsvpDeadlineText');
 
-            if (modifyLink && deadlineNotice && now > deadline) {
-                modifyLink.style.display = 'none';
-                deadlineNotice.innerHTML = 'The deadline for RSVP changes (March 15) has passed.<br>Please contact us directly if you need to make changes.';
-                deadlineNotice.classList.add('deadline-passed');
+            if (now > deadline) {
+                // Disable RSVP button on main page
+                if (rsvpButton) {
+                    rsvpButton.disabled = true;
+                    rsvpButton.onclick = null;
+                }
+                if (rsvpDeadlineText) {
+                    rsvpDeadlineText.textContent = 'RSVPs are now closed. Please contact us directly.';
+                    rsvpDeadlineText.classList.add('closed');
+                }
+
+                // Update modify RSVP section
+                if (modifyLink && deadlineNotice) {
+                    modifyLink.style.display = 'none';
+                    deadlineNotice.innerHTML = 'The deadline for RSVP changes (March 15) has passed.<br>Please contact us directly if you need to make changes.';
+                    deadlineNotice.classList.add('deadline-passed');
+                }
             }
         }
 
