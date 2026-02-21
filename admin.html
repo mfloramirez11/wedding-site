@@ -1050,7 +1050,7 @@
 
                 <div class="form-group">
                     <label>Phone</label>
-                    <input type="tel" id="editPhone" required>
+                    <input type="tel" id="editPhone" required placeholder="(555) 123-4567" maxlength="14" oninput="formatPhoneNumber(this)">
                 </div>
 
                 <div class="form-group">
@@ -1142,7 +1142,7 @@
 
                 <div class="form-group">
                     <label>Phone</label>
-                    <input type="tel" id="addPhone" placeholder="(555) 123-4567">
+                    <input type="tel" id="addPhone" placeholder="(555) 123-4567" maxlength="14" oninput="formatPhoneNumber(this)">
                 </div>
 
                 <div class="form-group">
@@ -1253,6 +1253,27 @@
     </div>
 
     <script>
+        function formatPhoneNumber(input) {
+            let digits = input.value.replace(/\D/g, '');
+            if (digits.length > 10 && digits.startsWith('1')) digits = digits.substring(1);
+            digits = digits.substring(0, 10);
+            let formatted = '';
+            if (digits.length > 0) formatted = '(' + digits.substring(0, 3);
+            if (digits.length >= 3) formatted += ') ' + digits.substring(3, 6);
+            if (digits.length >= 6) formatted += '-' + digits.substring(6, 10);
+            input.value = formatted;
+        }
+
+        function formatPhoneDisplay(phone) {
+            if (!phone) return '';
+            const digits = phone.replace(/\D/g, '').replace(/^1/, '').substring(0, 10);
+            let formatted = '';
+            if (digits.length > 0) formatted = '(' + digits.substring(0, 3);
+            if (digits.length >= 3) formatted += ') ' + digits.substring(3, 6);
+            if (digits.length >= 6) formatted += '-' + digits.substring(6, 10);
+            return formatted || phone;
+        }
+
         let rsvpData = [];
         let authToken = '';
         let deleteId = null;
@@ -1513,7 +1534,7 @@
             document.getElementById('editId').value = rsvp.id;
             document.getElementById('editName').value = rsvp.name;
             document.getElementById('editEmail').value = rsvp.email;
-            document.getElementById('editPhone').value = rsvp.phone || '';
+            document.getElementById('editPhone').value = formatPhoneDisplay(rsvp.phone || '');
             document.getElementById('editAttending').value = rsvp.attending;
             document.getElementById('editGuests').value = rsvp.guests || 1;
 
