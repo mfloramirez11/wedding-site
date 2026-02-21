@@ -1358,6 +1358,12 @@
                 title.textContent = '🌸 Baby Shower RSVP Dashboard';
             }
 
+            // Reset stats while loading
+            document.getElementById('statTotal').textContent = '—';
+            document.getElementById('statAttending').textContent = '—';
+            document.getElementById('statDeclined').textContent = '—';
+            document.getElementById('statGuests').textContent = '—';
+
             // Save preference
             sessionStorage.setItem('adminEvent', eventType);
 
@@ -1465,7 +1471,9 @@
                         logout();
                         return;
                     }
-                    throw new Error('Failed to load RSVPs');
+                    let errBody = '';
+                    try { errBody = await response.text(); } catch {}
+                    throw new Error(`HTTP ${response.status}: ${errBody}`);
                 }
 
                 const data = await response.json();
@@ -1483,7 +1491,7 @@
 
             } catch (error) {
                 console.error('Error loading RSVPs:', error);
-                content.innerHTML = '<div class="no-data">Failed to load RSVPs. Please try again.</div>';
+                content.innerHTML = `<div class="no-data">Failed to load RSVPs: ${error.message}<br><br><button class="btn btn-secondary" onclick="loadRSVPs()" style="margin:0 auto;display:block;max-width:160px;">Try Again</button></div>`;
             }
         }
 
