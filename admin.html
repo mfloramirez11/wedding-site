@@ -1776,16 +1776,18 @@
         function updateAddGuestFields() {
             const count = parseInt(document.getElementById('addGuests').value);
             const container = document.getElementById('addGuestFields');
+            const primaryName = document.getElementById('addName').value.trim();
             container.innerHTML = '';
 
             for (let i = 0; i < count; i++) {
+                const isPrimary = i === 0;
                 const card = document.createElement('div');
                 card.className = 'edit-guest-card';
                 card.innerHTML = `
-                    <div class="edit-guest-card-header">Guest ${i + 1}${i === 0 ? ' (Primary)' : ''}</div>
+                    <div class="edit-guest-card-header">Guest ${i + 1}${isPrimary ? ' (Primary)' : ''}</div>
                     <div class="form-group">
                         <label>Name *</label>
-                        <input type="text" id="addGuest_name_${i}" placeholder="Full name" required>
+                        <input type="text" id="addGuest_name_${i}" placeholder="Full name" value="${isPrimary ? escapeHtml(primaryName) : ''}" required>
                     </div>
                     <div class="form-group">
                         <label>Dietary Restrictions</label>
@@ -1799,6 +1801,12 @@
                 container.appendChild(card);
             }
         }
+
+        // Keep Guest 1 name in sync with primary contact name
+        document.getElementById('addName').addEventListener('input', function() {
+            const guest1Input = document.getElementById('addGuest_name_0');
+            if (guest1Input) guest1Input.value = this.value;
+        });
 
         document.getElementById('addForm').addEventListener('submit', async (e) => {
             e.preventDefault();
