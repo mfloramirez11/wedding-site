@@ -3,6 +3,10 @@
   "outputDirectory": ".",
   "rewrites": [
     { "source": "/images/:path*", "destination": "/public/images/:path*" },
+    { "source": "/baby-shower", "destination": "/baby-shower.html" },
+    { "source": "/baby-shower-modify", "destination": "/baby-shower-modify.html" },
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/modify-rsvp", "destination": "/modify-rsvp.html" },
     { "source": "/:path((?!api/).*)", "destination": "/index.html" }
   ]
 }

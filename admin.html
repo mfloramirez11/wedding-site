@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#2d3e3a">
-    <title>Admin - Manny & Celesti Wedding RSVPs</title>
+    <title>Admin - Manny & Celesti RSVPs</title>
     <style>
         * {
             margin: 0;
@@ -62,6 +62,45 @@
             margin-bottom: 28px;
             color: rgba(196, 209, 199, 0.7);
             font-size: 0.95rem;
+        }
+
+        /* Event Toggle */
+        .event-toggle {
+            display: flex;
+            background: rgba(196, 209, 199, 0.1);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(196, 209, 199, 0.2);
+        }
+
+        .event-toggle-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.25s ease;
+            background: transparent;
+            color: rgba(196, 209, 199, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .event-toggle-btn.active {
+            background: rgba(196, 209, 199, 0.2);
+            color: #c4d1c7;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .event-toggle-btn.baby-active {
+            background: rgba(224, 122, 170, 0.25);
+            color: #f4a8c5;
+            box-shadow: 0 2px 8px rgba(176, 86, 120, 0.25);
         }
 
         .form-group {
@@ -909,8 +948,8 @@
     <!-- Login Screen -->
     <div class="login-container" id="loginScreen">
         <div class="login-box">
-            <h1>Wedding Admin</h1>
-            <p>Manny & Celesti's RSVP Dashboard</p>
+            <h1>Event Admin</h1>
+            <p>Manny & Celesti – RSVP Dashboard</p>
 
             <div class="error-message" id="loginError"></div>
 
@@ -939,8 +978,18 @@
             Back to Website
         </a>
 
+        <!-- Event Toggle -->
+        <div class="event-toggle" id="eventToggle">
+            <button class="event-toggle-btn active" id="toggleWedding" onclick="switchEvent('wedding')">
+                💍 Wedding
+            </button>
+            <button class="event-toggle-btn" id="toggleBabyShower" onclick="switchEvent('babyShower')">
+                🌸 Baby Shower
+            </button>
+        </div>
+
         <div class="dashboard-header">
-            <h1>RSVP Dashboard</h1>
+            <h1 id="dashboardTitle">Wedding RSVP Dashboard</h1>
             <div class="header-actions">
                 <button class="btn btn-secondary btn-icon" onclick="refreshData()" title="Refresh">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1277,14 +1326,56 @@
         let rsvpData = [];
         let authToken = '';
         let deleteId = null;
+        let currentEvent = 'wedding'; // 'wedding' or 'babyShower'
+
+        // API endpoint resolver
+        function getApiEndpoint(action) {
+            const prefix = currentEvent === 'babyShower' ? '/api/baby-shower-' : '/api/';
+            const map = {
+                'get-rsvps':    currentEvent === 'babyShower' ? '/api/baby-shower-get-rsvps' : '/api/get-rsvps',
+                'add-rsvp':     currentEvent === 'babyShower' ? '/api/baby-shower-add-rsvp'  : '/api/add-rsvp',
+                'update-rsvp':  currentEvent === 'babyShower' ? '/api/baby-shower-update-rsvp' : '/api/update-rsvp',
+                'delete-rsvp':  currentEvent === 'babyShower' ? '/api/baby-shower-delete-rsvp' : '/api/delete-rsvp',
+            };
+            return map[action] || `/api/${action}`;
+        }
+
+        function switchEvent(eventType) {
+            currentEvent = eventType;
+            const wBtn = document.getElementById('toggleWedding');
+            const bBtn = document.getElementById('toggleBabyShower');
+            const title = document.getElementById('dashboardTitle');
+
+            if (eventType === 'wedding') {
+                wBtn.classList.add('active');
+                wBtn.classList.remove('baby-active');
+                bBtn.classList.remove('active', 'baby-active');
+                title.textContent = 'Wedding RSVP Dashboard';
+            } else {
+                bBtn.classList.add('baby-active');
+                bBtn.classList.remove('active');
+                wBtn.classList.remove('active', 'baby-active');
+                title.textContent = '🌸 Baby Shower RSVP Dashboard';
+            }
+
+            // Save preference
+            sessionStorage.setItem('adminEvent', eventType);
+
+            loadRSVPs();
+        }
 
         // Check if already logged in
         document.addEventListener('DOMContentLoaded', () => {
             const savedToken = sessionStorage.getItem('adminToken');
+            const savedEvent = sessionStorage.getItem('adminEvent');
             if (savedToken) {
                 authToken = savedToken;
                 showDashboard();
-                loadRSVPs();
+                if (savedEvent) {
+                    switchEvent(savedEvent);
+                } else {
+                    loadRSVPs();
+                }
             }
         });
 
@@ -1365,7 +1456,7 @@
             content.innerHTML = '<div class="loading">Loading RSVPs</div>';
 
             try {
-                const response = await fetch('/api/get-rsvps', {
+                const response = await fetch(getApiEndpoint('get-rsvps'), {
                     headers: { 'Authorization': `Bearer ${authToken}` }
                 });
 
@@ -1627,7 +1718,7 @@
             };
 
             try {
-                const response = await fetch('/api/update-rsvp', {
+                const response = await fetch(getApiEndpoint('update-rsvp'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1734,7 +1825,7 @@
             };
 
             try {
-                const response = await fetch('/api/add-rsvp', {
+                const response = await fetch(getApiEndpoint('add-rsvp'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1776,7 +1867,7 @@
             if (!deleteId) return;
 
             try {
-                const response = await fetch('/api/delete-rsvp', {
+                const response = await fetch(getApiEndpoint('delete-rsvp'), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1839,7 +1930,8 @@
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = `wedding-rsvps-${new Date().toISOString().split('T')[0]}.csv`;
+            const eventName = currentEvent === 'babyShower' ? 'baby-shower' : 'wedding';
+            link.download = `${eventName}-rsvps-${new Date().toISOString().split('T')[0]}.csv`;
             link.click();
 
             showToast('CSV exported successfully');
