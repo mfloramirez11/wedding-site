@@ -206,6 +206,44 @@
             color: rgba(196, 209, 199, 0.5);
         }
 
+        .phone-input-wrapper {
+            display: flex;
+            align-items: center;
+            background: rgba(196, 209, 199, 0.1);
+            border: 1px solid rgba(196, 209, 199, 0.3);
+            border-radius: 10px;
+            transition: border-color 0.3s ease, background 0.3s ease;
+        }
+        .phone-input-wrapper:focus-within {
+            border-color: #c4d1c7;
+            background: rgba(196, 209, 199, 0.15);
+        }
+        .phone-prefix {
+            padding: 14px 0 14px 16px;
+            color: rgba(196, 209, 199, 0.7);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            user-select: none;
+        }
+        .phone-input-wrapper input {
+            flex: 1;
+            border: none !important;
+            background: transparent !important;
+            padding-left: 8px !important;
+            border-radius: 0 !important;
+        }
+        .phone-input-wrapper input:focus {
+            outline: none;
+        }
+        .form-hint {
+            display: block;
+            margin-top: 6px;
+            color: rgba(196, 209, 199, 0.6);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.85rem;
+        }
+
         .form-group select {
             -webkit-appearance: none;
             appearance: none;
@@ -431,7 +469,7 @@
     <nav role="navigation" aria-label="Main navigation">
         <ul>
             <li><a href="/">Home</a></li>
-            <li><a href="/#our-story">Our Story</a></li>
+            <!-- <li><a href="/#our-story">Our Story</a></li> -->
             <li><a href="/#faq">FAQ</a></li>
             <li><a href="/#registry">Registry</a></li>
             <li><a href="/#contact">Contact</a></li>
@@ -512,7 +550,12 @@
 
                     <div class="form-group">
                         <label for="verifyPhone">Phone Number</label>
-                        <input type="tel" id="verifyPhone" placeholder="Enter your phone number" required>
+                        <div class="phone-input-wrapper">
+                            <span class="phone-prefix">+1</span>
+                            <input type="tel" id="verifyPhone" placeholder="(555) 123-4567" required
+                                   maxlength="14" oninput="formatPhoneNumber(this)">
+                        </div>
+                        <span class="form-hint">10 digits only — no country code needed</span>
                     </div>
 
                     <button type="submit" class="btn btn-primary">Find My RSVP</button>
@@ -566,6 +609,19 @@
     </div>
 
     <script>
+        function formatPhoneNumber(input) {
+            let digits = input.value.replace(/\D/g, '');
+            if (digits.length > 10 && digits.startsWith('1')) {
+                digits = digits.substring(1);
+            }
+            digits = digits.substring(0, 10);
+            let formatted = '';
+            if (digits.length > 0) formatted = '(' + digits.substring(0, 3);
+            if (digits.length >= 3) formatted += ') ' + digits.substring(3, 6);
+            if (digits.length >= 6) formatted += '-' + digits.substring(6, 10);
+            input.value = formatted;
+        }
+
         let currentRsvp = null;
 
         // Check deadline on page load
