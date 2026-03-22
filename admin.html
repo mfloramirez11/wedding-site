@@ -1156,6 +1156,59 @@
             opacity: 0.5;
             cursor: not-allowed;
         }
+
+        /* Schedule editor */
+        .schedule-editor-row {
+            display: grid;
+            grid-template-columns: 110px 1fr 1fr 36px;
+            gap: 8px;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .schedule-editor-row:first-child {
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            color: rgba(255,255,255,0.4);
+            text-transform: uppercase;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+        }
+        .schedule-editor-input {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 6px;
+            color: #e8f0ec;
+            font-family: 'Lato', sans-serif;
+            font-size: 0.88rem;
+            padding: 7px 10px;
+            width: 100%;
+            transition: border-color 0.2s;
+        }
+        .schedule-editor-input:focus {
+            outline: none;
+            border-color: rgba(196,209,199,0.4);
+        }
+        .schedule-editor-input::placeholder {
+            color: rgba(255,255,255,0.25);
+        }
+        .schedule-remove-btn {
+            background: rgba(231,76,60,0.15);
+            border: 1px solid rgba(231,76,60,0.3);
+            border-radius: 6px;
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 1rem;
+            height: 34px;
+            width: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .schedule-remove-btn:hover {
+            background: rgba(231,76,60,0.3);
+        }
     </style>
 </head>
 <body>
@@ -1202,6 +1255,9 @@
             </button>
             <button class="event-toggle-btn" id="toggleSeating" onclick="switchToSeating()">
                 🪑 Seating
+            </button>
+            <button class="event-toggle-btn" id="toggleSchedule" onclick="switchToSchedule()">
+                📅 Schedule
             </button>
         </div>
 
@@ -1287,6 +1343,26 @@
         <!-- RSVP List -->
         <div id="rsvpContent">
             <div class="loading">Loading RSVPs</div>
+        </div>
+
+        <!-- Schedule Editor Panel -->
+        <div class="seating-panel" id="schedulePanel" style="display:none;">
+            <div class="seating-save-all-bar">
+                <h2>Schedule Editor</h2>
+                <button class="btn btn-primary" onclick="saveSchedule()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+                        <path d="M17 21v-8H7v8M7 3v5h8"/>
+                    </svg>
+                    Save All
+                </button>
+            </div>
+            <div id="scheduleEditorBody" style="padding: 0 24px 24px;">
+                <div class="loading">Loading schedule</div>
+            </div>
+            <div style="padding: 0 24px 24px;">
+                <button class="seating-add-btn" onclick="addScheduleRow()" style="width:100%; max-width:200px;">+ Add Row</button>
+            </div>
         </div>
 
         <!-- Seating Editor Panel -->
@@ -2307,29 +2383,40 @@
         let seatingData = []; // array of { table_number, table_label, seats: [{id, seat_name, rsvp_id}] }
         let currentView = 'rsvp'; // 'rsvp' or 'seating'
 
-        function switchToSeating() {
-            currentView = 'seating';
-            // Update toggle buttons
-            document.getElementById('toggleWedding').classList.remove('active', 'baby-active');
-            document.getElementById('toggleBabyShower').classList.remove('active', 'baby-active');
-            document.getElementById('toggleSeating').classList.add('active');
-
-            // Show/hide panels
-            document.getElementById('seatingPanel').style.display = 'block';
+        function hideAllPanels() {
+            document.getElementById('seatingPanel').style.display = 'none';
+            document.getElementById('schedulePanel').style.display = 'none';
             document.getElementById('rsvpContent').style.display = 'none';
             document.querySelector('.stats-grid').style.display = 'none';
             document.getElementById('statsDetail').style.display = 'none';
             document.querySelector('.search-container').style.display = 'none';
-            document.getElementById('dashboardTitle').textContent = 'Seating Chart';
+            document.getElementById('toggleWedding').classList.remove('active', 'baby-active');
+            document.getElementById('toggleBabyShower').classList.remove('active', 'baby-active');
+            document.getElementById('toggleSeating').classList.remove('active', 'baby-active');
+            document.getElementById('toggleSchedule').classList.remove('active', 'baby-active');
+        }
 
-            // Load seating data if not loaded
+        function switchToSeating() {
+            currentView = 'seating';
+            hideAllPanels();
+            document.getElementById('toggleSeating').classList.add('active');
+            document.getElementById('seatingPanel').style.display = 'block';
+            document.getElementById('dashboardTitle').textContent = 'Seating Chart';
             loadSeatingData();
+        }
+
+        function switchToSchedule() {
+            currentView = 'schedule';
+            hideAllPanels();
+            document.getElementById('toggleSchedule').classList.add('active');
+            document.getElementById('schedulePanel').style.display = 'block';
+            document.getElementById('dashboardTitle').textContent = 'Schedule Editor';
+            loadScheduleEditor();
         }
 
         function switchEvent(eventType) {
             currentView = 'rsvp';
-            document.getElementById('toggleSeating').classList.remove('active', 'baby-active');
-            document.getElementById('seatingPanel').style.display = 'none';
+            hideAllPanels();
             document.getElementById('rsvpContent').style.display = 'block';
             document.querySelector('.stats-grid').style.display = 'grid';
             document.getElementById('statsDetail').style.display = 'block';
@@ -2603,6 +2690,90 @@
                 await saveTable(tableNum);
             }
             showToast('All tables saved!');
+        }
+
+        // ── Schedule Editor ──────────────────────────────────────────────
+
+        async function loadScheduleEditor() {
+            const body = document.getElementById('scheduleEditorBody');
+            body.innerHTML = '<div class="loading">Loading schedule</div>';
+            try {
+                const res = await fetch('/api/get-schedule');
+                const data = await res.json();
+                renderScheduleEditor(data.items || []);
+            } catch (e) {
+                body.innerHTML = '<div class="no-data">Failed to load schedule.</div>';
+            }
+        }
+
+        function renderScheduleEditor(items) {
+            const body = document.getElementById('scheduleEditorBody');
+            const header = `<div class="schedule-editor-row">
+                <span>Time</span><span>Event</span><span>Notes</span><span></span>
+            </div>`;
+            const rows = items.map((item, i) => buildScheduleRow(item, i)).join('');
+            body.innerHTML = header + `<div id="scheduleRows">${rows}</div>`;
+        }
+
+        function buildScheduleRow(item = {}, idx = 0) {
+            const t = escapeHtml(item.time || '');
+            const e = escapeHtml(item.event || '');
+            const n = escapeHtml(item.note || '');
+            return `<div class="schedule-editor-row" data-idx="${idx}">
+                <input class="schedule-editor-input" type="text" placeholder="e.g. 4:00 PM" value="${t}" data-field="time">
+                <input class="schedule-editor-input" type="text" placeholder="Event name" value="${e}" data-field="event">
+                <input class="schedule-editor-input" type="text" placeholder="Optional notes" value="${n}" data-field="note">
+                <button class="schedule-remove-btn" onclick="removeScheduleRow(this)" title="Remove">×</button>
+            </div>`;
+        }
+
+        function addScheduleRow() {
+            const container = document.getElementById('scheduleRows');
+            if (!container) return;
+            const idx = container.children.length;
+            const div = document.createElement('div');
+            div.innerHTML = buildScheduleRow({}, idx);
+            container.appendChild(div.firstElementChild);
+        }
+
+        function removeScheduleRow(btn) {
+            btn.closest('.schedule-editor-row').remove();
+        }
+
+        function collectScheduleItems() {
+            const rows = document.querySelectorAll('#scheduleRows .schedule-editor-row');
+            const items = [];
+            rows.forEach(row => {
+                const time = row.querySelector('[data-field="time"]').value.trim();
+                const event = row.querySelector('[data-field="event"]').value.trim();
+                const note = row.querySelector('[data-field="note"]').value.trim();
+                if (event) items.push({ time, event, note: note || null });
+            });
+            return items;
+        }
+
+        async function saveSchedule() {
+            const btn = document.querySelector('#schedulePanel .btn-primary');
+            btn.disabled = true;
+            btn.textContent = 'Saving…';
+            try {
+                const items = collectScheduleItems();
+                const res = await fetch('/api/update-schedule', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ items })
+                });
+                if (!res.ok) throw new Error('Save failed');
+                showToast('Schedule saved!');
+            } catch (e) {
+                showToast('Error saving schedule');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg> Save All`;
+            }
         }
     </script>
 </body>

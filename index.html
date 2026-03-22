@@ -1218,46 +1218,10 @@ Think elevated but comfortable: sundresses, midi dresses, jumpsuits, dressy sepa
     <section id="schedule" class="invitation-container" aria-labelledby="schedule-heading">
         <h2 id="schedule-heading">Schedule</h2>
 
-        <div class="schedule-list">
-            <div class="schedule-item">
-                <div class="schedule-time">4:00 PM</div>
-                <div class="schedule-event">
-                    Guest Arrival
-                    <div class="schedule-note">Photobooth opens · Cocktails served · Guests mingle freely</div>
-                </div>
-            </div>
-            <div class="schedule-item">
-                <div class="schedule-time">4:30 PM</div>
-                <div class="schedule-event">
-                    Buffet Opens
-                    <div class="schedule-note">Guests eat at their own pace · Casual, relaxed vibe</div>
-                </div>
-            </div>
-            <div class="schedule-item">
-                <div class="schedule-time">6:30 PM</div>
-                <div class="schedule-event">
-                    Vows
-                    <div class="schedule-note">Personal promises to each other</div>
-                </div>
-            </div>
-            <div class="schedule-item">
-                <div class="schedule-time">6:50 PM</div>
-                <div class="schedule-event">First Dance</div>
-            </div>
-            <div class="schedule-item">
-                <div class="schedule-time">7:00 PM</div>
-                <div class="schedule-event">Parent Dances</div>
-            </div>
-            <div class="schedule-item">
-                <div class="schedule-time">7:15 PM</div>
-                <div class="schedule-event">Cake Cutting</div>
-            </div>
-            <div class="schedule-item">
-                <div class="schedule-time">7:45 PM</div>
-                <div class="schedule-event">
-                    Open Dance Floor & Party
-                    <div class="schedule-note">Music picks up · Dance, mingle, or enjoy backyard activities</div>
-                </div>
+        <div class="schedule-list" id="scheduleList">
+            <div class="schedule-item" style="opacity:0.5;">
+                <div class="schedule-time">—</div>
+                <div class="schedule-event">Loading schedule...</div>
             </div>
         </div>
     </section>
@@ -2014,6 +1978,27 @@ END:VCARD`;
 
         // Run on page load
         checkDeadline();
+
+        // Load schedule from API
+        (async function loadSchedule() {
+            try {
+                const res = await fetch('/api/get-schedule');
+                const data = await res.json();
+                const list = document.getElementById('scheduleList');
+                if (!data.items || data.items.length === 0) return;
+                list.innerHTML = data.items.map(item => `
+                    <div class="schedule-item">
+                        <div class="schedule-time">${item.time || ''}</div>
+                        <div class="schedule-event">
+                            ${item.event}
+                            ${item.note ? `<div class="schedule-note">${item.note}</div>` : ''}
+                        </div>
+                    </div>
+                `).join('');
+            } catch (e) {
+                // silently keep the loading placeholder on failure
+            }
+        })();
     </script>
 </body>
 </html>
