@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seating Chart - Manny & Celesti</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cinzel:wght@400;500&family=Lato:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #2d3e3a 0%, #455951 100%);
+            font-family: 'Cormorant Garamond', serif;
+            color: #c4d1c7;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(61, 79, 71, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: #c4d1c7;
+            text-decoration: none;
+            font-family: 'Cinzel', serif;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: #c4d1c7;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover { color: #ffffff; }
+        nav a:hover::after { width: 100%; }
+
+        .page-wrapper {
+            padding: 120px 20px 80px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            color: #e8b4a0;
+            text-align: center;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            color: #c4d1c7;
+            text-align: center;
+            font-size: 1.2rem;
+            opacity: 0.7;
+            margin-bottom: 60px;
+        }
+
+        /* Search */
+        .search-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 50px;
+        }
+
+        #search {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(196, 209, 199, 0.25);
+            border-radius: 4px;
+            color: #c4d1c7;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            padding: 12px 22px;
+            width: 100%;
+            max-width: 380px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        #search::placeholder { color: rgba(196,209,199,0.45); }
+        #search:focus { border-color: #e8b4a0; }
+
+        /* Grid of tables */
+        .tables-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 28px;
+        }
+
+        .table-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(196, 209, 199, 0.15);
+            border-radius: 8px;
+            padding: 28px 24px;
+            transition: border-color 0.3s, background 0.3s;
+        }
+
+        .table-card.highlighted {
+            border-color: #e8b4a0;
+            background: rgba(232, 180, 160, 0.07);
+        }
+
+        .table-card.dimmed {
+            opacity: 0.3;
+        }
+
+        .table-name {
+            font-family: 'Cinzel', serif;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #e8b4a0;
+            margin-bottom: 4px;
+        }
+
+        .table-label {
+            font-style: italic;
+            font-size: 0.95rem;
+            color: rgba(196,209,199,0.55);
+            margin-bottom: 18px;
+        }
+
+        .guest-list {
+            list-style: none;
+        }
+
+        .guest-list li {
+            font-size: 1.1rem;
+            color: #c4d1c7;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(196, 209, 199, 0.08);
+            transition: color 0.2s;
+        }
+
+        .guest-list li:last-child { border-bottom: none; }
+
+        .guest-list li.match {
+            color: #ffffff;
+            font-weight: 400;
+        }
+
+        @media (max-width: 600px) {
+            nav ul { gap: 20px; }
+            .page-title { font-size: 1.5rem; }
+            .tables-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+            .table-card { padding: 20px 16px; }
+        }
+
+        @media (max-width: 400px) {
+            .tables-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav role="navigation" aria-label="Main navigation">
+    <ul>
+        <li><a href="/index.html">Home</a></li>
+        <li><a href="/index.html#schedule">Schedule</a></li>
+        <li><a href="/seating.html">Seating</a></li>
+        <li><a href="/contact.html">Contact</a></li>
+    </ul>
+</nav>
+
+<div class="page-wrapper">
+    <h1 class="page-title">Seating Chart</h1>
+    <p class="page-subtitle">Find your table below</p>
+
+    <div class="search-wrap">
+        <input type="text" id="search" placeholder="Search your name..." autocomplete="off" />
+    </div>
+
+    <div class="tables-grid" id="tables-grid">
+        <div style="grid-column:1/-1;text-align:center;color:rgba(196,209,199,0.5);padding:40px 0;">Loading seating chart...</div>
+    </div>
+</div>
+
+<script>
+    const searchInput = document.getElementById('search');
+    const grid = document.getElementById('tables-grid');
+
+    function escHtml(str) {
+        const d = document.createElement('div');
+        d.textContent = str || '';
+        return d.innerHTML;
+    }
+
+    function renderTables(tables) {
+        // Remove placeholder cards and loading message
+        grid.innerHTML = '';
+
+        if (!tables || tables.length === 0) {
+            grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:rgba(196,209,199,0.5);padding:40px 0;">Seating chart coming soon.</div>';
+            return;
+        }
+
+        tables.forEach(table => {
+            const card = document.createElement('div');
+            card.className = 'table-card';
+            card.dataset.table = table.table_number;
+
+            const guestItems = table.seats.map(s =>
+                `<li>${escHtml(s.seat_name)}</li>`
+            ).join('');
+
+            card.innerHTML = `
+                <div class="table-name">Table ${table.table_number}</div>
+                ${table.table_label ? `<div class="table-label">${escHtml(table.table_label)}</div>` : ''}
+                <ul class="guest-list">${guestItems}</ul>
+            `;
+
+            grid.appendChild(card);
+        });
+
+        applySearch();
+    }
+
+    function applySearch() {
+        const query = searchInput.value.trim().toLowerCase();
+        const cards = grid.querySelectorAll('.table-card');
+
+        cards.forEach(card => {
+            const items = card.querySelectorAll('.guest-list li');
+            let hasMatch = false;
+
+            items.forEach(li => {
+                const name = li.textContent.toLowerCase();
+                if (query && name.includes(query)) {
+                    li.classList.add('match');
+                    hasMatch = true;
+                } else {
+                    li.classList.remove('match');
+                }
+            });
+
+            if (!query) {
+                card.classList.remove('highlighted', 'dimmed');
+            } else if (hasMatch) {
+                card.classList.add('highlighted');
+                card.classList.remove('dimmed');
+            } else {
+                card.classList.add('dimmed');
+                card.classList.remove('highlighted');
+            }
+        });
+    }
+
+    searchInput.addEventListener('input', applySearch);
+
+    // Load from API
+    async function loadSeating() {
+        try {
+            const res = await fetch('/api/get-seating');
+            if (!res.ok) throw new Error('API error');
+            const data = await res.json();
+            renderTables(data.tables);
+        } catch (err) {
+            grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:rgba(196,209,199,0.5);padding:40px 0;">Unable to load seating chart. Please try again later.</div>';
+        }
+    }
+
+    loadSeating();
+</script>
+
+</body>
+</html>

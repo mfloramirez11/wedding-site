@@ -942,6 +942,220 @@
                 padding-right: max(24px, env(safe-area-inset-right));
             }
         }
+
+        /* ===== SEATING EDITOR ===== */
+        .seating-panel {
+            display: none;
+        }
+
+        .seating-save-all-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .seating-save-all-bar h2 {
+            color: #c4d1c7;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .seating-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .seating-table-card {
+            background: rgba(61, 79, 71, 0.95);
+            border: 1px solid rgba(196, 209, 199, 0.2);
+            border-radius: 14px;
+            padding: 18px;
+        }
+
+        .seating-table-card.saving {
+            border-color: #e8b4a0;
+            opacity: 0.7;
+        }
+
+        .seating-table-card.saved {
+            border-color: #a8d5a2;
+        }
+
+        .seating-table-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(196, 209, 199, 0.1);
+        }
+
+        .seating-table-num {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #e8b4a0;
+            white-space: nowrap;
+        }
+
+        .seating-label-input {
+            flex: 1;
+            background: rgba(196, 209, 199, 0.08);
+            border: 1px solid rgba(196, 209, 199, 0.2);
+            border-radius: 8px;
+            color: rgba(196, 209, 199, 0.8);
+            font-size: 0.85rem;
+            padding: 6px 10px;
+            -webkit-appearance: none;
+        }
+
+        .seating-label-input:focus {
+            outline: none;
+            border-color: rgba(196, 209, 199, 0.5);
+            color: #fff;
+        }
+
+        .seating-label-input::placeholder {
+            color: rgba(196, 209, 199, 0.3);
+        }
+
+        .seating-seat-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .seating-seat-row {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .seat-name-input {
+            flex: 0 0 120px;
+            min-width: 0;
+            background: rgba(196, 209, 199, 0.08);
+            border: 1px solid rgba(196, 209, 199, 0.15);
+            border-radius: 8px;
+            color: rgba(196, 209, 199, 0.7);
+            font-size: 0.85rem;
+            padding: 8px 10px;
+            -webkit-appearance: none;
+        }
+
+        .seat-name-input:focus {
+            outline: none;
+            border-color: rgba(196, 209, 199, 0.5);
+            color: #fff;
+        }
+
+        .seat-name-input::placeholder {
+            color: rgba(196, 209, 199, 0.25);
+            font-size: 0.8rem;
+        }
+
+        .seat-rsvp-select {
+            flex: 1;
+            min-width: 0;
+            background: rgba(196, 209, 199, 0.08);
+            border: 1px solid rgba(196, 209, 199, 0.2);
+            border-radius: 8px;
+            color: #c4d1c7;
+            font-size: 0.9rem;
+            padding: 8px 10px;
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        .seat-rsvp-select:focus {
+            outline: none;
+            border-color: rgba(196, 209, 199, 0.5);
+        }
+
+        .seat-rsvp-select option, .seat-rsvp-select optgroup {
+            background: #3d4f47;
+            color: #fff;
+        }
+
+        .seat-rsvp-select.linked {
+            border-color: #a8d5a2;
+            color: #a8d5a2;
+        }
+
+        .seat-remove-btn {
+            background: rgba(232, 180, 160, 0.1);
+            border: 1px solid rgba(232, 180, 160, 0.2);
+            border-radius: 6px;
+            color: #e8b4a0;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+
+        .seat-remove-btn:hover {
+            background: rgba(232, 180, 160, 0.25);
+        }
+
+        .seating-table-footer {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 4px;
+        }
+
+        .seating-add-btn {
+            flex: 1;
+            background: rgba(196, 209, 199, 0.08);
+            border: 1px dashed rgba(196, 209, 199, 0.3);
+            border-radius: 8px;
+            color: rgba(196, 209, 199, 0.6);
+            font-size: 0.85rem;
+            padding: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .seating-add-btn:hover {
+            background: rgba(196, 209, 199, 0.12);
+            color: #c4d1c7;
+        }
+
+        .seating-save-btn {
+            background: #c4d1c7;
+            border: none;
+            border-radius: 8px;
+            color: #3d4f47;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .seating-save-btn:hover {
+            background: #d4e1d7;
+        }
+
+        .seating-save-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -985,6 +1199,9 @@
             </button>
             <button class="event-toggle-btn" id="toggleBabyShower" onclick="switchEvent('babyShower')">
                 🌸 Baby Shower
+            </button>
+            <button class="event-toggle-btn" id="toggleSeating" onclick="switchToSeating()">
+                🪑 Seating
             </button>
         </div>
 
@@ -1070,6 +1287,23 @@
         <!-- RSVP List -->
         <div id="rsvpContent">
             <div class="loading">Loading RSVPs</div>
+        </div>
+
+        <!-- Seating Editor Panel -->
+        <div class="seating-panel" id="seatingPanel">
+            <div class="seating-save-all-bar">
+                <h2>Seating Chart Editor</h2>
+                <button class="btn btn-primary" onclick="saveAllTables()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+                        <path d="M17 21v-8H7v8M7 3v5h8"/>
+                    </svg>
+                    Save All
+                </button>
+            </div>
+            <div class="seating-grid" id="seatingGrid">
+                <div class="loading">Loading seating chart</div>
+            </div>
         </div>
     </div>
 
@@ -1338,36 +1572,6 @@
                 'delete-rsvp':  currentEvent === 'babyShower' ? '/api/baby-shower-delete-rsvp' : '/api/delete-rsvp',
             };
             return map[action] || `/api/${action}`;
-        }
-
-        function switchEvent(eventType) {
-            currentEvent = eventType;
-            const wBtn = document.getElementById('toggleWedding');
-            const bBtn = document.getElementById('toggleBabyShower');
-            const title = document.getElementById('dashboardTitle');
-
-            if (eventType === 'wedding') {
-                wBtn.classList.add('active');
-                wBtn.classList.remove('baby-active');
-                bBtn.classList.remove('active', 'baby-active');
-                title.textContent = 'Wedding RSVP Dashboard';
-            } else {
-                bBtn.classList.add('baby-active');
-                bBtn.classList.remove('active');
-                wBtn.classList.remove('active', 'baby-active');
-                title.textContent = '🌸 Baby Shower RSVP Dashboard';
-            }
-
-            // Reset stats while loading
-            document.getElementById('statTotal').textContent = '—';
-            document.getElementById('statAttending').textContent = '—';
-            document.getElementById('statDeclined').textContent = '—';
-            document.getElementById('statGuests').textContent = '—';
-
-            // Save preference
-            sessionStorage.setItem('adminEvent', eventType);
-
-            loadRSVPs();
         }
 
         // Check if already logged in
@@ -2097,6 +2301,279 @@
             // Use BCC to protect privacy
             const mailtoLink = `mailto:?bcc=${emails.join(',')}`;
             window.location.href = mailtoLink;
+        }
+
+        // ===== SEATING EDITOR =====
+        let seatingData = []; // array of { table_number, table_label, seats: [{id, seat_name, rsvp_id}] }
+        let currentView = 'rsvp'; // 'rsvp' or 'seating'
+
+        function switchToSeating() {
+            currentView = 'seating';
+            // Update toggle buttons
+            document.getElementById('toggleWedding').classList.remove('active', 'baby-active');
+            document.getElementById('toggleBabyShower').classList.remove('active', 'baby-active');
+            document.getElementById('toggleSeating').classList.add('active');
+
+            // Show/hide panels
+            document.getElementById('seatingPanel').style.display = 'block';
+            document.getElementById('rsvpContent').style.display = 'none';
+            document.querySelector('.stats-grid').style.display = 'none';
+            document.getElementById('statsDetail').style.display = 'none';
+            document.querySelector('.search-container').style.display = 'none';
+            document.getElementById('dashboardTitle').textContent = 'Seating Chart';
+
+            // Load seating data if not loaded
+            loadSeatingData();
+        }
+
+        function switchEvent(eventType) {
+            currentView = 'rsvp';
+            document.getElementById('toggleSeating').classList.remove('active', 'baby-active');
+            document.getElementById('seatingPanel').style.display = 'none';
+            document.getElementById('rsvpContent').style.display = 'block';
+            document.querySelector('.stats-grid').style.display = 'grid';
+            document.getElementById('statsDetail').style.display = 'block';
+            document.querySelector('.search-container').style.display = 'block';
+
+            currentEvent = eventType;
+            const wBtn = document.getElementById('toggleWedding');
+            const bBtn = document.getElementById('toggleBabyShower');
+            const title = document.getElementById('dashboardTitle');
+
+            if (eventType === 'wedding') {
+                wBtn.classList.add('active');
+                wBtn.classList.remove('baby-active');
+                bBtn.classList.remove('active', 'baby-active');
+                title.textContent = 'Wedding RSVP Dashboard';
+            } else {
+                bBtn.classList.add('baby-active');
+                bBtn.classList.remove('active');
+                wBtn.classList.remove('active', 'baby-active');
+                title.textContent = '🌸 Baby Shower RSVP Dashboard';
+            }
+
+            document.getElementById('statTotal').textContent = '—';
+            document.getElementById('statAttending').textContent = '—';
+            document.getElementById('statDeclined').textContent = '—';
+            document.getElementById('statGuests').textContent = '—';
+
+            sessionStorage.setItem('adminEvent', eventType);
+            loadRSVPs();
+        }
+
+        async function loadSeatingData() {
+            const grid = document.getElementById('seatingGrid');
+            grid.innerHTML = '<div class="loading">Loading seating chart</div>';
+
+            try {
+                const res = await fetch('/api/get-seating');
+                if (!res.ok) throw new Error('API error');
+                const data = await res.json();
+                seatingData = data.tables;
+
+                // Make sure we also have RSVPs for the dropdown
+                if (rsvpData.length === 0 && currentEvent === 'wedding') {
+                    // rsvpData might not be loaded if user jumped straight to seating
+                    const rsvpRes = await fetch('/api/get-rsvps', {
+                        headers: { 'Authorization': `Bearer ${authToken}` }
+                    });
+                    if (rsvpRes.ok) {
+                        const rsvpJson = await rsvpRes.json();
+                        rsvpData = rsvpJson.rsvps;
+                    }
+                }
+
+                // If no seating data yet, create 6 blank tables
+                if (seatingData.length === 0) {
+                    seatingData = Array.from({ length: 6 }, (_, i) => ({
+                        table_number: i + 1,
+                        table_label: '',
+                        seats: []
+                    }));
+                }
+
+                renderSeatingEditor();
+            } catch (err) {
+                grid.innerHTML = `<div class="no-data">Failed to load seating chart. <button class="btn btn-secondary" onclick="loadSeatingData()" style="margin: 12px auto 0; display:block; max-width:140px;">Try Again</button></div>`;
+            }
+        }
+
+        // Build flat list of every individual guest across all attending RSVPs
+        function getAllGuests() {
+            const guests = [];
+            rsvpData.filter(r => r.attending === 'yes').forEach(r => {
+                const guestList = parseGuestData(r.guest_names);
+                if (guestList.length > 0) {
+                    guestList.forEach(g => {
+                        const name = typeof g === 'string' ? g : g.name;
+                        if (name && name.trim()) guests.push({ name: name.trim(), rsvp_id: r.id, party: r.name });
+                    });
+                } else {
+                    // Fallback: use primary contact name if no guest_names
+                    guests.push({ name: r.name, rsvp_id: r.id, party: r.name });
+                }
+            });
+            return guests;
+        }
+
+        // Build <optgroup> options grouped by RSVP party
+        function buildRsvpOptions(selectedRsvpId, selectedSeatName) {
+            const attending = rsvpData.filter(r => r.attending === 'yes');
+            const parts = [`<option value="">— Pick a guest —</option>`];
+
+            attending.forEach(r => {
+                const guestList = parseGuestData(r.guest_names);
+                const people = guestList.length > 0
+                    ? guestList.map(g => typeof g === 'string' ? g : g.name).filter(Boolean)
+                    : [r.name];
+
+                const groupLabel = people.length > 1
+                    ? `${escapeHtml(r.name)} (${people.length} guests)`
+                    : escapeHtml(r.name);
+
+                parts.push(`<optgroup label="${groupLabel}">`);
+                people.forEach(name => {
+                    const isSel = selectedRsvpId && parseInt(selectedRsvpId) === r.id && selectedSeatName === name;
+                    parts.push(`<option value="${r.id}" data-name="${escapeHtml(name)}" ${isSel ? 'selected' : ''}>${escapeHtml(name)}</option>`);
+                });
+                parts.push(`</optgroup>`);
+            });
+
+            return parts.join('');
+        }
+
+        function renderSeatingEditor() {
+            const grid = document.getElementById('seatingGrid');
+            grid.innerHTML = '';
+
+            seatingData.forEach(table => {
+                const card = document.createElement('div');
+                card.className = 'seating-table-card';
+                card.id = `seating-card-${table.table_number}`;
+
+                const seatRows = table.seats.map((seat, idx) => buildSeatRow(table.table_number, idx, seat)).join('');
+
+                card.innerHTML = `
+                    <div class="seating-table-header">
+                        <span class="seating-table-num">Table ${table.table_number}</span>
+                        <input class="seating-label-input" id="label-${table.table_number}"
+                               placeholder="Label (e.g. Family)"
+                               value="${escapeHtml(table.table_label || '')}">
+                    </div>
+                    <div class="seating-seat-list" id="seats-${table.table_number}">${seatRows}</div>
+                    <div class="seating-table-footer">
+                        <button class="seating-add-btn" onclick="addSeatRow(${table.table_number})">+ Add Seat</button>
+                        <button class="seating-save-btn" id="save-btn-${table.table_number}" onclick="saveTable(${table.table_number})">Save</button>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        function buildSeatRow(tableNum, idx, seat) {
+            const linkedClass = seat.rsvp_id ? 'linked' : '';
+            return `
+                <div class="seating-seat-row" data-idx="${idx}">
+                    <select class="seat-rsvp-select ${linkedClass}"
+                            onchange="onRsvpSelect(this)"
+                            title="Pick guest from RSVPs">
+                        ${buildRsvpOptions(seat.rsvp_id, seat.seat_name)}
+                    </select>
+                    <input class="seat-name-input" placeholder="Or type name manually"
+                           value="${escapeHtml(seat.seat_name || '')}">
+                    <button class="seat-remove-btn" onclick="removeSeatRow(this)" title="Remove">×</button>
+                </div>
+            `;
+        }
+
+        function onRsvpSelect(selectEl) {
+            const row = selectEl.closest('.seating-seat-row');
+            const nameInput = row.querySelector('.seat-name-input');
+            const selectedOption = selectEl.options[selectEl.selectedIndex];
+            const guestName = selectedOption ? selectedOption.dataset.name : '';
+
+            if (selectEl.value && guestName) {
+                nameInput.value = guestName;
+                selectEl.classList.add('linked');
+            } else {
+                selectEl.classList.remove('linked');
+            }
+        }
+
+        function addSeatRow(tableNum) {
+            const list = document.getElementById(`seats-${tableNum}`);
+            const div = document.createElement('div');
+            div.innerHTML = buildSeatRow(tableNum, list.children.length, { seat_name: '', rsvp_id: null });
+            list.appendChild(div.firstElementChild);
+        }
+
+        function removeSeatRow(btn) {
+            btn.closest('.seating-seat-row').remove();
+        }
+
+        function getTablePayload(tableNum) {
+            const label = document.getElementById(`label-${tableNum}`).value.trim();
+            const rows = document.querySelectorAll(`#seats-${tableNum} .seating-seat-row`);
+            const seats = [];
+            rows.forEach(row => {
+                const nameInput = row.querySelector('.seat-name-input');
+                const select = row.querySelector('.seat-rsvp-select');
+                const name = (nameInput.value || '').trim();
+                if (name) {
+                    seats.push({
+                        seat_name: name,
+                        rsvp_id: select.value ? parseInt(select.value) : null
+                    });
+                }
+            });
+            return { table_number: tableNum, table_label: label, seats };
+        }
+
+        async function saveTable(tableNum) {
+            const btn = document.getElementById(`save-btn-${tableNum}`);
+            const card = document.getElementById(`seating-card-${tableNum}`);
+            btn.disabled = true;
+            btn.textContent = 'Saving…';
+            card.classList.add('saving');
+            card.classList.remove('saved');
+
+            const payload = getTablePayload(tableNum);
+
+            try {
+                const res = await fetch('/api/update-seating', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await res.json();
+                if (res.ok) {
+                    card.classList.remove('saving');
+                    card.classList.add('saved');
+                    showToast(`Table ${tableNum} saved`);
+                } else {
+                    showToast(result.error || 'Failed to save', 'error');
+                    card.classList.remove('saving');
+                }
+            } catch (err) {
+                showToast('Network error', 'error');
+                card.classList.remove('saving');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Save';
+            }
+        }
+
+        async function saveAllTables() {
+            const tables = seatingData.map(t => t.table_number);
+            for (const tableNum of tables) {
+                await saveTable(tableNum);
+            }
+            showToast('All tables saved!');
         }
     </script>
 </body>
