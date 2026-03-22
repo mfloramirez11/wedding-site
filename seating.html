@@ -122,10 +122,21 @@
         }
 
         /* Search */
+        .search-sticky {
+            position: sticky;
+            top: 65px;
+            z-index: 100;
+            background: linear-gradient(to bottom, rgba(45,62,58,0.97) 80%, transparent);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 16px 0 20px;
+            margin-bottom: 32px;
+        }
+
         .search-wrap {
             display: flex;
             justify-content: center;
-            margin-bottom: 52px;
+            margin-bottom: 0;
             position: relative;
         }
 
@@ -220,10 +231,10 @@
         .search-hint {
             text-align: center;
             font-style: italic;
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             color: rgba(196, 209, 199, 0.4);
-            margin-top: -36px;
-            margin-bottom: 52px;
+            margin-top: 8px;
+            margin-bottom: 0;
         }
 
         /* Grid */
@@ -381,14 +392,16 @@
         <p class="page-subtitle">Find your name and table below</p>
     </div>
 
-    <div class="search-wrap">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-        </svg>
-        <input type="text" id="search" placeholder="Search your name..." autocomplete="off" />
-        <div class="suggestions-wrap" id="suggestions"></div>
+    <div class="search-sticky">
+        <div class="search-wrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+            </svg>
+            <input type="text" id="search" placeholder="Search your name..." autocomplete="off" />
+            <div class="suggestions-wrap" id="suggestions"></div>
+        </div>
+        <p class="search-hint">Can't find your name? Ask Manny or Celesti and they'll point you to your seat.</p>
     </div>
-    <p class="search-hint">Can't find your name? Ask Manny or Celesti and they'll point you to your seat.</p>
 
     <div class="tables-grid" id="tables-grid">
         <div style="grid-column:1/-1;text-align:center;color:rgba(196,209,199,0.5);padding:40px 0;">Loading seating chart...</div>
