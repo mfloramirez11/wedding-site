@@ -2398,48 +2398,68 @@
             }
         }
 
-        // Build flat list of every individual guest across all attending RSVPs
-        function getAllGuests() {
-            const guests = [];
-            rsvpData.filter(r => r.attending === 'yes').forEach(r => {
-                const guestList = parseGuestData(r.guest_names);
-                if (guestList.length > 0) {
-                    guestList.forEach(g => {
-                        const name = typeof g === 'string' ? g : g.name;
-                        if (name && name.trim()) guests.push({ name: name.trim(), rsvp_id: r.id, party: r.name });
-                    });
-                } else {
-                    // Fallback: use primary contact name if no guest_names
-                    guests.push({ name: r.name, rsvp_id: r.id, party: r.name });
-                }
+        // Returns a Set of "rsvpId:name" strings for all seats currently assigned,
+        // optionally excluding a specific row (so a seat doesn't filter itself out).
+        function getAssignedSet(excludeRow) {
+            const assigned = new Set();
+            document.querySelectorAll('.seating-seat-row').forEach(row => {
+                if (row === excludeRow) return;
+                const select = row.querySelector('.seat-rsvp-select');
+                if (!select || !select.value) return;
+                const opt = select.options[select.selectedIndex];
+                const name = opt ? opt.dataset.name : '';
+                if (name) assigned.add(`${select.value}:${name}`);
             });
-            return guests;
+            return assigned;
         }
 
-        // Build <optgroup> options grouped by RSVP party
-        function buildRsvpOptions(selectedRsvpId, selectedSeatName) {
+        // Build <optgroup> options grouped by RSVP party, hiding already-assigned guests.
+        function buildRsvpOptions(selectedRsvpId, selectedSeatName, assignedSet) {
+            assignedSet = assignedSet || new Set();
             const attending = rsvpData.filter(r => r.attending === 'yes');
             const parts = [`<option value="">— Pick a guest —</option>`];
 
             attending.forEach(r => {
                 const guestList = parseGuestData(r.guest_names);
-                const people = guestList.length > 0
+                const allPeople = guestList.length > 0
                     ? guestList.map(g => typeof g === 'string' ? g : g.name).filter(Boolean)
                     : [r.name];
 
-                const groupLabel = people.length > 1
-                    ? `${escapeHtml(r.name)} (${people.length} guests)`
+                // Keep people not yet assigned (always keep the currently selected one)
+                const available = allPeople.filter(name => {
+                    const key = `${r.id}:${name}`;
+                    const isCurrent = parseInt(selectedRsvpId) === r.id && selectedSeatName === name;
+                    return isCurrent || !assignedSet.has(key);
+                });
+
+                if (available.length === 0) return;
+
+                const groupLabel = allPeople.length > 1
+                    ? `${escapeHtml(r.name)} (${available.length} of ${allPeople.length} available)`
                     : escapeHtml(r.name);
 
                 parts.push(`<optgroup label="${groupLabel}">`);
-                people.forEach(name => {
-                    const isSel = selectedRsvpId && parseInt(selectedRsvpId) === r.id && selectedSeatName === name;
+                available.forEach(name => {
+                    const isSel = parseInt(selectedRsvpId) === r.id && selectedSeatName === name;
                     parts.push(`<option value="${r.id}" data-name="${escapeHtml(name)}" ${isSel ? 'selected' : ''}>${escapeHtml(name)}</option>`);
                 });
                 parts.push(`</optgroup>`);
             });
 
             return parts.join('');
+        }
+
+        // Rebuild every dropdown's options to reflect the current assignment state.
+        function refreshAllDropdowns() {
+            document.querySelectorAll('.seating-seat-row').forEach(row => {
+                const select = row.querySelector('.seat-rsvp-select');
+                if (!select) return;
+                const currentRsvpId = select.value;
+                const currentOpt = select.options[select.selectedIndex];
+                const currentName = currentOpt ? currentOpt.dataset.name : '';
+                const assignedSet = getAssignedSet(row);
+                select.innerHTML = buildRsvpOptions(currentRsvpId, currentName, assignedSet);
+            });
         }
 
         function renderSeatingEditor() {
@@ -2469,6 +2489,9 @@
 
                 grid.appendChild(card);
             });
+
+            // After all rows exist in the DOM, filter each dropdown based on the others
+            refreshAllDropdowns();
         }
 
         function buildSeatRow(tableNum, idx, seat) {
@@ -2499,6 +2522,9 @@
             } else {
                 selectEl.classList.remove('linked');
             }
+
+            // Update all other dropdowns to hide/show this person
+            refreshAllDropdowns();
         }
 
         function addSeatRow(tableNum) {
@@ -2506,10 +2532,13 @@
             const div = document.createElement('div');
             div.innerHTML = buildSeatRow(tableNum, list.children.length, { seat_name: '', rsvp_id: null });
             list.appendChild(div.firstElementChild);
+            refreshAllDropdowns();
         }
 
         function removeSeatRow(btn) {
             btn.closest('.seating-seat-row').remove();
+            // Person is now unassigned — add them back to all dropdowns
+            refreshAllDropdowns();
         }
 
         function getTablePayload(tableNum) {
