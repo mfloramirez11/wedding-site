@@ -1209,6 +1209,60 @@
         .schedule-remove-btn:hover {
             background: rgba(231,76,60,0.3);
         }
+
+        /* Reminders panel */
+        .reminder-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+        .reminder-table th {
+            text-align: left;
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.4);
+            padding: 8px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-weight: 400;
+        }
+        .reminder-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: #e8f0ec;
+            vertical-align: middle;
+        }
+        .reminder-table tr:last-child td {
+            border-bottom: none;
+        }
+        .reminder-sent-badge {
+            display: inline-block;
+            font-size: 0.72rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: rgba(39,174,96,0.15);
+            border: 1px solid rgba(39,174,96,0.3);
+            color: #2ecc71;
+        }
+        .reminder-send-btn {
+            background: rgba(196,163,110,0.12);
+            border: 1px solid rgba(196,163,110,0.35);
+            color: #c4a36e;
+            border-radius: 6px;
+            padding: 5px 14px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-family: 'Lato', sans-serif;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+        .reminder-send-btn:hover:not(:disabled) {
+            background: rgba(196,163,110,0.25);
+        }
+        .reminder-send-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -1258,6 +1312,9 @@
             </button>
             <button class="event-toggle-btn" id="toggleSchedule" onclick="switchToSchedule()">
                 📅 Schedule
+            </button>
+            <button class="event-toggle-btn" id="toggleReminders" onclick="switchToReminders()">
+                📧 Reminders
             </button>
         </div>
 
@@ -1362,6 +1419,25 @@
             </div>
             <div style="padding: 0 24px 24px;">
                 <button class="seating-add-btn" onclick="addScheduleRow()" style="width:100%; max-width:200px;">+ Add Row</button>
+            </div>
+        </div>
+
+        <!-- Reminders Panel -->
+        <div class="seating-panel" id="remindersPanel" style="display:none;">
+            <div class="seating-save-all-bar">
+                <div>
+                    <h2>Email Reminders</h2>
+                    <p id="bulkCooldownNote" style="margin:4px 0 0;font-size:0.78rem;color:rgba(255,255,255,0.45);"></p>
+                </div>
+                <button class="btn btn-primary" id="sendAllBtn" onclick="sendAllReminders()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    </svg>
+                    Send to All
+                </button>
+            </div>
+            <div id="remindersList" style="padding:0 24px 32px;">
+                <div class="loading">Loading guests</div>
             </div>
         </div>
 
@@ -2386,6 +2462,7 @@
         function hideAllPanels() {
             document.getElementById('seatingPanel').style.display = 'none';
             document.getElementById('schedulePanel').style.display = 'none';
+            document.getElementById('remindersPanel').style.display = 'none';
             document.getElementById('rsvpContent').style.display = 'none';
             document.querySelector('.stats-grid').style.display = 'none';
             document.getElementById('statsDetail').style.display = 'none';
@@ -2394,6 +2471,7 @@
             document.getElementById('toggleBabyShower').classList.remove('active', 'baby-active');
             document.getElementById('toggleSeating').classList.remove('active', 'baby-active');
             document.getElementById('toggleSchedule').classList.remove('active', 'baby-active');
+            document.getElementById('toggleReminders').classList.remove('active', 'baby-active');
         }
 
         function switchToSeating() {
@@ -2412,6 +2490,15 @@
             document.getElementById('schedulePanel').style.display = 'block';
             document.getElementById('dashboardTitle').textContent = 'Schedule Editor';
             loadScheduleEditor();
+        }
+
+        function switchToReminders() {
+            currentView = 'reminders';
+            hideAllPanels();
+            document.getElementById('toggleReminders').classList.add('active');
+            document.getElementById('remindersPanel').style.display = 'block';
+            document.getElementById('dashboardTitle').textContent = 'Email Reminders';
+            loadReminders();
         }
 
         function switchEvent(eventType) {
@@ -2773,6 +2860,145 @@
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg> Save All`;
+            }
+        }
+
+        // ── Reminders ────────────────────────────────────────────────────────────
+
+        let remindersData = [];
+
+        function hoursAgo(ts) {
+            if (!ts) return Infinity;
+            return (Date.now() - new Date(ts).getTime()) / 36e5;
+        }
+
+        function relativeTime(ts) {
+            if (!ts) return null;
+            const hrs = hoursAgo(ts);
+            if (hrs < 1) return 'just now';
+            if (hrs < 24) return `${Math.round(hrs)}h ago`;
+            return `${Math.round(hrs / 24)}d ago`;
+        }
+
+        async function loadReminders() {
+            const list = document.getElementById('remindersList');
+            const note = document.getElementById('bulkCooldownNote');
+            list.innerHTML = '<div class="loading">Loading guests</div>';
+
+            // Load RSVPs and bulk setting in parallel
+            const [rsvpRes, settingRes] = await Promise.all([
+                fetch('/api/get-rsvps?event=wedding', { headers: { 'Authorization': `Bearer ${authToken}` } }),
+                fetch('/api/get-setting?key=last_bulk_reminder_at', { headers: { 'Authorization': `Bearer ${authToken}` } }).catch(() => null)
+            ]);
+
+            const rsvpData = await rsvpRes.json();
+            remindersData = (rsvpData.rsvps || []).filter(r => r.attending === 'yes');
+
+            // Bulk cooldown status
+            const sendAllBtn = document.getElementById('sendAllBtn');
+            let lastBulk = null;
+            if (settingRes && settingRes.ok) {
+                const s = await settingRes.json();
+                lastBulk = s.value;
+            }
+            const bulkHrs = hoursAgo(lastBulk);
+            const bulkCooling = bulkHrs < 48;
+            sendAllBtn.disabled = bulkCooling;
+            note.textContent = lastBulk
+                ? bulkCooling
+                    ? `Bulk reminder sent ${relativeTime(lastBulk)} — available again in ${Math.round(48 - bulkHrs)}h`
+                    : `Last bulk sent: ${relativeTime(lastBulk)}`
+                : 'No bulk reminder sent yet';
+
+            if (!remindersData.length) {
+                list.innerHTML = '<div class="no-data">No attending guests found.</div>';
+                return;
+            }
+
+            list.innerHTML = `
+                <table class="reminder-table">
+                    <thead>
+                        <tr>
+                            <th>Guest</th>
+                            <th>Email</th>
+                            <th>Last Reminder</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="remindersBody">
+                        ${remindersData.map(r => buildReminderRow(r)).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function buildReminderRow(rsvp) {
+            const hrs = hoursAgo(rsvp.reminder_sent_at);
+            const cooling = hrs < 48;
+            const sentLabel = rsvp.reminder_sent_at
+                ? `<span class="reminder-sent-badge">${relativeTime(rsvp.reminder_sent_at)}</span>`
+                : '<span style="color:rgba(255,255,255,0.3);font-size:0.8rem;">Never</span>';
+            const btnDisabled = cooling ? 'disabled title="Sent recently — wait before resending"' : '';
+            const btnLabel = cooling ? `Sent ${relativeTime(rsvp.reminder_sent_at)}` : 'Send';
+            return `<tr id="reminder-row-${rsvp.id}">
+                <td>${escapeHtml(rsvp.name)}</td>
+                <td style="color:rgba(232,240,236,0.6);font-size:0.82rem;">${escapeHtml(rsvp.email || '—')}</td>
+                <td>${sentLabel}</td>
+                <td align="right">
+                    <button class="reminder-send-btn" id="reminder-btn-${rsvp.id}" onclick="sendSingleReminder(${rsvp.id})" ${btnDisabled}>${btnLabel}</button>
+                </td>
+            </tr>`;
+        }
+
+        async function sendSingleReminder(rsvpId) {
+            const btn = document.getElementById(`reminder-btn-${rsvpId}`);
+            const orig = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Sending…';
+
+            const res = await fetch('/api/send-reminder', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+                body: JSON.stringify({ rsvp_id: rsvpId })
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                showToast('Reminder sent!');
+                const rsvp = remindersData.find(r => r.id === rsvpId);
+                if (rsvp) {
+                    rsvp.reminder_sent_at = new Date().toISOString();
+                    const row = document.getElementById(`reminder-row-${rsvpId}`);
+                    if (row) row.outerHTML = buildReminderRow(rsvp);
+                }
+            } else {
+                showToast(data.error || 'Failed to send');
+                btn.disabled = false;
+                btn.textContent = orig;
+            }
+        }
+
+        async function sendAllReminders() {
+            const btn = document.getElementById('sendAllBtn');
+            const count = remindersData.filter(r => hoursAgo(r.reminder_sent_at) >= 48).length;
+            if (!confirm(`Send reminder to ${count} eligible guest(s)? This cannot be undone.`)) return;
+
+            btn.disabled = true;
+            btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Sending…`;
+
+            const res = await fetch('/api/send-reminder', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+                body: JSON.stringify({ send_all: true })
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                showToast(`Sent to ${data.sent} guest(s)${data.skipped?.length ? `, skipped ${data.skipped.length}` : ''}`);
+                loadReminders();
+            } else {
+                showToast(data.error || 'Failed to send');
+                loadReminders();
             }
         }
     </script>
