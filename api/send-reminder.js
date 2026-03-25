@@ -22,59 +22,60 @@ function hoursAgo(ts) {
 
 function buildEmailHtml({ name, guestCount }) {
   const firstName = name.split(' ')[0];
-  const partyLine = guestCount && guestCount > 1
-    ? `We have you down for <strong style="color:#e8d5b0;">${guestCount} guests</strong> in your party.`
-    : `We have you down for <strong style="color:#e8d5b0;">1 guest</strong> in your party.`;
+  const partyCount = guestCount || 1;
+  const partyLine = partyCount > 1
+    ? `We have you down for <strong style="color:#e8d5b0;">${partyCount} guests</strong>.`
+    : `We have you down for <strong style="color:#e8d5b0;">1 guest</strong>.`;
+
+  const dot = `<span style="color:#c4a36e;font-size:18px;line-height:1;vertical-align:middle;padding-right:12px;">&#8212;</span>`;
+
   return `<!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
 <body style="margin:0;padding:0;background:#f5f0eb;font-family:Georgia,serif;">
 
-  <!-- Wrapper -->
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f0eb;padding:32px 0;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f0eb;padding:40px 0;">
     <tr><td align="center">
-      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#2d3e3a;border-radius:12px;overflow:hidden;">
+      <table width="580" cellpadding="0" cellspacing="0" style="max-width:580px;width:100%;background:#2d3e3a;border-radius:4px;overflow:hidden;">
 
         <!-- Header -->
         <tr>
-          <td align="center" style="padding:48px 40px 32px;border-bottom:1px solid rgba(196,163,110,0.3);">
-            <p style="margin:0 0 8px;font-size:11px;letter-spacing:0.25em;color:rgba(196,163,110,0.7);text-transform:uppercase;font-family:Arial,sans-serif;">April 4, 2026</p>
-            <h1 style="margin:0;font-size:36px;font-weight:400;color:#e8d5b0;letter-spacing:0.12em;font-family:Georgia,serif;">Manny &amp; Celesti</h1>
-            <p style="margin:12px 0 0;font-size:13px;color:rgba(232,208,176,0.6);letter-spacing:0.08em;font-family:Arial,sans-serif;">A REMINDER FOR OUR SPECIAL DAY</p>
+          <td align="center" style="padding:52px 48px 40px;border-bottom:1px solid rgba(196,163,110,0.25);">
+            <p style="margin:0 0 10px;font-size:10px;letter-spacing:0.3em;color:rgba(196,163,110,0.6);text-transform:uppercase;font-family:Arial,sans-serif;">April 4, 2026 · Bay Area, CA</p>
+            <h1 style="margin:0;font-size:34px;font-weight:400;color:#e8d5b0;letter-spacing:0.14em;font-family:Georgia,serif;">Manny &amp; Celesti</h1>
+            <p style="margin:14px 0 0;font-size:11px;color:rgba(232,208,176,0.45);letter-spacing:0.2em;text-transform:uppercase;font-family:Arial,sans-serif;">A Gentle Reminder</p>
           </td>
         </tr>
 
         <!-- Greeting -->
         <tr>
-          <td style="padding:36px 40px 24px;">
-            <p style="margin:0 0 16px;font-size:18px;color:#e8f0ec;line-height:1.5;">Dear ${firstName},</p>
-            <p style="margin:0 0 16px;font-size:16px;color:rgba(232,240,236,0.85);line-height:1.8;">
+          <td style="padding:44px 48px 32px;">
+            <p style="margin:0 0 20px;font-size:17px;color:#e8f0ec;line-height:1.4;font-family:Georgia,serif;">Dear ${firstName},</p>
+            <p style="margin:0 0 20px;font-size:15px;color:rgba(232,240,236,0.8);line-height:1.9;font-family:Georgia,serif;">
               Thank you so much for your RSVP — it truly means the world to us.
-              We are counting down the days and cannot wait to celebrate with you on our special day.
+              We are counting down the days and cannot wait to celebrate with you.
             </p>
-            <p style="margin:0;font-size:15px;color:rgba(232,240,236,0.7);line-height:1.7;background:rgba(196,163,110,0.08);border:1px solid rgba(196,163,110,0.2);border-radius:8px;padding:14px 18px;">
-              📝 ${partyLine} If anything has changed, please text us and we'll get it sorted.
+            <p style="margin:0;font-size:14px;color:rgba(232,240,236,0.6);line-height:1.8;border-left:2px solid rgba(196,163,110,0.5);padding-left:16px;font-family:Arial,sans-serif;">
+              ${partyLine} If anything has changed, please text us and we'll get it sorted.
             </p>
           </td>
         </tr>
 
         <!-- Photos -->
         <tr>
-          <td style="padding:8px 40px 32px;">
+          <td style="padding:0 48px 40px;">
             <table width="100%" cellpadding="0" cellspacing="0">
               <tr>
-                <td width="48%" style="padding-right:8px;">
+                <td width="49%" style="padding-right:6px;">
                   <img src="https://mannyandcelesti.com/images/email-couple-1.jpeg"
-                       alt="Manny &amp; Celesti"
-                       width="100%"
-                       style="border-radius:8px;display:block;border:1px solid rgba(196,163,110,0.2);">
+                       alt="Manny &amp; Celesti" width="100%"
+                       style="border-radius:3px;display:block;">
                 </td>
-                <td width="4%"></td>
-                <td width="48%" style="padding-left:8px;">
+                <td width="2%"></td>
+                <td width="49%" style="padding-left:6px;">
                   <img src="https://mannyandcelesti.com/images/email-couple-2.jpeg"
-                       alt="Manny &amp; Celesti"
-                       width="100%"
-                       style="border-radius:8px;display:block;border:1px solid rgba(196,163,110,0.2);">
+                       alt="Manny &amp; Celesti" width="100%"
+                       style="border-radius:3px;display:block;">
                 </td>
               </tr>
             </table>
@@ -83,98 +84,47 @@ function buildEmailHtml({ name, guestCount }) {
 
         <!-- Divider -->
         <tr>
-          <td style="padding:0 40px;">
-            <hr style="border:none;border-top:1px solid rgba(196,163,110,0.25);margin:0;">
+          <td style="padding:0 48px;">
+            <hr style="border:none;border-top:1px solid rgba(196,163,110,0.2);margin:0;">
           </td>
         </tr>
 
         <!-- Details -->
         <tr>
-          <td style="padding:32px 40px 8px;">
-            <p style="margin:0 0 24px;font-size:13px;letter-spacing:0.15em;color:rgba(196,163,110,0.8);text-transform:uppercase;font-family:Arial,sans-serif;">A few things to keep in mind</p>
+          <td style="padding:36px 48px 32px;">
+            <p style="margin:0 0 28px;font-size:10px;letter-spacing:0.25em;color:rgba(196,163,110,0.7);text-transform:uppercase;font-family:Arial,sans-serif;">A few things to keep in mind</p>
 
-            <!-- Item 1 -->
-            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
-              <tr>
-                <td width="28" valign="top" style="padding-top:2px;">
-                  <span style="font-size:14px;">📋</span>
-                </td>
-                <td>
-                  <p style="margin:0;font-size:15px;color:#e8f0ec;line-height:1.6;">
-                    Have questions? Please take a moment to read our
-                    <a href="https://mannyandcelesti.com/#faq" style="color:#c4a36e;text-decoration:none;border-bottom:1px solid rgba(196,163,110,0.4);">FAQ page</a>
-                    — you'll find answers to the most common questions about the day.
-                  </p>
-                </td>
-              </tr>
-            </table>
+            <p style="margin:0 0 20px;font-size:15px;color:rgba(232,240,236,0.8);line-height:1.8;font-family:Georgia,serif;">
+              ${dot}Please take a moment to review our
+              <a href="https://mannyandcelesti.com/#faq" style="color:#c4a36e;text-decoration:none;border-bottom:1px solid rgba(196,163,110,0.35);">FAQ page</a>
+              before the day.
+            </p>
 
-            <!-- Item 2 -->
-            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
-              <tr>
-                <td width="28" valign="top" style="padding-top:2px;">
-                  <span style="font-size:14px;">📅</span>
-                </td>
-                <td>
-                  <p style="margin:0;font-size:15px;color:#e8f0ec;line-height:1.6;">
-                    We've updated the
-                    <a href="https://mannyandcelesti.com/#schedule" style="color:#c4a36e;text-decoration:none;border-bottom:1px solid rgba(196,163,110,0.4);">event schedule</a>
-                    — take a look so you know what to expect throughout the evening.
-                  </p>
-                </td>
-              </tr>
-            </table>
+            <p style="margin:0 0 20px;font-size:15px;color:rgba(232,240,236,0.8);line-height:1.8;font-family:Georgia,serif;">
+              ${dot}The
+              <a href="https://mannyandcelesti.com/#schedule" style="color:#c4a36e;text-decoration:none;border-bottom:1px solid rgba(196,163,110,0.35);">event schedule</a>
+              has been updated — take a look so you know what to expect throughout the evening.
+            </p>
 
-            <!-- Item 3 -->
-            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
-              <tr>
-                <td width="28" valign="top" style="padding-top:2px;">
-                  <span style="font-size:14px;">⏰</span>
-                </td>
-                <td>
-                  <p style="margin:0;font-size:15px;color:#e8f0ec;line-height:1.6;">
-                    <strong style="color:#e8d5b0;">Please be on time.</strong>
-                    Doors open at 4:00 PM — we'd love for everyone to be settled in before the evening begins.
-                  </p>
-                </td>
-              </tr>
-            </table>
+            <p style="margin:0 0 20px;font-size:15px;color:rgba(232,240,236,0.8);line-height:1.8;font-family:Georgia,serif;">
+              ${dot}Doors open at <strong style="color:#e8d5b0;font-weight:normal;">4:00 PM</strong> — please plan to arrive on time so we can begin together.
+            </p>
 
-            <!-- Item 4 -->
-            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:20px;">
-              <tr>
-                <td width="28" valign="top" style="padding-top:2px;">
-                  <span style="font-size:14px;">✏️</span>
-                </td>
-                <td>
-                  <p style="margin:0;font-size:15px;color:#e8f0ec;line-height:1.6;">
-                    Need to modify your RSVP? Please <strong style="color:#e8d5b0;">text us</strong> and we'll take care of it for you.
-                  </p>
-                </td>
-              </tr>
-            </table>
+            <p style="margin:0 0 20px;font-size:15px;color:rgba(232,240,236,0.8);line-height:1.8;font-family:Georgia,serif;">
+              ${dot}Need to modify your RSVP? Please text us and we will take care of it for you.
+            </p>
 
-            <!-- Item 5 -->
-            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:8px;">
-              <tr>
-                <td width="28" valign="top" style="padding-top:2px;">
-                  <span style="font-size:14px;">💬</span>
-                </td>
-                <td>
-                  <p style="margin:0;font-size:15px;color:#e8f0ec;line-height:1.6;">
-                    Any other questions? Don't hesitate — text us or simply reply to this email and we'll get back to you.
-                  </p>
-                </td>
-              </tr>
-            </table>
+            <p style="margin:0;font-size:15px;color:rgba(232,240,236,0.8);line-height:1.8;font-family:Georgia,serif;">
+              ${dot}Any other questions? Simply reply to this email or send us a text — we are happy to help.
+            </p>
           </td>
         </tr>
 
         <!-- CTA -->
         <tr>
-          <td align="center" style="padding:32px 40px;">
+          <td align="center" style="padding:8px 48px 40px;">
             <a href="https://mannyandcelesti.com/seating"
-               style="display:inline-block;background:rgba(196,163,110,0.15);border:1px solid rgba(196,163,110,0.5);color:#e8d5b0;text-decoration:none;padding:14px 32px;border-radius:6px;font-size:13px;letter-spacing:0.12em;font-family:Arial,sans-serif;text-transform:uppercase;">
+               style="display:inline-block;border:1px solid rgba(196,163,110,0.45);color:#e8d5b0;text-decoration:none;padding:13px 36px;font-size:11px;letter-spacing:0.2em;font-family:Arial,sans-serif;text-transform:uppercase;">
               Find Your Seat
             </a>
           </td>
@@ -182,20 +132,22 @@ function buildEmailHtml({ name, guestCount }) {
 
         <!-- Divider -->
         <tr>
-          <td style="padding:0 40px;">
-            <hr style="border:none;border-top:1px solid rgba(196,163,110,0.25);margin:0;">
+          <td style="padding:0 48px;">
+            <hr style="border:none;border-top:1px solid rgba(196,163,110,0.2);margin:0;">
           </td>
         </tr>
 
         <!-- Footer -->
         <tr>
-          <td align="center" style="padding:28px 40px 36px;">
-            <p style="margin:0 0 8px;font-size:15px;color:rgba(232,240,236,0.7);line-height:1.6;font-style:italic;">
-              We are so grateful to have you in our lives.<br>
-              See you very soon. 💍
+          <td align="center" style="padding:32px 48px 44px;">
+            <p style="margin:0 0 6px;font-size:15px;color:rgba(232,240,236,0.6);line-height:1.8;font-style:italic;font-family:Georgia,serif;">
+              We are so grateful to have you in our lives.
             </p>
-            <p style="margin:16px 0 0;font-size:13px;color:rgba(232,240,236,0.4);font-family:Arial,sans-serif;">
-              Manny &amp; Celesti · April 4, 2026
+            <p style="margin:0 0 20px;font-size:15px;color:rgba(232,240,236,0.6);font-style:italic;font-family:Georgia,serif;">
+              See you very soon.
+            </p>
+            <p style="margin:0;font-size:10px;color:rgba(232,240,236,0.3);letter-spacing:0.15em;text-transform:uppercase;font-family:Arial,sans-serif;">
+              Manny &amp; Celesti &nbsp;&middot;&nbsp; April 4, 2026
             </p>
           </td>
         </tr>
@@ -241,7 +193,7 @@ export default async function handler(req, res) {
       from: process.env.RESEND_FROM_EMAIL || 'Manny & Celesti <rsvp@mannyandcelesti.com>',
       to: rsvp.email,
       replyTo: 'mannyandcelesti@gmail.com',
-      subject: "We can't wait to see you — a quick reminder 💍",
+      subject: "A gentle reminder — Manny & Celesti, April 4",
       html: buildEmailHtml({ name: rsvp.name, guestCount: rsvp.guests }),
     });
 
@@ -288,7 +240,7 @@ export default async function handler(req, res) {
         from: process.env.RESEND_FROM_EMAIL || 'Manny & Celesti <rsvp@mannyandcelesti.com>',
         to: guest.email,
         replyTo: 'mannyandcelesti@gmail.com',
-        subject: "We can't wait to see you — a quick reminder 💍",
+        subject: "A gentle reminder — Manny & Celesti, April 4",
         html: buildEmailHtml({ name: guest.name, guestCount: guest.guests }),
       });
 
