@@ -20,6 +20,12 @@ function hoursAgo(ts) {
   return (Date.now() - new Date(ts).getTime()) / 36e5;
 }
 
+function parseGuests(raw) {
+  if (!raw) return [];
+  if (Array.isArray(raw)) return raw;
+  try { return JSON.parse(raw); } catch { return []; }
+}
+
 function buildGuestListHtml(guestNames) {
   if (!guestNames || !guestNames.length) return '';
   const rows = guestNames.map(g => {
@@ -168,7 +174,7 @@ export default async function handler(req, res) {
       to: test_email,
       replyTo: 'mannyandcelesti@gmail.com',
       subject: '[TEST] A friendly reminder · Manny & Celesti, April 4 💍',
-      html: buildEmailHtml({ name: sample.name, guestNames: sample.guest_names || [] }),
+      html: buildEmailHtml({ name: sample.name, guestNames: parseGuests(sample.guest_names) }),
     });
     if (error) return res.status(500).json({ error: error.message });
     return res.status(200).json({ success: true, sent: [test_email] });
@@ -197,7 +203,7 @@ export default async function handler(req, res) {
       to: rsvp.email,
       replyTo: 'mannyandcelesti@gmail.com',
       subject: "A friendly reminder · Manny & Celesti, April 4 💍",
-      html: buildEmailHtml({ name: rsvp.name, guestNames: rsvp.guest_names || [] }),
+      html: buildEmailHtml({ name: rsvp.name, guestNames: parseGuests(rsvp.guest_names) }),
     });
 
     if (error) return res.status(500).json({ error: error.message });
@@ -244,7 +250,7 @@ export default async function handler(req, res) {
         to: guest.email,
         replyTo: 'mannyandcelesti@gmail.com',
         subject: "A friendly reminder · Manny & Celesti, April 4 💍",
-        html: buildEmailHtml({ name: guest.name, guestNames: guest.guest_names || [] }),
+        html: buildEmailHtml({ name: guest.name, guestNames: parseGuests(guest.guest_names) }),
       });
 
       if (error) {
