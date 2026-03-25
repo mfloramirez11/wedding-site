@@ -41,7 +41,7 @@ function buildEmailHtml({ name, guestCount }) {
         <!-- Header -->
         <tr>
           <td align="center" style="padding:52px 48px 40px;border-bottom:1px solid rgba(196,163,110,0.25);">
-            <p style="margin:0 0 10px;font-size:10px;letter-spacing:0.3em;color:rgba(196,163,110,0.6);text-transform:uppercase;font-family:Arial,sans-serif;">April 4, 2026 · Bay Area, CA</p>
+            <p style="margin:0 0 10px;font-size:10px;letter-spacing:0.3em;color:rgba(196,163,110,0.6);text-transform:uppercase;font-family:Arial,sans-serif;">April 4, 2026 · Pinole, CA</p>
             <h1 style="margin:0;font-size:34px;font-weight:400;color:#e8d5b0;letter-spacing:0.14em;font-family:Georgia,serif;">Manny &amp; Celesti</h1>
             <p style="margin:14px 0 0;font-size:11px;color:rgba(232,208,176,0.45);letter-spacing:0.2em;text-transform:uppercase;font-family:Arial,sans-serif;">A Gentle Reminder</p>
           </td>
@@ -52,8 +52,7 @@ function buildEmailHtml({ name, guestCount }) {
           <td style="padding:44px 48px 36px;">
             <p style="margin:0 0 20px;font-size:17px;color:#e8f0ec;line-height:1.4;font-family:Georgia,serif;">Dear ${firstName},</p>
             <p style="margin:0 0 20px;font-size:15px;color:rgba(232,240,236,0.8);line-height:1.9;font-family:Georgia,serif;">
-              We are so looking forward to celebrating with you on April 4th.
-              Just a few quick things before the day.
+              We cannot wait to celebrate with you on April 4th. A few things to keep in mind as the day approaches.
             </p>
             <p style="margin:0;font-size:14px;color:rgba(232,240,236,0.55);line-height:1.8;border-left:2px solid rgba(196,163,110,0.4);padding-left:16px;font-family:Arial,sans-serif;">
               ${partyLine} Need to make a change? Please text us.
@@ -61,24 +60,12 @@ function buildEmailHtml({ name, guestCount }) {
           </td>
         </tr>
 
-        <!-- Photos -->
+        <!-- Photo -->
         <tr>
           <td style="padding:0 48px 36px;">
-            <table width="100%" cellpadding="0" cellspacing="0">
-              <tr>
-                <td width="49%" style="padding-right:6px;">
-                  <img src="https://mannyandcelesti.com/images/email-couple-1.jpeg"
-                       alt="Manny &amp; Celesti" width="100%"
-                       style="border-radius:3px;display:block;">
-                </td>
-                <td width="2%"></td>
-                <td width="49%" style="padding-left:6px;">
-                  <img src="https://mannyandcelesti.com/images/email-couple-2.jpeg"
-                       alt="Manny &amp; Celesti" width="100%"
-                       style="border-radius:3px;display:block;">
-                </td>
-              </tr>
-            </table>
+            <img src="https://mannyandcelesti.com/images/email-couple-2.jpeg"
+                 alt="Manny &amp; Celesti" width="100%"
+                 style="border-radius:3px;display:block;">
           </td>
         </tr>
 
@@ -115,11 +102,14 @@ function buildEmailHtml({ name, guestCount }) {
         <!-- Footer -->
         <tr>
           <td align="center" style="padding:28px 48px 40px;">
-            <p style="margin:0 0 16px;font-size:15px;color:rgba(232,240,236,0.55);font-style:italic;font-family:Georgia,serif;">
-              See you very soon.
+            <p style="margin:0 0 6px;font-size:15px;color:rgba(232,240,236,0.6);font-style:italic;font-family:Georgia,serif;">
+              With love,
             </p>
-            <p style="margin:0;font-size:10px;color:rgba(232,240,236,0.25);letter-spacing:0.15em;text-transform:uppercase;font-family:Arial,sans-serif;">
-              Manny &amp; Celesti &nbsp;&middot;&nbsp; April 4, 2026
+            <p style="margin:0 0 20px;font-size:15px;color:rgba(232,240,236,0.6);font-style:italic;font-family:Georgia,serif;">
+              Manny &amp; Celesti
+            </p>
+            <p style="margin:0;font-size:10px;color:rgba(232,240,236,0.2);letter-spacing:0.18em;text-transform:uppercase;font-family:Arial,sans-serif;">
+              April 4, 2026 &nbsp;&middot;&nbsp; Pinole, CA
             </p>
           </td>
         </tr>
@@ -140,8 +130,21 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   if (!auth(req)) return res.status(401).json({ error: 'Unauthorized' });
 
-  const { rsvp_id, send_all } = req.body || {};
+  const { rsvp_id, send_all, test_email } = req.body || {};
   const { sql, resend } = getClients();
+
+  // ── Test send (no cooldown, no DB write) ─────────────────────────────────────
+  if (test_email) {
+    const { error } = await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || 'Manny & Celesti <rsvp@mannyandcelesti.com>',
+      to: test_email,
+      replyTo: 'mannyandcelesti@gmail.com',
+      subject: '[TEST] A gentle reminder — Manny & Celesti, April 4 💍',
+      html: buildEmailHtml({ name: 'Manny Flores', guestCount: 2 }),
+    });
+    if (error) return res.status(500).json({ error: error.message });
+    return res.status(200).json({ success: true, sent: [test_email] });
+  }
 
   // ── Single guest ─────────────────────────────────────────────────────────────
   if (rsvp_id) {
@@ -165,7 +168,7 @@ export default async function handler(req, res) {
       from: process.env.RESEND_FROM_EMAIL || 'Manny & Celesti <rsvp@mannyandcelesti.com>',
       to: rsvp.email,
       replyTo: 'mannyandcelesti@gmail.com',
-      subject: "A gentle reminder — Manny & Celesti, April 4",
+      subject: "A gentle reminder — Manny & Celesti, April 4 💍",
       html: buildEmailHtml({ name: rsvp.name, guestCount: rsvp.guests }),
     });
 
@@ -212,7 +215,7 @@ export default async function handler(req, res) {
         from: process.env.RESEND_FROM_EMAIL || 'Manny & Celesti <rsvp@mannyandcelesti.com>',
         to: guest.email,
         replyTo: 'mannyandcelesti@gmail.com',
-        subject: "A gentle reminder — Manny & Celesti, April 4",
+        subject: "A gentle reminder — Manny & Celesti, April 4 💍",
         html: buildEmailHtml({ name: guest.name, guestCount: guest.guests }),
       });
 
