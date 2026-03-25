@@ -156,15 +156,19 @@ export default async function handler(req, res) {
 
   // ── Test send (no cooldown, no DB write) ─────────────────────────────────────
   if (test_email) {
+    // Pull a real RSVP so the test reflects actual data
+    const sampleRows = rsvp_id
+      ? await sql`SELECT name, guest_names FROM rsvps WHERE id = ${rsvp_id} LIMIT 1`
+      : await sql`SELECT name, guest_names FROM rsvps WHERE attending = 'yes' AND guest_names IS NOT NULL ORDER BY id LIMIT 1`;
+
+    const sample = sampleRows[0] || { name: 'Guest', guest_names: [] };
+
     const { error } = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || 'Manny & Celesti <rsvp@mannyandcelesti.com>',
       to: test_email,
       replyTo: 'mannyandcelesti@gmail.com',
       subject: '[TEST] A friendly reminder · Manny & Celesti, April 4 💍',
-      html: buildEmailHtml({ name: 'Manny Flores', guestNames: [
-        { name: 'Manny Flores', dietary: 'No restrictions', allergies: '' },
-        { name: 'Celesti Chia', dietary: '', allergies: 'Tree nuts' },
-      ]}),
+      html: buildEmailHtml({ name: sample.name, guestNames: sample.guest_names || [] }),
     });
     if (error) return res.status(500).json({ error: error.message });
     return res.status(200).json({ success: true, sent: [test_email] });
