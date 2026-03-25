@@ -20,13 +20,33 @@ function hoursAgo(ts) {
   return (Date.now() - new Date(ts).getTime()) / 36e5;
 }
 
-function buildEmailHtml({ name, guestCount }) {
-  const firstName = name.split(' ')[0];
-  const partyCount = guestCount || 1;
-  const partyLine = partyCount > 1
-    ? `We have you down for <strong style="color:#e8d5b0;">${partyCount} guests</strong>.`
-    : `We have you down for <strong style="color:#e8d5b0;">1 guest</strong>.`;
+function buildGuestListHtml(guestNames) {
+  if (!guestNames || !guestNames.length) return '';
+  const rows = guestNames.map(g => {
+    const restrictions = [g.dietary, g.allergies].filter(Boolean).join(', ');
+    return `
+      <tr>
+        <td style="padding:7px 0;font-size:14px;color:rgba(232,240,236,0.85);font-family:Georgia,serif;border-bottom:1px solid rgba(196,163,110,0.1);">
+          ${g.name}
+        </td>
+        <td style="padding:7px 0 7px 16px;font-size:13px;color:rgba(196,163,110,0.75);font-family:Arial,sans-serif;border-bottom:1px solid rgba(196,163,110,0.1);text-align:right;">
+          ${restrictions || '&nbsp;'}
+        </td>
+      </tr>`;
+  }).join('');
 
+  return `
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:12px;">
+      <tr>
+        <td style="padding-bottom:6px;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(196,163,110,0.5);font-family:Arial,sans-serif;">Guest</td>
+        <td style="padding-bottom:6px;font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:rgba(196,163,110,0.5);font-family:Arial,sans-serif;text-align:right;">Dietary Notes</td>
+      </tr>
+      ${rows}
+    </table>`;
+}
+
+function buildEmailHtml({ name, guestNames }) {
+  const firstName = name.split(' ')[0];
   const dot = `<span style="color:#c4a36e;font-size:18px;line-height:1;vertical-align:middle;padding-right:12px;">&#8212;</span>`;
 
   return `<!DOCTYPE html>
@@ -43,7 +63,7 @@ function buildEmailHtml({ name, guestCount }) {
           <td align="center" style="padding:52px 48px 40px;border-bottom:1px solid rgba(196,163,110,0.25);">
             <p style="margin:0 0 10px;font-size:10px;letter-spacing:0.3em;color:rgba(196,163,110,0.6);text-transform:uppercase;font-family:Arial,sans-serif;">April 4, 2026 · Pinole, CA</p>
             <h1 style="margin:0;font-size:34px;font-weight:400;color:#e8d5b0;letter-spacing:0.14em;font-family:Georgia,serif;">Manny &amp; Celesti</h1>
-            <p style="margin:14px 0 0;font-size:11px;color:rgba(232,208,176,0.45);letter-spacing:0.2em;text-transform:uppercase;font-family:Arial,sans-serif;">A Gentle Reminder</p>
+            <p style="margin:14px 0 0;font-size:11px;color:rgba(232,208,176,0.45);letter-spacing:0.2em;text-transform:uppercase;font-family:Arial,sans-serif;">A Friendly Reminder</p>
           </td>
         </tr>
 
@@ -54,9 +74,11 @@ function buildEmailHtml({ name, guestCount }) {
             <p style="margin:0 0 20px;font-size:15px;color:rgba(232,240,236,0.8);line-height:1.9;font-family:Georgia,serif;">
               We cannot wait to celebrate with you on April 4th. A few things to keep in mind as the day approaches.
             </p>
-            <p style="margin:0;font-size:14px;color:rgba(232,240,236,0.55);line-height:1.8;border-left:2px solid rgba(196,163,110,0.4);padding-left:16px;font-family:Arial,sans-serif;">
-              ${partyLine} Need to make a change? Please text us.
-            </p>
+            <div style="border-left:2px solid rgba(196,163,110,0.4);padding-left:16px;">
+              <p style="margin:0 0 2px;font-size:13px;color:rgba(196,163,110,0.7);letter-spacing:0.1em;text-transform:uppercase;font-family:Arial,sans-serif;">Your Party</p>
+              ${buildGuestListHtml(guestNames)}
+              <p style="margin:14px 0 0;font-size:13px;color:rgba(232,240,236,0.45);font-family:Arial,sans-serif;line-height:1.7;">Need to make a change? Please text us.</p>
+            </div>
           </td>
         </tr>
 
@@ -80,11 +102,10 @@ function buildEmailHtml({ name, guestCount }) {
         <tr>
           <td style="padding:32px 48px 28px;">
             <p style="margin:0 0 18px;font-size:15px;color:rgba(232,240,236,0.8);line-height:1.8;font-family:Georgia,serif;">
-              ${dot}Doors open at <strong style="color:#e8d5b0;font-weight:normal;">4:00 PM</strong> — please arrive on time.
+              ${dot}Doors open at <strong style="color:#e8d5b0;font-weight:normal;">4:00 PM.</strong> Please arrive on time.
             </p>
             <p style="margin:0 0 18px;font-size:15px;color:rgba(232,240,236,0.8);line-height:1.8;font-family:Georgia,serif;">
-              ${dot}The schedule has been updated —
-              <a href="https://mannyandcelesti.com/#schedule" style="color:#c4a36e;text-decoration:none;border-bottom:1px solid rgba(196,163,110,0.35);">take a look</a>.
+              ${dot}The schedule has been updated. <a href="https://mannyandcelesti.com/#schedule" style="color:#c4a36e;text-decoration:none;border-bottom:1px solid rgba(196,163,110,0.35);">Take a look</a>.
             </p>
             <p style="margin:0;font-size:15px;color:rgba(232,240,236,0.8);line-height:1.8;font-family:Georgia,serif;">
               ${dot}Have questions? Our <a href="https://mannyandcelesti.com/#faq" style="color:#c4a36e;text-decoration:none;border-bottom:1px solid rgba(196,163,110,0.35);">FAQ</a> has answers, or reply to this email.
@@ -139,8 +160,11 @@ export default async function handler(req, res) {
       from: process.env.RESEND_FROM_EMAIL || 'Manny & Celesti <rsvp@mannyandcelesti.com>',
       to: test_email,
       replyTo: 'mannyandcelesti@gmail.com',
-      subject: '[TEST] A gentle reminder — Manny & Celesti, April 4 💍',
-      html: buildEmailHtml({ name: 'Manny Flores', guestCount: 2 }),
+      subject: '[TEST] A friendly reminder · Manny & Celesti, April 4 💍',
+      html: buildEmailHtml({ name: 'Manny Flores', guestNames: [
+        { name: 'Manny Flores', dietary: 'No restrictions', allergies: '' },
+        { name: 'Celesti Chia', dietary: '', allergies: 'Tree nuts' },
+      ]}),
     });
     if (error) return res.status(500).json({ error: error.message });
     return res.status(200).json({ success: true, sent: [test_email] });
@@ -149,7 +173,7 @@ export default async function handler(req, res) {
   // ── Single guest ─────────────────────────────────────────────────────────────
   if (rsvp_id) {
     const rows = await sql`
-      SELECT id, name, email, guests, reminder_sent_at
+      SELECT id, name, email, guests, guest_names, reminder_sent_at
       FROM rsvps WHERE id = ${rsvp_id} AND attending = 'yes'
     `;
     if (!rows.length) return res.status(404).json({ error: 'RSVP not found or not attending' });
@@ -168,8 +192,8 @@ export default async function handler(req, res) {
       from: process.env.RESEND_FROM_EMAIL || 'Manny & Celesti <rsvp@mannyandcelesti.com>',
       to: rsvp.email,
       replyTo: 'mannyandcelesti@gmail.com',
-      subject: "A gentle reminder — Manny & Celesti, April 4 💍",
-      html: buildEmailHtml({ name: rsvp.name, guestCount: rsvp.guests }),
+      subject: "A friendly reminder · Manny & Celesti, April 4 💍",
+      html: buildEmailHtml({ name: rsvp.name, guestNames: rsvp.guest_names || [] }),
     });
 
     if (error) return res.status(500).json({ error: error.message });
@@ -192,7 +216,7 @@ export default async function handler(req, res) {
 
     // Fetch all attending guests with email, skip those recently reminded
     const guests = await sql`
-      SELECT id, name, email, guests, reminder_sent_at
+      SELECT id, name, email, guests, guest_names, reminder_sent_at
       FROM rsvps
       WHERE attending = 'yes' AND email IS NOT NULL AND email != ''
     `;
@@ -215,8 +239,8 @@ export default async function handler(req, res) {
         from: process.env.RESEND_FROM_EMAIL || 'Manny & Celesti <rsvp@mannyandcelesti.com>',
         to: guest.email,
         replyTo: 'mannyandcelesti@gmail.com',
-        subject: "A gentle reminder — Manny & Celesti, April 4 💍",
-        html: buildEmailHtml({ name: guest.name, guestCount: guest.guests }),
+        subject: "A friendly reminder · Manny & Celesti, April 4 💍",
+        html: buildEmailHtml({ name: guest.name, guestNames: guest.guest_names || [] }),
       });
 
       if (error) {
