@@ -49,21 +49,21 @@ function buildEmailHtml({ name, guestCount }) {
 
         <!-- Greeting -->
         <tr>
-          <td style="padding:44px 48px 32px;">
+          <td style="padding:44px 48px 36px;">
             <p style="margin:0 0 20px;font-size:17px;color:#e8f0ec;line-height:1.4;font-family:Georgia,serif;">Dear ${firstName},</p>
             <p style="margin:0 0 20px;font-size:15px;color:rgba(232,240,236,0.8);line-height:1.9;font-family:Georgia,serif;">
-              Thank you so much for your RSVP — it truly means the world to us.
-              We are counting down the days and cannot wait to celebrate with you.
+              We are so looking forward to celebrating with you on April 4th.
+              Just a few quick things before the day.
             </p>
-            <p style="margin:0;font-size:14px;color:rgba(232,240,236,0.6);line-height:1.8;border-left:2px solid rgba(196,163,110,0.5);padding-left:16px;font-family:Arial,sans-serif;">
-              ${partyLine} If anything has changed, please text us and we'll get it sorted.
+            <p style="margin:0;font-size:14px;color:rgba(232,240,236,0.55);line-height:1.8;border-left:2px solid rgba(196,163,110,0.4);padding-left:16px;font-family:Arial,sans-serif;">
+              ${partyLine} Need to make a change? Please text us.
             </p>
           </td>
         </tr>
 
         <!-- Photos -->
         <tr>
-          <td style="padding:0 48px 40px;">
+          <td style="padding:0 48px 36px;">
             <table width="100%" cellpadding="0" cellspacing="0">
               <tr>
                 <td width="49%" style="padding-right:6px;">
@@ -91,42 +91,17 @@ function buildEmailHtml({ name, guestCount }) {
 
         <!-- Details -->
         <tr>
-          <td style="padding:36px 48px 32px;">
-            <p style="margin:0 0 28px;font-size:10px;letter-spacing:0.25em;color:rgba(196,163,110,0.7);text-transform:uppercase;font-family:Arial,sans-serif;">A few things to keep in mind</p>
-
-            <p style="margin:0 0 20px;font-size:15px;color:rgba(232,240,236,0.8);line-height:1.8;font-family:Georgia,serif;">
-              ${dot}Please take a moment to review our
-              <a href="https://mannyandcelesti.com/#faq" style="color:#c4a36e;text-decoration:none;border-bottom:1px solid rgba(196,163,110,0.35);">FAQ page</a>
-              before the day.
+          <td style="padding:32px 48px 28px;">
+            <p style="margin:0 0 18px;font-size:15px;color:rgba(232,240,236,0.8);line-height:1.8;font-family:Georgia,serif;">
+              ${dot}Doors open at <strong style="color:#e8d5b0;font-weight:normal;">4:00 PM</strong> — please arrive on time.
             </p>
-
-            <p style="margin:0 0 20px;font-size:15px;color:rgba(232,240,236,0.8);line-height:1.8;font-family:Georgia,serif;">
-              ${dot}The
-              <a href="https://mannyandcelesti.com/#schedule" style="color:#c4a36e;text-decoration:none;border-bottom:1px solid rgba(196,163,110,0.35);">event schedule</a>
-              has been updated — take a look so you know what to expect throughout the evening.
+            <p style="margin:0 0 18px;font-size:15px;color:rgba(232,240,236,0.8);line-height:1.8;font-family:Georgia,serif;">
+              ${dot}The schedule has been updated —
+              <a href="https://mannyandcelesti.com/#schedule" style="color:#c4a36e;text-decoration:none;border-bottom:1px solid rgba(196,163,110,0.35);">take a look</a>.
             </p>
-
-            <p style="margin:0 0 20px;font-size:15px;color:rgba(232,240,236,0.8);line-height:1.8;font-family:Georgia,serif;">
-              ${dot}Doors open at <strong style="color:#e8d5b0;font-weight:normal;">4:00 PM</strong> — please plan to arrive on time so we can begin together.
-            </p>
-
-            <p style="margin:0 0 20px;font-size:15px;color:rgba(232,240,236,0.8);line-height:1.8;font-family:Georgia,serif;">
-              ${dot}Need to modify your RSVP? Please text us and we will take care of it for you.
-            </p>
-
             <p style="margin:0;font-size:15px;color:rgba(232,240,236,0.8);line-height:1.8;font-family:Georgia,serif;">
-              ${dot}Any other questions? Simply reply to this email or send us a text — we are happy to help.
+              ${dot}Have questions? Our <a href="https://mannyandcelesti.com/#faq" style="color:#c4a36e;text-decoration:none;border-bottom:1px solid rgba(196,163,110,0.35);">FAQ</a> has answers, or reply to this email.
             </p>
-          </td>
-        </tr>
-
-        <!-- CTA -->
-        <tr>
-          <td align="center" style="padding:8px 48px 40px;">
-            <a href="https://mannyandcelesti.com/seating"
-               style="display:inline-block;border:1px solid rgba(196,163,110,0.45);color:#e8d5b0;text-decoration:none;padding:13px 36px;font-size:11px;letter-spacing:0.2em;font-family:Arial,sans-serif;text-transform:uppercase;">
-              Find Your Seat
-            </a>
           </td>
         </tr>
 
@@ -139,14 +114,11 @@ function buildEmailHtml({ name, guestCount }) {
 
         <!-- Footer -->
         <tr>
-          <td align="center" style="padding:32px 48px 44px;">
-            <p style="margin:0 0 6px;font-size:15px;color:rgba(232,240,236,0.6);line-height:1.8;font-style:italic;font-family:Georgia,serif;">
-              We are so grateful to have you in our lives.
-            </p>
-            <p style="margin:0 0 20px;font-size:15px;color:rgba(232,240,236,0.6);font-style:italic;font-family:Georgia,serif;">
+          <td align="center" style="padding:28px 48px 40px;">
+            <p style="margin:0 0 16px;font-size:15px;color:rgba(232,240,236,0.55);font-style:italic;font-family:Georgia,serif;">
               See you very soon.
             </p>
-            <p style="margin:0;font-size:10px;color:rgba(232,240,236,0.3);letter-spacing:0.15em;text-transform:uppercase;font-family:Arial,sans-serif;">
+            <p style="margin:0;font-size:10px;color:rgba(232,240,236,0.25);letter-spacing:0.15em;text-transform:uppercase;font-family:Arial,sans-serif;">
               Manny &amp; Celesti &nbsp;&middot;&nbsp; April 4, 2026
             </p>
           </td>
