@@ -1316,6 +1316,9 @@
             <button class="event-toggle-btn" id="toggleReminders" onclick="switchToReminders()">
                 📧 Reminders
             </button>
+            <button class="event-toggle-btn" id="toggleSpanish" onclick="switchEvent('spanish')">
+                🇲🇽 LA Shower
+            </button>
         </div>
 
         <div class="dashboard-header">
@@ -1723,18 +1726,17 @@
         let rsvpData = [];
         let authToken = '';
         let deleteId = null;
-        let currentEvent = 'wedding'; // 'wedding' or 'babyShower'
+        let currentEvent = 'wedding'; // 'wedding', 'babyShower', or 'spanish'
 
         // API endpoint resolver
         function getApiEndpoint(action) {
-            const prefix = currentEvent === 'babyShower' ? '/api/baby-shower-' : '/api/';
-            const map = {
-                'get-rsvps':    currentEvent === 'babyShower' ? '/api/baby-shower-get-rsvps' : '/api/get-rsvps',
-                'add-rsvp':     currentEvent === 'babyShower' ? '/api/baby-shower-add-rsvp'  : '/api/add-rsvp',
-                'update-rsvp':  currentEvent === 'babyShower' ? '/api/baby-shower-update-rsvp' : '/api/update-rsvp',
-                'delete-rsvp':  currentEvent === 'babyShower' ? '/api/baby-shower-delete-rsvp' : '/api/delete-rsvp',
-            };
-            return map[action] || `/api/${action}`;
+            if (currentEvent === 'babyShower') {
+                return `/api/baby-shower-${action}`;
+            }
+            if (currentEvent === 'spanish') {
+                return `/api/spanish-${action}`;
+            }
+            return `/api/${action}`;
         }
 
         // Check if already logged in
@@ -2483,6 +2485,7 @@
             document.getElementById('toggleSeating').classList.remove('active', 'baby-active');
             document.getElementById('toggleSchedule').classList.remove('active', 'baby-active');
             document.getElementById('toggleReminders').classList.remove('active', 'baby-active');
+            document.getElementById('toggleSpanish').classList.remove('active', 'baby-active');
         }
 
         function switchToSeating() {
@@ -2525,16 +2528,25 @@
             const bBtn = document.getElementById('toggleBabyShower');
             const title = document.getElementById('dashboardTitle');
 
+            const sBtn = document.getElementById('toggleSpanish');
             if (eventType === 'wedding') {
                 wBtn.classList.add('active');
                 wBtn.classList.remove('baby-active');
                 bBtn.classList.remove('active', 'baby-active');
+                sBtn.classList.remove('active', 'baby-active');
                 title.textContent = 'Wedding RSVP Dashboard';
-            } else {
+            } else if (eventType === 'babyShower') {
                 bBtn.classList.add('baby-active');
                 bBtn.classList.remove('active');
                 wBtn.classList.remove('active', 'baby-active');
+                sBtn.classList.remove('active', 'baby-active');
                 title.textContent = '🌸 Baby Shower RSVP Dashboard';
+            } else if (eventType === 'spanish') {
+                sBtn.classList.add('active');
+                sBtn.classList.remove('baby-active');
+                wBtn.classList.remove('active', 'baby-active');
+                bBtn.classList.remove('active', 'baby-active');
+                title.textContent = '🇲🇽 LA Baby Shower RSVPs';
             }
 
             document.getElementById('statTotal').textContent = '—';
