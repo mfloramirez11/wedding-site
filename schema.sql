@@ -37,3 +37,23 @@ CREATE TABLE IF NOT EXISTS baby_shower_rsvps (
 -- Indexes for baby shower table
 CREATE INDEX IF NOT EXISTS idx_bs_rsvps_email ON baby_shower_rsvps(LOWER(email));
 CREATE INDEX IF NOT EXISTS idx_bs_rsvps_created_at ON baby_shower_rsvps(created_at DESC);
+
+
+-- ============================================================
+-- LA Baby Shower RSVP Table (Spanish / English)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS spanish_rsvps (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255),
+  email VARCHAR(255),
+  phone VARCHAR(50),
+  attending VARCHAR(10) CHECK (attending IN ('yes', 'no')),
+  guests INTEGER DEFAULT 0 CHECK (guests >= 0 AND guests <= 10),
+  guest_names TEXT,   -- JSON array: [{name, dietary, allergies}]
+  reminder_sent_at TIMESTAMP,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Indexes for LA baby shower table
+CREATE INDEX IF NOT EXISTS idx_spanish_rsvps_email ON spanish_rsvps(LOWER(email));
+CREATE INDEX IF NOT EXISTS idx_spanish_rsvps_created_at ON spanish_rsvps(created_at DESC);
