@@ -90,7 +90,7 @@ export default async function handler(req, res) {
     const guestsJson = attending === 'yes' ? JSON.stringify(guests) : null;
 
     await sql`
-      INSERT INTO baby_shower_rsvps (name, email, phone, attending, guests, guest_names, created_at)
+      INSERT INTO baby_shower_rsvps (name, email, phone, attending, guests, guest_names, event, created_at)
       VALUES (
         ${name},
         ${email.toLowerCase()},
@@ -98,6 +98,7 @@ export default async function handler(req, res) {
         ${attending},
         ${attending === 'yes' ? guestCount : 0},
         ${guestsJson},
+        ${event},
         NOW()
       )
     `;
