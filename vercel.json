@@ -3,6 +3,8 @@
   "outputDirectory": ".",
   "rewrites": [
     { "source": "/images/:path*", "destination": "/public/images/:path*" },
+    { "source": "/seating", "destination": "/seating.html" },
+    { "source": "/contact", "destination": "/contact.html" },
     { "source": "/baby-shower", "destination": "/baby-shower.html" },
     { "source": "/baby-shower-modify", "destination": "/baby-shower-modify.html" },
     { "source": "/baby-shower-secret", "destination": "/baby-shower-secret.html" },
