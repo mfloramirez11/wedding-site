@@ -1,4 +1,5 @@
 import { neon } from '@neondatabase/serverless';
+import { sendLAShowerNotifications } from './la-shower-notifications.js';
 
 const rateLimitMap = new Map();
 const RATE_LIMIT_WINDOW = 3600000;
@@ -99,7 +100,30 @@ export default async function handler(req, res) {
       )
     `;
 
-    return res.status(200).json({ success: true, message: 'Confirmación enviada exitosamente' });
+    let notificationResult;
+    try {
+      notificationResult = await sendLAShowerNotifications({
+        name,
+        email: email ? email.toLowerCase() : null,
+        phone: phone || null,
+        attending,
+        guestCount: attending === 'yes' ? guestCount : 0,
+        guests: attending === 'yes' ? guests : [],
+      });
+      console.log('LA shower notification results:', notificationResult);
+    } catch (err) {
+      console.error('LA shower notification error:', err);
+      notificationResult = { email: { success: false, error: err.message } };
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Confirmación enviada exitosamente',
+      notifications: {
+        email: notificationResult?.email?.success || false,
+        emailError: notificationResult?.email?.error || null,
+      }
+    });
 
   } catch (error) {
     console.error('Spanish RSVP error:', error);
