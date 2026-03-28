@@ -1809,10 +1809,14 @@
         // API endpoint resolver
         function getApiEndpoint(action) {
             if (currentEvent === 'babyShower') {
+                // Pinole shower — filter by event=pinole
+                if (action === 'get-rsvps') return `/api/baby-shower-get-rsvps?event=pinole`;
                 return `/api/baby-shower-${action}`;
             }
             if (currentEvent === 'spanish') {
-                return `/api/spanish-${action}`;
+                // LA shower — same table, filter by event=la
+                if (action === 'get-rsvps') return `/api/baby-shower-get-rsvps?event=la`;
+                return `/api/baby-shower-${action}`;
             }
             return `/api/${action}`;
         }
@@ -2284,7 +2288,8 @@
                 phone: document.getElementById('addPhone').value.trim(),
                 attending: attending,
                 guests: attending === 'yes' ? parseInt(document.getElementById('addGuests').value) : 0,
-                guestData: guestData
+                guestData: guestData,
+                event: currentEvent === 'spanish' ? 'la' : (currentEvent === 'babyShower' ? 'pinole' : undefined)
             };
 
             try {

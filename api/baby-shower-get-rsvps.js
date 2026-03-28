@@ -36,11 +36,20 @@ export default async function handler(req, res) {
   const sql = neon(process.env.DATABASE_URL);
 
   try {
-    const rsvps = await sql`
-      SELECT id, name, email, phone, attending, guests, guest_names, created_at
-      FROM baby_shower_rsvps
-      ORDER BY created_at DESC
-    `;
+    const eventFilter = req.query?.event; // 'pinole', 'la', or undefined (all)
+
+    const rsvps = eventFilter
+      ? await sql`
+          SELECT id, name, email, phone, attending, guests, guest_names, event, created_at
+          FROM baby_shower_rsvps
+          WHERE event = ${eventFilter}
+          ORDER BY created_at DESC
+        `
+      : await sql`
+          SELECT id, name, email, phone, attending, guests, guest_names, event, created_at
+          FROM baby_shower_rsvps
+          ORDER BY created_at DESC
+        `;
 
     const total = rsvps.length;
     const attending = rsvps.filter(r => r.attending === 'yes').length;
