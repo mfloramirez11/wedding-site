@@ -44,7 +44,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { name, email, phone, attending, guestCount, guests } = req.body;
+    const { name, email, phone, attending, guestCount, guests, event = 'pinole' } = req.body;
 
     if (!name || !email || !phone || !attending) {
       return res.status(400).json({ error: 'Missing required fields' });
@@ -111,6 +111,7 @@ export default async function handler(req, res) {
         attending,
         guestCount: attending === 'yes' ? guestCount : 0,
         guests: attending === 'yes' ? guests : [],
+        event,
       });
       console.log('Baby shower notification results:', notificationResult);
     } catch (err) {

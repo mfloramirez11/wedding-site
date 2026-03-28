@@ -14,13 +14,14 @@ function getResendClient() {
 /**
  * Send admin notification when someone RSVPs or modifies for baby shower
  */
-export async function sendBabyShowerAdminNotification({ name, email, phone, attending, guestCount, guests, isUpdate = false }) {
+export async function sendBabyShowerAdminNotification({ name, email, phone, attending, guestCount, guests, isUpdate = false, event = 'pinole' }) {
   const resend = getResendClient();
   if (!resend) return { success: false, error: 'Email service not configured' };
 
   try {
     const action = isUpdate ? 'Updated' : 'New';
     const emoji = attending === 'yes' ? '🎀' : '💌';
+    const eventLabel = event === 'la' ? 'LA Baby Shower' : 'Baby Shower';
 
     let guestList = '';
     if (attending === 'yes' && guests && guests.length > 0) {
@@ -34,7 +35,7 @@ export async function sendBabyShowerAdminNotification({ name, email, phone, atte
 
     const htmlContent = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background: #fff5f8;">
-        <h2 style="color: #6d2b47;">${emoji} Baby Shower – ${action} RSVP ${emoji}</h2>
+        <h2 style="color: #6d2b47;">${emoji} ${eventLabel} – ${action} RSVP ${emoji}</h2>
         <div style="background: #fce4ec; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #e07aaa;">
           <p><strong>Name:</strong> ${name}</p>
           <p><strong>Email:</strong> ${email}</p>
@@ -52,7 +53,7 @@ export async function sendBabyShowerAdminNotification({ name, email, phone, atte
     const { data, error } = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || 'Manny & Celesti <rsvp@mannyandcelesti.com>',
       to: ADMIN_EMAIL,
-      subject: `${emoji} Baby Shower – ${action} RSVP: ${name} (${attending === 'yes' ? 'Attending' : 'Declined'})`,
+      subject: `${emoji} ${eventLabel} – ${action} RSVP: ${name} (${attending === 'yes' ? 'Attending' : 'Declined'})`,
       html: htmlContent,
     });
 
@@ -72,13 +73,13 @@ export async function sendBabyShowerAdminNotification({ name, email, phone, atte
 /**
  * Send confirmation email to the guest
  */
-export async function sendBabyShowerConfirmationEmail({ name, email, attending, guestCount, guests }) {
+export async function sendBabyShowerConfirmationEmail({ name, email, attending, guestCount, guests, event = 'pinole' }) {
   const resend = getResendClient();
   if (!resend) return { success: false, error: 'Email service not configured' };
 
   try {
-    const htmlContent = generateBabyShowerConfirmationEmail({ name, email, attending, guestCount, guests });
-    const textContent = generateBabyShowerConfirmationText({ name, email, attending, guestCount, guests });
+    const htmlContent = generateBabyShowerConfirmationEmail({ name, email, attending, guestCount, guests, event });
+    const textContent = generateBabyShowerConfirmationText({ name, email, attending, guestCount, guests, event });
 
     const { data, error } = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || 'Manny & Celesti <rsvp@mannyandcelesti.com>',
@@ -106,10 +107,10 @@ export async function sendBabyShowerConfirmationEmail({ name, email, attending, 
 /**
  * Send both guest confirmation and admin notification
  */
-export async function sendBabyShowerNotifications({ name, email, phone, attending, guestCount, guests, isUpdate = false }) {
+export async function sendBabyShowerNotifications({ name, email, phone, attending, guestCount, guests, isUpdate = false, event = 'pinole' }) {
   const [emailResult, adminResult] = await Promise.all([
-    sendBabyShowerConfirmationEmail({ name, email, attending, guestCount, guests }),
-    sendBabyShowerAdminNotification({ name, email, phone, attending, guestCount, guests, isUpdate }),
+    sendBabyShowerConfirmationEmail({ name, email, attending, guestCount, guests, event }),
+    sendBabyShowerAdminNotification({ name, email, phone, attending, guestCount, guests, isUpdate, event }),
   ]);
 
   return { email: emailResult, admin: adminResult };

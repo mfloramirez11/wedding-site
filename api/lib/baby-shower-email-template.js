@@ -1,8 +1,16 @@
 /**
  * Baby shower RSVP confirmation email – girl-themed pink design
+ * event: 'pinole' (default) or 'la'
  */
-export function generateBabyShowerConfirmationEmail({ name, attending, guestCount, guests }) {
+export function generateBabyShowerConfirmationEmail({ name, attending, guestCount, guests, event = 'pinole' }) {
   const editRsvpUrl = `https://mannyandcelesti.com/baby-shower-modify.html`;
+
+  const isLA = event === 'la';
+  const eventDate     = isLA ? 'Saturday, April 25th, 2026'      : 'Sunday, June 7, 2026';
+  const eventTime     = isLA ? '1:00 in the afternoon'            : '1 o\'clock in the afternoon';
+  const eventAddress1 = isLA ? '314 E 106th St'                   : '2725 De La Briandais Ct';
+  const eventAddress2 = isLA ? 'Los Angeles, California 90002'    : 'Pinole, California 94564';
+  const changeDeadline = isLA ? 'April 18, 2026'                  : 'May 25, 2026';
 
   let guestListHtml = '';
   if (attending === 'yes' && guests && guests.length > 0) {
@@ -88,9 +96,9 @@ export function generateBabyShowerConfirmationEmail({ name, attending, guestCoun
                 <tr>
                   <td style="padding: 28px; text-align: center;">
                     <p style="font-family: Georgia, serif; font-size: 11px; color: #b05678; letter-spacing: 3px; text-transform: uppercase; margin: 0 0 18px;">Event Details</p>
-                    <p style="font-family: Georgia, serif; font-style: italic; font-size: 20px; color: #6d2b47; margin: 0 0 5px;">Sunday, June 7, 2026</p>
-                    <p style="font-family: Georgia, serif; font-style: italic; font-size: 15px; color: #b05678; margin: 0 0 22px;">1 o'clock in the afternoon</p>
-                    <p style="font-family: Georgia, serif; font-size: 15px; color: #8a3a58; margin: 0; line-height: 1.7;">2725 De La Briandais Ct<br>Pinole, California 94564</p>
+                    <p style="font-family: Georgia, serif; font-style: italic; font-size: 20px; color: #6d2b47; margin: 0 0 5px;">${eventDate}</p>
+                    <p style="font-family: Georgia, serif; font-style: italic; font-size: 15px; color: #b05678; margin: 0 0 22px;">${eventTime}</p>
+                    <p style="font-family: Georgia, serif; font-size: 15px; color: #8a3a58; margin: 0; line-height: 1.7;">${eventAddress1}<br>${eventAddress2}</p>
                   </td>
                 </tr>
               </table>
@@ -109,7 +117,7 @@ export function generateBabyShowerConfirmationEmail({ name, attending, guestCoun
                   </td>
                 </tr>
               </table>
-              <p style="font-family: Georgia, serif; font-size: 12px; color: #c0517a; margin: 22px 0 0; font-style: italic;">The last day to make changes is May 25, 2026</p>
+              <p style="font-family: Georgia, serif; font-size: 12px; color: #c0517a; margin: 22px 0 0; font-style: italic;">The last day to make changes is ${changeDeadline}</p>
             </td>
           </tr>
 
@@ -148,8 +156,15 @@ export function generateBabyShowerConfirmationEmail({ name, attending, guestCoun
 /**
  * Plain text version
  */
-export function generateBabyShowerConfirmationText({ name, attending, guestCount, guests }) {
+export function generateBabyShowerConfirmationText({ name, attending, guestCount, guests, event = 'pinole' }) {
   const editRsvpUrl = `https://mannyandcelesti.com/baby-shower-modify.html`;
+
+  const isLA = event === 'la';
+  const eventDate     = isLA ? 'Saturday, April 25th, 2026'   : 'Sunday, June 7, 2026';
+  const eventTime     = isLA ? '1:00 PM'                       : '1 o\'clock in the afternoon';
+  const eventAddress1 = isLA ? '314 E 106th St'                : '2725 De La Briandais Ct';
+  const eventAddress2 = isLA ? 'Los Angeles, California 90002' : 'Pinole, California 94564';
+  const changeDeadline = isLA ? 'April 18, 2026'               : 'May 25, 2026';
 
   let guestList = '';
   if (attending === 'yes' && guests && guests.length > 0) {
@@ -183,11 +198,11 @@ ${guestList}
 EVENT DETAILS
 ────────────────────────────────────────
 
-Sunday, June 7, 2026
-1 o'clock in the afternoon
+${eventDate}
+${eventTime}
 
-2725 De La Briandais Ct
-Pinole, California 94564
+${eventAddress1}
+${eventAddress2}
 `;
   }
 
@@ -200,7 +215,7 @@ EDIT YOUR RSVP
 Need to make changes? Visit:
 ${editRsvpUrl}
 
-The last day to make changes is May 25, 2026.
+The last day to make changes is ${changeDeadline}.
 
 ────────────────────────────────────────
 
