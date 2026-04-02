@@ -173,7 +173,7 @@ export default async function handler(req, res) {
       from: process.env.RESEND_FROM_EMAIL || 'Manny & Celesti <rsvp@mannyandcelesti.com>',
       to: test_email,
       replyTo: 'mannyandcelesti@gmail.com',
-      subject: '[TEST] A friendly reminder · Manny & Celesti, April 4 💍',
+      subject: 'A friendly reminder · Manny & Celesti, April 4 💍',
       html: buildEmailHtml({ name: sample.name, guestNames: parseGuests(sample.guest_names) }),
     });
     if (error) return res.status(500).json({ error: error.message });
