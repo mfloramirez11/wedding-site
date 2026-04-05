@@ -1533,11 +1533,11 @@
             </div>
 
             <!-- Thank You Email -->
-            <div style="margin:0 24px 32px;border-top:1px solid rgba(255,255,255,0.08);padding-top:28px;">
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+            <div style="margin:0 24px 0;border-top:1px solid rgba(255,255,255,0.08);padding-top:28px;">
+                <div class="seating-save-all-bar" style="padding:0 0 16px;">
                     <div>
-                        <h2 style="font-size:1.1rem;margin:0;">💌 Thank You Email</h2>
-                        <p style="margin:4px 0 0;font-size:0.78rem;color:rgba(255,255,255,0.45);">Send a post-wedding thank you with the photo drive link</p>
+                        <h2>💌 Thank You Emails</h2>
+                        <p id="thankyouBulkNote" style="margin:4px 0 0;font-size:0.78rem;color:rgba(255,255,255,0.45);">Send a post-wedding thank you with the photo drive link</p>
                     </div>
                     <button class="btn btn-primary" id="sendAllThankyouBtn" onclick="sendAllThankyou()">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1546,22 +1546,20 @@
                         Send to All
                     </button>
                 </div>
-
-                <!-- Email preview -->
-                <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:16px 20px;margin-bottom:14px;font-size:0.85rem;color:rgba(255,255,255,0.55);line-height:1.7;">
-                    <em>"Thank you for being a part of our special day... If you took any photos or videos, please share them via the Google Drive link..."</em>
-                </div>
-
                 <!-- Test send -->
-                <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:16px 20px;">
-                    <p style="margin:0 0 12px;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4);font-family:'Lato',sans-serif;">Send Test Email</p>
-                    <div style="display:flex;gap:10px;align-items:center;">
-                        <input type="email" id="testThankyouInput" placeholder="your@email.com"
-                            style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:#e8f0ec;font-family:'Lato',sans-serif;font-size:0.88rem;padding:8px 12px;">
-                        <button class="btn btn-secondary" onclick="sendTestThankyou()" style="white-space:nowrap;flex-shrink:0;">Send Test</button>
+                <div style="padding:0 0 20px;">
+                    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:16px 20px;">
+                        <p style="margin:0 0 12px;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:rgba(255,255,255,0.4);font-family:'Lato',sans-serif;">Send Test Email</p>
+                        <div style="display:flex;gap:10px;align-items:center;">
+                            <input type="email" id="testThankyouInput" placeholder="your@email.com"
+                                style="flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:6px;color:#e8f0ec;font-family:'Lato',sans-serif;font-size:0.88rem;padding:8px 12px;">
+                            <button class="btn btn-secondary" onclick="sendTestThankyou()" style="white-space:nowrap;flex-shrink:0;">Send Test</button>
+                        </div>
                     </div>
                 </div>
-                <div id="thankyouStatus" style="margin-top:12px;font-size:0.85rem;display:none;padding:10px 14px;border-radius:6px;"></div>
+                <div id="thankyouList" style="padding:0 0 32px;">
+                    <div class="loading">Loading guests</div>
+                </div>
             </div>
         </div>
 
@@ -3028,6 +3026,8 @@
 
             const rsvpData = await rsvpRes.json();
             remindersData = (rsvpData.rsvps || []).filter(r => r.attending === 'yes');
+            thankyouData = remindersData.slice();
+            renderThankyouTable();
 
             // Bulk cooldown status
             const sendAllBtn = document.getElementById('sendAllBtn');
@@ -3143,7 +3143,6 @@
             if (!email) { showToast('Enter an email address'); return; }
 
             const btn = input.nextElementSibling;
-            const status = document.getElementById('thankyouStatus');
             btn.disabled = true;
             btn.textContent = 'Sending…';
 
@@ -3165,10 +3164,80 @@
             }
         }
 
+        // ── Thank You per-guest table ─────────────────────────────────────────────
+
+        let thankyouData = [];
+
+        function buildThankyouRow(rsvp) {
+            const sentLabel = rsvp.thankyou_sent_at
+                ? `<span class="reminder-sent-badge">${relativeTime(rsvp.thankyou_sent_at)}</span>`
+                : '<span style="color:rgba(255,255,255,0.3);font-size:0.8rem;">Never</span>';
+            return `<tr id="thankyou-row-${rsvp.id}">
+                <td>${escapeHtml(rsvp.name)}</td>
+                <td style="color:rgba(232,240,236,0.6);font-size:0.82rem;">${escapeHtml(rsvp.email || '—')}</td>
+                <td>${sentLabel}</td>
+                <td><button class="reminder-send-btn" onclick="sendThankyouSingle(${rsvp.id}, this)"${!rsvp.email ? ' disabled title="No email on file"' : ''}>Send</button></td>
+            </tr>`;
+        }
+
+        function renderThankyouTable() {
+            const list = document.getElementById('thankyouList');
+            if (!thankyouData.length) {
+                list.innerHTML = '<div class="no-data">No attending guests found.</div>';
+                return;
+            }
+            const sentCount = thankyouData.filter(r => r.thankyou_sent_at).length;
+            document.getElementById('thankyouBulkNote').textContent =
+                `${sentCount} of ${thankyouData.length} guests have been sent a thank you`;
+            list.innerHTML = `
+                <table class="reminder-table">
+                    <thead><tr>
+                        <th>Name</th><th>Email</th><th>Sent</th><th></th>
+                    </tr></thead>
+                    <tbody>${thankyouData.map(r => buildThankyouRow(r)).join('')}</tbody>
+                </table>`;
+        }
+
+        async function sendThankyouSingle(rsvpId, btn) {
+            const orig = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Sending…';
+
+            const res = await fetch('/api/send-thankyou', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
+                body: JSON.stringify({ rsvp_id: rsvpId })
+            });
+            const data = await res.json();
+
+            if (res.ok) {
+                showToast('Thank you sent!');
+                const rsvp = thankyouData.find(r => r.id === rsvpId);
+                if (rsvp) {
+                    rsvp.thankyou_sent_at = data.thankyou_sent_at || new Date().toISOString();
+                    const row = document.getElementById(`thankyou-row-${rsvpId}`);
+                    if (row) row.outerHTML = buildThankyouRow(rsvp);
+                }
+                renderThankyouBulkNote();
+            } else {
+                btn.disabled = false;
+                btn.textContent = orig;
+                showToast(data.error || 'Failed to send');
+            }
+        }
+
+        function renderThankyouBulkNote() {
+            const sentCount = thankyouData.filter(r => r.thankyou_sent_at).length;
+            const el = document.getElementById('thankyouBulkNote');
+            if (el) el.textContent = `${sentCount} of ${thankyouData.length} guests have been sent a thank you`;
+        }
+
         async function sendAllThankyou() {
             const btn = document.getElementById('sendAllThankyouBtn');
-            const status = document.getElementById('thankyouStatus');
-            if (!confirm('Send thank you email to all attending guests? This cannot be undone.')) return;
+            const unsent = thankyouData.filter(r => r.email && !r.thankyou_sent_at).length;
+            const total = thankyouData.filter(r => r.email).length;
+            const count = unsent || total;
+            if (!confirm(`Send thank you to ${count} guest(s)? This cannot be undone.`)) return;
 
             btn.disabled = true;
             btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Sending…`;
@@ -3183,17 +3252,12 @@
             btn.disabled = false;
             btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Send to All`;
 
-            status.style.display = 'block';
             if (res.ok) {
-                status.style.background = 'rgba(196,209,199,0.1)';
-                status.style.color = '#c4d1c7';
-                status.style.border = '1px solid rgba(196,209,199,0.3)';
-                status.textContent = `✓ Thank you email sent to ${data.sent} guest(s)${data.failed?.length ? ` · ${data.failed.length} failed` : ''}`;
+                showToast(`Thank you sent to ${data.sent} guest(s)${data.failed?.length ? ` · ${data.failed.length} failed` : ''}`);
+                // Reload data to reflect sent timestamps
+                loadReminders();
             } else {
-                status.style.background = 'rgba(232,180,160,0.1)';
-                status.style.color = '#e8b4a0';
-                status.style.border = '1px solid rgba(232,180,160,0.3)';
-                status.textContent = data.error || 'Failed to send';
+                showToast(data.error || 'Failed to send');
             }
         }
 

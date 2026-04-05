@@ -125,7 +125,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
   if (!auth(req)) return res.status(401).json({ error: 'Unauthorized' });
 
-  const { send_all, test_email } = req.body || {};
+  const { send_all, test_email, rsvp_id } = req.body || {};
   const { sql, resend } = getClients();
 
   // ── Test send ────────────────────────────────────────────────────────────────
@@ -139,6 +139,27 @@ export default async function handler(req, res) {
     });
     if (error) return res.status(500).json({ error: error.message });
     return res.status(200).json({ success: true, sent: [test_email] });
+  }
+
+  // ── Single guest ──────────────────────────────────────────────────────────────
+  if (rsvp_id) {
+    const [guest] = await sql`
+      SELECT id, name, email FROM rsvps WHERE id = ${rsvp_id}
+    `;
+    if (!guest) return res.status(404).json({ error: 'Guest not found.' });
+    if (!guest.email) return res.status(400).json({ error: 'Guest has no email address.' });
+
+    const { error } = await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || 'Manny & Celesti <rsvp@mannyandcelesti.com>',
+      to: guest.email,
+      replyTo: 'mannyandcelesti@gmail.com',
+      subject: 'Thank you for celebrating with us 💚 · Manny & Celesti',
+      html: buildEmailHtml({ name: guest.name }),
+    });
+    if (error) return res.status(500).json({ error: error.message });
+
+    await sql`UPDATE rsvps SET thankyou_sent_at = NOW() WHERE id = ${rsvp_id}`;
+    return res.status(200).json({ success: true, thankyou_sent_at: new Date().toISOString() });
   }
 
   // ── Send all attending guests ─────────────────────────────────────────────────
@@ -168,6 +189,7 @@ export default async function handler(req, res) {
       if (error) {
         failed.push({ name: guest.name, error: error.message });
       } else {
+        await sql`UPDATE rsvps SET thankyou_sent_at = NOW() WHERE id = ${guest.id}`;
         sent.push(guest.email);
       }
     }
@@ -175,5 +197,5 @@ export default async function handler(req, res) {
     return res.status(200).json({ success: true, sent: sent.length, failed });
   }
 
-  return res.status(400).json({ error: 'Provide either send_all: true or test_email.' });
+  return res.status(400).json({ error: 'Provide rsvp_id, send_all: true, or test_email.' });
 }

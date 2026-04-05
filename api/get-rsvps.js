@@ -69,7 +69,7 @@ export default async function handler(req, res) {
   try {
     // Get all RSVPs ordered by creation date
     const result = await sql`
-      SELECT id, name, email, phone, attending, guests, guest_names, dietary, allergies, created_at, reminder_sent_at
+      SELECT id, name, email, phone, attending, guests, guest_names, dietary, allergies, created_at, reminder_sent_at, thankyou_sent_at
       FROM rsvps
       ORDER BY created_at DESC
     `;
