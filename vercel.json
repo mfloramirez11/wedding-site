@@ -3,6 +3,7 @@
   "outputDirectory": ".",
   "rewrites": [
     { "source": "/images/:path*", "destination": "/public/images/:path*" },
+    { "source": "/wedding", "destination": "/wedding.html" },
     { "source": "/seating", "destination": "/seating.html" },
     { "source": "/contact", "destination": "/contact.html" },
     { "source": "/baby-shower", "destination": "/baby-shower.html" },
