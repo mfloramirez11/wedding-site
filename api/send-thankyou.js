@@ -53,7 +53,7 @@ function buildEmailHtml({ name }) {
               Thank you for being a part of our special day. We hope you had a wonderful time and felt the love we have for each and every one of you.
             </p>
             <p style="margin:0 0 20px;font-size:15px;color:rgba(232,240,236,0.85);line-height:1.9;font-family:Georgia,serif;">
-              If you took any photos or videos during the celebration that you'd like to share with us, we would absolutely love to have them. Please feel free to add them to our shared Google Drive below — or text them to either one of us if that's easier.
+              If you took any photos or videos during the celebration that you'd like to share with us, we would absolutely love to have them. Please feel free to add them to our shared Google Drive below or text them to either one of us if that's easier.
             </p>
           </td>
         </tr>
@@ -79,7 +79,7 @@ function buildEmailHtml({ name }) {
         <tr>
           <td style="padding:40px 48px 44px;">
             <p style="margin:0 0 20px;font-size:15px;color:rgba(232,240,236,0.85);line-height:1.9;font-family:Georgia,serif;">
-              From the bottom of our hearts — we are so grateful for each one of you. Our paths have crossed, and you will forever be a part of our story, our history, and the adventures still ahead.
+              From the bottom of our hearts! We are so grateful for each one of you. Our paths have crossed, and you will forever be a part of our story, our history, and the adventures still ahead.
             </p>
             <p style="margin:0;font-size:15px;color:rgba(232,240,236,0.85);line-height:1.9;font-family:Georgia,serif;">
               We love you all.
