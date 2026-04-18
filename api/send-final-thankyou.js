@@ -93,7 +93,7 @@ function buildEmailHtml({ dearLine, bodyHtml, photoLink, aiNote }) {
             <img src="https://mannyandcelesti.com/images/finale.png"
                  alt="Manny &amp; Celesti"
                  width="580"
-                 style="display:block;width:100%;max-width:580px;max-height:380px;object-fit:cover;object-position:50% 30%;">
+                 style="display:block;width:100%;max-width:580px;max-height:440px;object-fit:cover;object-position:50% 62%;">
           </td>
         </tr>
 
