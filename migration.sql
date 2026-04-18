@@ -87,3 +87,9 @@ INSERT INTO seating_chart (table_number, table_label, seat_name, seat_order) VAL
   (6, 'Chung Family', 'Elva',            4),
   (6, 'Chung Family', 'Ramon',           5)
 ON CONFLICT DO NOTHING;
+
+
+-- ============================================================
+-- Migration: Final thank you email tracking
+-- ============================================================
+ALTER TABLE rsvps ADD COLUMN IF NOT EXISTS final_thankyou_sent_at TIMESTAMP;

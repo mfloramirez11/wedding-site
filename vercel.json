@@ -11,6 +11,7 @@
     { "source": "/baby-shower-secret", "destination": "/baby-shower-secret.html" },
     { "source": "/baby-shower-secret-es", "destination": "/baby-shower-secret-es.html" },
     { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/thank-you-final", "destination": "/thank-you-final.html" },
     { "source": "/modify-rsvp", "destination": "/modify-rsvp.html" },
     { "source": "/:path((?!api/).*)", "destination": "/index.html" }
   ]
