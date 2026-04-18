@@ -3392,7 +3392,7 @@ Thank you again for everything. We appreciate you more than we can say.</textare
             try {
                 const res = await fetch('/api/send-final-thankyou', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminPassword}` },
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
                     body: JSON.stringify({ ...compose, test_email: email }),
                 });
                 const data = await res.json();
@@ -3415,7 +3415,7 @@ Thank you again for everything. We appreciate you more than we can say.</textare
                 try {
                     const res = await fetch('/api/send-final-thankyou', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminPassword}` },
+                        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
                         body: JSON.stringify({ ...compose, custom_name: 'friends and family', custom_email: email }),
                     });
                     const data = await res.json();
