@@ -174,6 +174,7 @@ export default async function handler(req, res) {
     test_email,
     custom_name,
     custom_email,
+    custom_dear,
     subject,
     body,
     photo_link,
@@ -189,7 +190,7 @@ export default async function handler(req, res) {
   const bodyHtml = bodyToHtml(body.trim());
 
   async function doSend({ name, email, guest_names, id }) {
-    const dearLine = buildDearLine(name, guest_names ?? null);
+    const dearLine = custom_dear ? `Dear ${custom_dear},` : buildDearLine(name, guest_names ?? null);
     const aiNote = ai_personalize ? await getAiNote(dearLine) : null;
     const html = buildEmailHtml({ dearLine, bodyHtml, photoLink, aiNote });
 
