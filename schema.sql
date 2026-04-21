@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS baby_shower_rsvps (
   attending VARCHAR(10) NOT NULL CHECK (attending IN ('yes', 'no')),
   guests INTEGER NOT NULL DEFAULT 0 CHECK (guests >= 0 AND guests <= 10),
   guest_names TEXT,   -- JSON array: [{name, dietary, allergies}]
+  event VARCHAR(20) DEFAULT 'pinole',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

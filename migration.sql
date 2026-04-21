@@ -93,3 +93,13 @@ ON CONFLICT DO NOTHING;
 -- Migration: Final thank you email tracking
 -- ============================================================
 ALTER TABLE rsvps ADD COLUMN IF NOT EXISTS final_thankyou_sent_at TIMESTAMP;
+
+
+-- ============================================================
+-- Migration: Add event column to baby_shower_rsvps (run once)
+-- ============================================================
+ALTER TABLE baby_shower_rsvps
+  ADD COLUMN IF NOT EXISTS event VARCHAR(20) DEFAULT 'pinole';
+
+-- Backfill any existing rows that have NULL event
+UPDATE baby_shower_rsvps SET event = 'pinole' WHERE event IS NULL;

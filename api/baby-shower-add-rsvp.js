@@ -17,7 +17,7 @@ export default async function handler(req, res) {
   const sql = neon(process.env.DATABASE_URL);
 
   try {
-    const { name, email, phone, attending, guests, guestData } = req.body;
+    const { name, email, phone, attending, guests, guestData, event = 'pinole' } = req.body;
 
     if (!name || !email) return res.status(400).json({ error: 'Name and email are required' });
 
@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     const guestsJson = attending === 'yes' && guestData ? JSON.stringify(guestData) : null;
 
     await sql`
-      INSERT INTO baby_shower_rsvps (name, email, phone, attending, guests, guest_names, created_at)
+      INSERT INTO baby_shower_rsvps (name, email, phone, attending, guests, guest_names, event, created_at)
       VALUES (
         ${name},
         ${email.toLowerCase()},
@@ -33,6 +33,7 @@ export default async function handler(req, res) {
         ${attending || 'yes'},
         ${attending === 'yes' ? (guests || 1) : 0},
         ${guestsJson},
+        ${event},
         NOW()
       )
     `;
