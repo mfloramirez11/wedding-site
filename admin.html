@@ -2716,7 +2716,7 @@ Thank you again for everything. We appreciate you more than we can say.</textare
             hideAllPanels();
             document.getElementById('toggleReminders').classList.add('active');
             document.getElementById('remindersPanel').style.display = 'block';
-            document.getElementById('dashboardTitle').textContent = 'Email Reminders';
+            document.getElementById('dashboardTitle').textContent = isBabyShowerReminders() ? 'Baby Shower Reminders' : 'Email Reminders';
             loadReminders();
         }
 
@@ -3092,6 +3092,13 @@ Thank you again for everything. We appreciate you more than we can say.</textare
 
         let remindersData = [];
 
+        function isBabyShowerReminders() {
+            return currentEvent === 'babyShower' || currentEvent === 'spanish';
+        }
+        function getReminderEndpoint() {
+            return isBabyShowerReminders() ? '/api/baby-shower-send-reminder' : '/api/send-reminder';
+        }
+
         function hoursAgo(ts) {
             if (!ts) return Infinity;
             return (Date.now() - new Date(ts).getTime()) / 36e5;
@@ -3111,9 +3118,11 @@ Thank you again for everything. We appreciate you more than we can say.</textare
             list.innerHTML = '<div class="loading">Loading guests</div>';
 
             // Load RSVPs and bulk setting in parallel
+            const rsvpEndpoint = isBabyShowerReminders() ? '/api/baby-shower-get-rsvps?event=pinole' : '/api/get-rsvps?event=wedding';
+            const settingKey = isBabyShowerReminders() ? 'last_bulk_bs_reminder_at' : 'last_bulk_reminder_at';
             const [rsvpRes, settingRes] = await Promise.all([
-                fetch('/api/get-rsvps?event=wedding', { headers: { 'Authorization': `Bearer ${authToken}` } }),
-                fetch('/api/get-setting?key=last_bulk_reminder_at', { headers: { 'Authorization': `Bearer ${authToken}` } }).catch(() => null)
+                fetch(rsvpEndpoint, { headers: { 'Authorization': `Bearer ${authToken}` } }),
+                fetch(`/api/get-setting?key=${settingKey}`, { headers: { 'Authorization': `Bearer ${authToken}` } }).catch(() => null)
             ]);
 
             const rsvpData = await rsvpRes.json();
@@ -3183,7 +3192,7 @@ Thank you again for everything. We appreciate you more than we can say.</textare
             btn.disabled = true;
             btn.textContent = 'Sending…';
 
-            const res = await fetch('/api/send-reminder', {
+            const res = await fetch(getReminderEndpoint(), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
                 body: JSON.stringify({ rsvp_id: rsvpId })
@@ -3213,7 +3222,7 @@ Thank you again for everything. We appreciate you more than we can say.</textare
             btn.disabled = true;
             btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Sending…`;
 
-            const res = await fetch('/api/send-reminder', {
+            const res = await fetch(getReminderEndpoint(), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
                 body: JSON.stringify({ send_all: true })
@@ -3362,7 +3371,7 @@ Thank you again for everything. We appreciate you more than we can say.</textare
             btn.disabled = true;
             btn.textContent = 'Sending…';
 
-            const res = await fetch('/api/send-reminder', {
+            const res = await fetch(getReminderEndpoint(), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authToken}` },
                 body: JSON.stringify({ test_email: email })
