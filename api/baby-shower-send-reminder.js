@@ -84,7 +84,7 @@ function buildEmailHtml({ name, guestNames }) {
             <div style="border-left:2px solid rgba(176,86,120,0.35);padding-left:16px;">
               <p style="margin:0 0 2px;font-size:13px;color:rgba(176,86,120,0.6);letter-spacing:0.1em;text-transform:uppercase;font-family:Arial,sans-serif;">Your Party</p>
               ${buildGuestListHtml(guestNames)}
-              <p style="margin:14px 0 0;font-size:13px;color:rgba(74,37,53,0.4);font-family:Arial,sans-serif;line-height:1.7;">Need to make a change? Please text us.</p>
+              <p style="margin:14px 0 0;font-size:13px;color:rgba(74,37,53,0.4);font-family:Arial,sans-serif;line-height:1.7;">Need to make a change? Text us at <a href="sms:3239723556" style="color:#b05678;text-decoration:none;">323-972-3556</a>.</p>
             </div>
           </td>
         </tr>
@@ -111,8 +111,11 @@ function buildEmailHtml({ name, guestNames }) {
             <p style="margin:0 0 18px;font-size:15px;color:rgba(74,37,53,0.75);line-height:1.8;font-family:Georgia,serif;">
               ${dot}Doors open at <strong style="color:#6d2b47;font-weight:normal;">1:00 PM.</strong> Please arrive on time.
             </p>
+            <p style="margin:0 0 18px;font-size:15px;color:rgba(74,37,53,0.75);line-height:1.8;font-family:Georgia,serif;">
+              ${dot}<a href="https://maps.google.com/?q=2725+De+La+Briandais+Ct,+Pinole,+CA+94564" style="color:#b05678;text-decoration:none;border-bottom:1px solid rgba(176,86,120,0.35);">2725 De La Briandais Ct, Pinole, CA 94564</a>. Free street parking available.
+            </p>
             <p style="margin:0;font-size:15px;color:rgba(74,37,53,0.75);line-height:1.8;font-family:Georgia,serif;">
-              ${dot}Have questions? Reply to this email and we will get back to you.
+              ${dot}Have questions? Reply to this email or text <a href="sms:3239723556" style="color:#b05678;text-decoration:none;border-bottom:1px solid rgba(176,86,120,0.35);">323-972-3556</a>.
             </p>
           </td>
         </tr>
