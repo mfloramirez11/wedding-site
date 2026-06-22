@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "vercel-dev",
-      "runtimeExecutable": "vercel",
-      "runtimeArgs": ["dev", "--yes"],
+      "runtimeExecutable": "/bin/sh",
+      "runtimeArgs": ["-c", "PATH=/Users/mannyflores/.nvm/versions/node/v22.16.0/bin:$PATH vercel dev --yes"],
       "port": 3000,
       "autoPort": true
     }
