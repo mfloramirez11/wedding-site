@@ -1,479 +1,418 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manny & Celesti</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Cinzel:wght@400;500&family=Lato:wght@300;400;500&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Thank You · Manny & Celesti</title>
+  <meta name="description" content="Thank you to everyone who celebrated with us. From the bottom of our hearts, Manny & Celesti.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
-        body {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #2d3e3a 0%, #455951 100%);
-            font-family: 'Cormorant Garamond', serif;
-            overflow-x: hidden;
-        }
+    body {
+      background: #faf7f4;
+      color: #2d2420;
+      font-family: 'Lato', sans-serif;
+      font-weight: 300;
+      -webkit-font-smoothing: antialiased;
+    }
 
-        /* Navigation */
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            background: rgba(61, 79, 71, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 22px 0;
-            opacity: 0;
-            animation: fadeIn 1s ease-out 0.3s forwards;
-        }
+    /* ─── Hero ──────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      height: 100svh;
+      min-height: 620px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
 
-        .nav-brand {
-            text-align: center;
-        }
+    .hero-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+    }
 
-        .nav-brand a {
-            color: #c4d1c7;
-            text-decoration: none;
-            font-family: 'Cinzel', serif;
-            font-size: 1.1rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            transition: color 0.3s ease;
-        }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(10,8,6,0.18) 0%,
+        rgba(10,8,6,0.42) 60%,
+        rgba(10,8,6,0.62) 100%
+      );
+    }
 
-        .nav-brand a:hover {
-            color: #ffffff;
-        }
+    .hero-content {
+      position: relative;
+      text-align: center;
+      color: #fff;
+      padding: 0 24px;
+    }
 
-        /* Photo scrollers */
-        .photo-scroller {
-            position: fixed;
-            top: 80px;
-            width: 18%;
-            min-width: 100px;
-            max-width: 220px;
-            height: calc(100vh - 100px);
-            overflow: hidden;
-            opacity: 0;
-            animation: fadeIn 1.5s ease-out 1.5s forwards;
-            z-index: 1;
-        }
+    .hero-eyebrow {
+      font-size: 10px;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      margin-bottom: 28px;
+      font-family: 'Lato', sans-serif;
+      font-weight: 300;
+    }
 
-        .photo-scroller.left { left: 0; }
-        .photo-scroller.right { right: 0; }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(80px, 16vw, 160px);
+      font-weight: 300;
+      line-height: 0.88;
+      letter-spacing: 0.02em;
+      margin-bottom: 32px;
+      color: #fff;
+    }
 
-        .photo-track {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            animation: scrollPhotos 60s linear infinite;
-        }
+    .hero-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(16px, 2.8vw, 24px);
+      font-weight: 300;
+      font-style: italic;
+      color: rgba(255,255,255,0.75);
+      letter-spacing: 0.08em;
+    }
 
-        .photo-scroller.right .photo-track {
-            animation: scrollPhotosReverse 60s linear infinite;
-        }
+    .scroll-cue {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255,255,255,0.4);
+      font-size: 9px;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      font-family: 'Lato', sans-serif;
+      animation: scrollBounce 2.4s ease-in-out infinite;
+    }
 
-        @keyframes scrollPhotos {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-50%); }
-        }
+    .scroll-cue::after {
+      content: '';
+      width: 1px;
+      height: 44px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
+    }
 
-        @keyframes scrollPhotosReverse {
-            0% { transform: translateY(-50%); }
-            100% { transform: translateY(0); }
-        }
+    /* ─── Message ───────────────────────────────────────────── */
+    .message-section {
+      padding: 120px 24px 100px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-        .photo-item {
-            width: 100%;
-            height: 35vh;
-            min-height: 180px;
-            max-height: 400px;
-            border-radius: 6px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
+    .section-label {
+      font-size: 9px;
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      color: rgba(45,36,32,0.38);
+      margin-bottom: 52px;
+      font-family: 'Lato', sans-serif;
+    }
 
-        .photo-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: 50% 20%;
-            display: block;
-        }
+    .message-body {
+      max-width: 620px;
+      text-align: center;
+    }
 
-        @media (max-width: 900px) {
-            .photo-scroller { width: 16%; min-width: 90px; max-width: 180px; }
-        }
+    .message-p {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(22px, 3.8vw, 36px);
+      font-weight: 300;
+      line-height: 1.72;
+      color: #2d2420;
+      margin-bottom: 0;
+    }
 
-        /* Main container */
-        .main-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 120px calc(19% + 12px) 80px;
-        }
+    .message-p + .message-p {
+      margin-top: 40px;
+      font-size: clamp(18px, 3vw, 27px);
+      color: rgba(45,36,32,0.68);
+    }
 
-        /* Header */
-        .header {
-            text-align: center;
-            margin-bottom: 24px;
-            opacity: 0;
-            animation: fadeSlideIn 1s ease-out 0.6s forwards;
-        }
+    .hairline {
+      width: 36px;
+      height: 1px;
+      background: rgba(45,36,32,0.18);
+      margin: 56px auto;
+    }
 
-        .header-script {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-            font-weight: 300;
-            font-size: 1.3rem;
-            color: rgba(196, 209, 199, 0.8);
-            letter-spacing: 0.5px;
-            margin-bottom: 18px;
-        }
+    .message-sign {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-style: italic;
+      font-weight: 300;
+      color: rgba(45,36,32,0.45);
+      letter-spacing: 0.06em;
+      text-align: center;
+    }
 
-        .header-names {
-            font-family: 'Cinzel', serif;
-            font-size: 2.6rem;
-            font-weight: 400;
-            letter-spacing: 8px;
-            text-transform: uppercase;
-            color: #c4d1c7;
-            margin-bottom: 14px;
-        }
+    /* ─── Photo grid ────────────────────────────────────────── */
+    .grid-section {
+      padding: 0 20px 120px;
+    }
 
-        .header-divider {
-            width: 60px;
-            height: 1px;
-            background: rgba(196, 209, 199, 0.4);
-            margin: 0 auto;
-        }
+    .photo-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr 1fr;
+      grid-template-rows: 320px 320px;
+      gap: 10px;
+    }
 
-        /* Directory label */
-        .directory-label {
-            font-family: 'Cinzel', serif;
-            font-size: 0.75rem;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: rgba(196, 209, 199, 0.55);
-            text-align: center;
-            margin-bottom: 24px;
-            opacity: 0;
-            animation: fadeIn 1s ease-out 1s forwards;
-        }
+    .photo-cell {
+      overflow: hidden;
+      border-radius: 2px;
+      background: #e8e0d8;
+    }
 
-        /* Directory grid */
-        .directory {
-            display: flex;
-            flex-direction: row;
-            gap: 20px;
-            justify-content: center;
-            align-items: stretch;
-            flex-wrap: nowrap;
-            width: 100%;
-            opacity: 0;
-            animation: fadeSlideIn 1s ease-out 0.9s forwards;
-        }
+    .photo-cell img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
 
-        /* Event card */
-        .event-card {
-            background: #3d4f47;
-            border: 1px solid rgba(196, 209, 199, 0.15);
-            border-radius: 4px;
-            padding: 36px 20px 32px;
-            flex: 1;
-            min-width: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-        }
+    .photo-cell:hover img {
+      transform: scale(1.04);
+    }
 
-        .event-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: rgba(196, 209, 199, 0.3);
-        }
+    /* wedding centerpiece — tall left column */
+    .cell-center {
+      grid-column: 1;
+      grid-row: 1 / 3;
+    }
+    .cell-center img { object-position: center 30%; }
 
-        .event-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-        }
+    /* cats — top middle */
+    .cell-cats {
+      grid-column: 2;
+      grid-row: 1;
+    }
+    .cell-cats img { object-position: center 20%; }
 
-        .card-icon {
-            width: 44px;
-            height: 44px;
-            margin-bottom: 22px;
-            opacity: 0.7;
-        }
+    /* baby shower speech — top right */
+    .cell-speech {
+      grid-column: 3;
+      grid-row: 1;
+    }
+    .cell-speech img { object-position: center 20%; }
 
-        .card-title {
-            font-family: 'Cinzel', serif;
-            font-size: 1rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: #c4d1c7;
-            margin-bottom: 10px;
-            font-weight: 400;
-        }
+    /* maternity — bottom spans middle + right */
+    .cell-maternity {
+      grid-column: 2 / 4;
+      grid-row: 2;
+    }
+    .cell-maternity img { object-position: center 60%; }
 
-        .card-subtitle {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-            font-size: 1rem;
-            color: rgba(196, 209, 199, 0.65);
-            margin-bottom: 28px;
-            line-height: 1.5;
-        }
+    /* ─── Closing ───────────────────────────────────────────── */
+    .closing {
+      background: #1b1612;
+      color: #e8e0d8;
+      text-align: center;
+      padding: 120px 32px 100px;
+    }
 
-        .card-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            width: 100%;
-            margin-top: auto;
-        }
+    .closing-eyebrow {
+      font-size: 9px;
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      color: rgba(232,224,216,0.3);
+      margin-bottom: 40px;
+      font-family: 'Lato', sans-serif;
+    }
 
-        .card-btn {
-            display: block;
-            padding: 13px 12px;
-            text-decoration: none;
-            font-family: 'Cinzel', serif;
-            font-size: 0.68rem;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            border-radius: 3px;
-            transition: all 0.3s ease;
-            color: #3d4f47;
-            background: #c4d1c7;
-            border: none;
-            white-space: nowrap;
-            cursor: pointer;
-        }
+    .closing-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(40px, 7vw, 76px);
+      font-weight: 300;
+      font-style: italic;
+      color: #e8d5b0;
+      line-height: 1.1;
+      margin-bottom: 24px;
+      letter-spacing: 0.02em;
+    }
 
-        .card-btn:hover {
-            background: #d4e1d7;
-            transform: translateY(-1px);
-        }
+    .closing-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(17px, 2.5vw, 22px);
+      font-weight: 300;
+      font-style: italic;
+      color: rgba(232,224,216,0.48);
+      letter-spacing: 0.06em;
+      margin-bottom: 0;
+    }
 
-        .card-btn.secondary {
-            background: transparent;
-            color: #c4d1c7;
-            border: 1px solid rgba(196, 209, 199, 0.4);
-        }
+    .closing-hairline {
+      width: 36px;
+      height: 1px;
+      background: rgba(232,208,176,0.18);
+      margin: 64px auto;
+    }
 
-        .card-btn.secondary:hover {
-            background: rgba(196, 209, 199, 0.1);
-            border-color: rgba(196, 209, 199, 0.7);
-        }
+    .closing-names {
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(232,224,216,0.22);
+      font-family: 'Lato', sans-serif;
+    }
 
-        /* Botanical divider between cards */
-        .card-divider {
-            display: flex;
-            align-items: center;
-            color: rgba(196, 209, 199, 0.25);
-            font-size: 1.4rem;
-            align-self: center;
-        }
+    /* ─── Scroll-reveal ─────────────────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
 
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
 
-        @keyframes fadeSlideIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
+    /* ─── Animations ────────────────────────────────────────── */
+    @keyframes heroFade {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: none; }
+    }
 
-        /* Responsive */
-        @media (max-width: 900px) {
-            .main-container { padding: 120px calc(13% + 16px) 80px; }
-            .card-divider { display: none; }
-        }
+    .hero-eyebrow { animation: heroFade 1.2s 0.3s ease both; }
+    .hero-title   { animation: heroFade 1.2s 0.6s ease both; }
+    .hero-sub     { animation: heroFade 1.2s 0.9s ease both; }
+    .scroll-cue   { animation: heroFade 1.2s 1.4s ease both, scrollBounce 2.4s 2s ease-in-out infinite; }
 
-        /* Mobile: single column, wider photos, thinner cards */
-        @media (max-width: 700px) {
-            .photo-scroller { width: 100px; min-width: 100px; max-width: 100px; }
-            .main-container {
-                padding: 100px calc(100px + 12px) 60px;
-                justify-content: flex-start;
-            }
-            .directory {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 14px;
-                width: 100%;
-            }
-            .event-card {
-                width: 100%;
-                flex: none;
-                padding: 24px 16px 20px;
-            }
-            .card-icon { width: 32px; height: 32px; margin-bottom: 12px; }
-            .card-title { font-size: 0.85rem; letter-spacing: 2px; }
-            .card-subtitle { font-size: 0.9rem; margin-bottom: 16px; }
-            .card-divider { display: none; }
-        }
+    @keyframes scrollBounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(10px); }
+    }
 
-        @media (max-width: 480px) {
-            .header {
-                margin-bottom: 50px;
-            }
-            .event-card {
-                width: 100%;
-            }
-        }
-    </style>
+    /* ─── Responsive ────────────────────────────────────────── */
+    @media (max-width: 720px) {
+      .photo-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 260px 220px 220px;
+        gap: 8px;
+      }
+
+      .cell-center {
+        grid-column: 1 / 3;
+        grid-row: 1;
+      }
+
+      .cell-cats {
+        grid-column: 1;
+        grid-row: 2;
+      }
+
+      .cell-speech {
+        grid-column: 2;
+        grid-row: 2;
+      }
+
+      .cell-maternity {
+        grid-column: 1 / 3;
+        grid-row: 3;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .message-section { padding: 80px 20px 72px; }
+      .grid-section { padding: 0 12px 80px; }
+      .closing { padding: 80px 24px 72px; }
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Navigation -->
-    <nav role="navigation" aria-label="Main navigation">
-        <div class="nav-brand">
-            <a href="/">Manny &amp; Celesti</a>
-        </div>
-    </nav>
-
-    <!-- Left photo scroller -->
-    <div class="photo-scroller left">
-        <div class="photo-track">
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/4D5A8638-F73B-4AC4-8778-A5278C8BC828_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/42D2FAE7-AFFC-4DB3-A6EE-F23091009D2F_1_105_c.jpeg" alt="Manny and Celesti together" style="object-position: 90% 20%;"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/85B8912A-FB61-4250-9B83-8D7E858A493A_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/0587F5A0-D753-4285-A1C4-A83C902051AE_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/IMG_4207.JPG" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/DE79E046-12F6-4A54-959D-7C81B80E2E67_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/IMG_3889.JPG" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/0852DFAA-36B8-478C-A23F-3DBEEA799C85_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/8B21D087-56BE-41D3-8876-FE78177EBA7F_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/0182ED3F-7DAD-4187-B3AD-38768CA7E776_4_5005_c.jpeg" alt="Manny and Celesti together"></div>
-            <!-- Duplicate for seamless loop -->
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/4D5A8638-F73B-4AC4-8778-A5278C8BC828_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/42D2FAE7-AFFC-4DB3-A6EE-F23091009D2F_1_105_c.jpeg" alt="Manny and Celesti together" style="object-position: 90% 20%;"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/85B8912A-FB61-4250-9B83-8D7E858A493A_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/0587F5A0-D753-4285-A1C4-A83C902051AE_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/IMG_4207.JPG" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/DE79E046-12F6-4A54-959D-7C81B80E2E67_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/IMG_3889.JPG" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/0852DFAA-36B8-478C-A23F-3DBEEA799C85_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/8B21D087-56BE-41D3-8876-FE78177EBA7F_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/0182ED3F-7DAD-4187-B3AD-38768CA7E776_4_5005_c.jpeg" alt="Manny and Celesti together"></div>
-        </div>
+  <!-- ── Hero ─────────────────────────────────────────────────── -->
+  <section class="hero">
+    <img class="hero-img" src="/images/wedding-center.JPG" alt="Manny and Celesti">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Manny &amp; Celesti &nbsp;·&nbsp; 2026</p>
+      <h1 class="hero-title">Thank<br>You</h1>
+      <p class="hero-sub">from the bottom of our hearts</p>
     </div>
+    <div class="scroll-cue">scroll</div>
+  </section>
 
-    <!-- Right photo scroller -->
-    <div class="photo-scroller right">
-        <div class="photo-track">
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/52B08637-75E4-44F7-B80A-EC48FB94F1E5_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/334C424A-14ED-4705-87AF-7B019188853D_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/D9C024BE-11E3-4ADA-8A69-3F29644BCA13_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/1DA7E94F-ACD9-40A2-ABAA-F0DEF12EB1E1_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/IMG_4198.JPG" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/CAB243D3-54A2-496E-8B87-33DBA6D0EE20_1_102_o.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/658706F7-2832-48C5-9EEE-8F888B2D5A7B_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/4D693264-E0BA-4620-9622-98B47AC58FD2_4_5005_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/45E95932-DBC0-4A17-9A89-52C3448CBD2C_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-            <!-- Duplicate for seamless loop -->
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/52B08637-75E4-44F7-B80A-EC48FB94F1E5_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/334C424A-14ED-4705-87AF-7B019188853D_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/D9C024BE-11E3-4ADA-8A69-3F29644BCA13_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/1DA7E94F-ACD9-40A2-ABAA-F0DEF12EB1E1_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/IMG_4198.JPG" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/CAB243D3-54A2-496E-8B87-33DBA6D0EE20_1_102_o.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/658706F7-2832-48C5-9EEE-8F888B2D5A7B_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/4D693264-E0BA-4620-9622-98B47AC58FD2_4_5005_c.jpeg" alt="Manny and Celesti together"></div>
-            <div class="photo-item"><img loading="lazy" decoding="async" src="/images/45E95932-DBC0-4A17-9A89-52C3448CBD2C_1_105_c.jpeg" alt="Manny and Celesti together"></div>
-        </div>
+  <!-- ── Message ──────────────────────────────────────────────── -->
+  <section class="message-section">
+    <p class="section-label reveal">To everyone who was part of our journey</p>
+    <div class="message-body">
+      <p class="message-p reveal">
+        Every moment you shared with us, the laughter, the happy tears, the celebrations, meant more than words will ever hold. You showed up for us, and we will never forget it.
+      </p>
+      <div class="hairline reveal"></div>
+      <p class="message-p reveal">
+        Our baby girl will grow up knowing she was surrounded by so much love long before she ever arrived. One day she will see all of this, and she will know exactly how cherished she already is.
+      </p>
+      <div class="hairline reveal"></div>
+      <p class="message-sign reveal">Manny &amp; Celesti</p>
     </div>
+  </section>
 
-    <!-- Main content -->
-    <div class="main-container">
-
-        <!-- Header -->
-        <header class="header">
-            <p class="directory-label">Select an event</p>
-        </header>
-
-        <!-- Horizontal directory -->
-        <div class="directory" role="list">
-
-            <!-- Wedding -->
-            <div class="event-card" role="listitem">
-                <svg class="card-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <g stroke="#c4d1c7" stroke-width="1.2" stroke-linecap="round">
-                        <path d="M22 10 Q18 7, 14 9 Q10 11, 11 16 Q12 21, 22 28 Q32 21, 33 16 Q34 11, 30 9 Q26 7, 22 10Z"/>
-                        <path d="M22 34 Q20 38, 22 42"/>
-                        <path d="M18 38 Q22 36, 26 38"/>
-                    </g>
-                </svg>
-                <div class="card-title">Wedding</div>
-                <div class="card-subtitle">April 4, 2026<br>Pinole, California</div>
-                <div class="card-buttons">
-                    <a href="/wedding" class="card-btn">View Details</a>
-                </div>
-            </div>
-
-            <div class="card-divider" aria-hidden="true">&#10022;</div>
-
-            <!-- Baby Shower Pinole -->
-            <div class="event-card" role="listitem">
-                <svg class="card-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <g stroke="#c4d1c7" stroke-width="1.2" stroke-linecap="round">
-                        <circle cx="22" cy="20" r="10"/>
-                        <path d="M22 10 Q25 6, 28 8"/>
-                        <circle cx="19" cy="19" r="1.2" fill="#c4d1c7"/>
-                        <circle cx="25" cy="19" r="1.2" fill="#c4d1c7"/>
-                        <path d="M18 23 Q22 26, 26 23"/>
-                        <path d="M13 32 Q17 28, 22 30 Q27 28, 31 32"/>
-                    </g>
-                </svg>
-                <div class="card-title">Baby Shower</div>
-                <div class="card-subtitle">Pinole, California</div>
-                <div class="card-buttons">
-                    <a href="/baby-shower" class="card-btn">View Details</a>
-                </div>
-            </div>
-
-            <div class="card-divider" aria-hidden="true">&#10022;</div>
-
-            <!-- Baby Shower LA -->
-            <div class="event-card" role="listitem">
-                <svg class="card-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <g stroke="#c4d1c7" stroke-width="1.2" stroke-linecap="round">
-                        <circle cx="22" cy="20" r="10"/>
-                        <path d="M22 10 Q25 6, 28 8"/>
-                        <circle cx="19" cy="19" r="1.2" fill="#c4d1c7"/>
-                        <circle cx="25" cy="19" r="1.2" fill="#c4d1c7"/>
-                        <path d="M18 23 Q22 26, 26 23"/>
-                        <path d="M13 32 Q17 28, 22 30 Q27 28, 31 32"/>
-                    </g>
-                </svg>
-                <div class="card-title">Baby Shower</div>
-                <div class="card-subtitle">Los Angeles, California</div>
-                <div class="card-buttons">
-                    <a href="/baby-shower-secret" class="card-btn">English</a>
-                    <a href="/baby-shower-secret-es" class="card-btn secondary">Español</a>
-                </div>
-            </div>
-
-        </div>
+  <!-- ── Photo grid ────────────────────────────────────────────── -->
+  <section class="grid-section">
+    <div class="photo-grid reveal">
+      <div class="photo-cell cell-center">
+        <img src="/images/babyshower-1.jpeg" alt="">
+      </div>
+      <div class="photo-cell cell-cats">
+        <img src="/images/flores-cats.jpeg" alt="">
+      </div>
+      <div class="photo-cell cell-speech">
+        <img src="/images/babyshower-2.jpg" alt="">
+      </div>
+      <div class="photo-cell cell-maternity">
+        <img src="/images/celesti-maternity.jpg" alt="">
+      </div>
     </div>
+  </section>
+
+  <!-- ── Closing ───────────────────────────────────────────────── -->
+  <section class="closing">
+    <p class="closing-eyebrow reveal">The home stretch</p>
+    <h2 class="closing-title reveal">Catalina is on her way</h2>
+    <p class="closing-sub reveal">Thank you for every moment along the way. The next chapter starts soon.</p>
+    <div class="closing-hairline reveal"></div>
+    <p class="closing-names reveal">Manny Flores &nbsp;&amp;&nbsp; Celesti Hao</p>
+  </section>
+
+  <script>
+    // Scroll-reveal
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
 
 </body>
 </html>
