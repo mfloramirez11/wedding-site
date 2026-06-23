@@ -56,12 +56,23 @@
     }
 
     /* ─── Event nav ─────────────────────────────────────────── */
+    .event-nav-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(250,247,244,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(45,36,32,0.08);
+    }
+
     .event-nav {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 8px 28px;
-      padding: 0 24px 80px;
+      padding: 18px 24px;
+      max-width: 1100px;
+      margin: 0 auto;
     }
 
     .event-nav a {
@@ -73,11 +84,17 @@
       padding-bottom: 6px;
       border-bottom: 1px solid transparent;
       transition: color 0.3s, border-color 0.3s;
+      white-space: nowrap;
     }
 
     .event-nav a:hover {
       color: #2d2420;
       border-bottom-color: rgba(45,36,32,0.3);
+    }
+
+    .event-nav a.active {
+      color: #2d2420;
+      border-bottom-color: rgba(45,36,32,0.55);
     }
 
     /* ─── Event section ─────────────────────────────────────── */
@@ -249,6 +266,8 @@
 
     @media (max-width: 480px) {
       .page-header { padding: 72px 20px 48px; }
+      .event-nav { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; padding: 14px 16px; -webkit-overflow-scrolling: touch; }
+      .event-nav::-webkit-scrollbar { display: none; }
       .event-section { padding: 0 12px 72px; }
       .photo-masonry { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 5px; }
       .lightbox-prev, .lightbox-next { font-size: 24px; padding: 10px; }
@@ -265,7 +284,9 @@
     <h1 class="page-title">Photo Albums</h1>
   </header>
 
-  <nav class="event-nav" id="eventNav"></nav>
+  <div class="event-nav-wrap">
+    <nav class="event-nav" id="eventNav"></nav>
+  </div>
 
   <main id="eventSections"></main>
 
@@ -381,6 +402,7 @@
           const link = document.createElement('a');
           link.href = `#${event.slug}`;
           link.textContent = event.title;
+          link.dataset.slug = event.slug;
           eventNav.appendChild(link);
           renderEvent(event);
 
@@ -397,6 +419,17 @@
           const target = document.querySelector(location.hash);
           if (target) target.scrollIntoView();
         }
+
+        const navLinks = eventNav.querySelectorAll('a');
+        const sectionObserver = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            navLinks.forEach(link => {
+              link.classList.toggle('active', link.dataset.slug === entry.target.id);
+            });
+          });
+        }, { rootMargin: '-40% 0px -55% 0px' });
+        document.querySelectorAll('.event-section').forEach(section => sectionObserver.observe(section));
       })
       .catch(() => {
         eventSections.innerHTML = '<p class="event-loading">Photos coming soon.</p>';
