@@ -392,6 +392,11 @@
           });
           lbEvents.appendChild(switchBtn);
         });
+
+        if (location.hash) {
+          const target = document.querySelector(location.hash);
+          if (target) target.scrollIntoView();
+        }
       })
       .catch(() => {
         eventSections.innerHTML = '<p class="event-loading">Photos coming soon.</p>';
