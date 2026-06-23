@@ -3,7 +3,9 @@
   "outputDirectory": ".",
   "rewrites": [
     { "source": "/images/:path*", "destination": "/public/images/:path*" },
+    { "source": "/gallery-manifest.json", "destination": "/public/gallery-manifest.json" },
     { "source": "/events", "destination": "/events.html" },
+    { "source": "/photos", "destination": "/gallery.html" },
     { "source": "/wedding", "destination": "/wedding.html" },
     { "source": "/seating", "destination": "/seating.html" },
     { "source": "/contact", "destination": "/contact.html" },

@@ -5,6 +5,7 @@
   "type": "module",
   "dependencies": {
     "@neondatabase/serverless": "^0.9.5",
+    "@vercel/blob": "^2.4.1",
     "resend": "^6.9.1",
     "twilio": "^5.12.0"
   },

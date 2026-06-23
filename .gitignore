@@ -1,7 +1,9 @@
 .vercel
 .claude/
 .env*.local
+.env
+.env.production
 node_modules/
 .DS_Store
 seating-qr.png
-.env
+gallery-staging/
